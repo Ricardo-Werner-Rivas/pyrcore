@@ -23,3 +23,9 @@ This project is part of my Final Degree Project (in spanish: *Trabajo de Fin de 
 However, no rule forbids me to learn from other people, so I'll be reading pull requests from forked repositories, but I will code any changes myself.
 
 Once the project is defended, contributions will be open. To contribute, fork this repository and clone it locally.
+
+There are two branches:
+* **PyPI**: the main branch, for releases.
+* **TestPyPI**: for pre-releases or development versions.
+
+Pull requests from TestPyPI to PyPI will only be done by the owner when a new release is ready.
