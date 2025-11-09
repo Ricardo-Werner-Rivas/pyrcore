@@ -18,3 +18,15 @@ This project is part of my Final Degree Project (in spanish: *Trabajo de Fin de 
 However, no rule forbids me to learn from other people, so I'll be reading pull requests from forked repositories, but I will code any changes myself.
 
 Once the project is defended, contributions will be open. To contribute, fork this repository and clone it locally.
+
+To merge branches properly with PyPI branch, you will need to execute the following commands in your PowerShell:
+```powershell
+git config merge.keepPyPIFiles.name "Keep README.md and setup.cfg from PyPI branch on merge"
+git config merge.keepPyPIFiles.driver "bash -c 'cp $(git rev-parse --show-toplevel)/$3 $2'"
+```
+Or in your git bash terminal:
+```bash
+git config merge.keepPyPIFiles.name "Keep README.md and setup.cfg from PyPI branch on merge"
+git config merge.keepPyPIFiles.driver "bash -c 'cp $(git rev-parse --show-toplevel)/$3 $2'"
+```
+This way, READMEs and setup files will not be overwritten in the PyPI branch.
