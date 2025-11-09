@@ -12,7 +12,7 @@ This project aims to be as package independent as possible.
 
 Dependency on `numpy` can be counted on.
 
-This project will **not** depend on `pandas`.
+This project will **not** depend on `pandas` for core functionalities.
 ## Contribution
 This project is part of my Final Degree Project (in spanish: *Trabajo de Fin de Grado* or *TFG*), so I won't be accepting contributions to this repository until the project is finished and defended.
 However, no rule forbids me to learn from other people, so I'll be reading pull requests from forked repositories, but I will code any changes myself.
