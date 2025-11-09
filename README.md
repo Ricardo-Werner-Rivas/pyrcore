@@ -24,7 +24,7 @@ However, no rule forbids me to learn from other people, so I'll be reading pull 
 
 Once the project is defended, contributions will be open. To contribute, fork this repository and clone it locally.
 
-To merge branches properly with PyPI branch, you will need to execute the following commands in your PowerShell:
+To merge branches properly with PyPI branch, you will need to have the `.gitattributes` file in the PyPI branch and execute the following commands, while in repo directory, in your PowerShell:
 ```powershell
 git config merge.keepPyPIFiles.name "Keep README.md and setup.cfg from PyPI branch on merge"
 git config merge.keepPyPIFiles.driver "bash -c 'cp $(git rev-parse --show-toplevel)/$3 $2'"
