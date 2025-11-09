@@ -2,6 +2,11 @@
 Python package aiming to create a core of R programming language to optimize time series management.
 ## Supported Python distributions
 This project is created and tested using the **CPython** team distribution.
+## Instalation
+You can install the `pyrcore` package from PyPI like so:
+```powershell
+pip install pyrcore
+```
 ## Intended features
 * Support for vectors
 * Support for matrixes
