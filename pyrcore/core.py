@@ -22,7 +22,6 @@ class Vector(Generic[TypeVar("var")]):
             return self._attributes[attribute]
         else:
             self._attributes[attribute]=value
-        return
     # Show attributes dictionary
     def attributes(self):
         return self._attributes
@@ -46,18 +45,12 @@ class Vector(Generic[TypeVar("var")]):
     # Addition
     def __add__(self,value):
         if isinstance(value,Vector):
-            if value.type in "int64 float64".split():
-                if self.type in "int64 float64".split():
-                    return Vector(self._data+value._data)
-                else:
-                    raise TypeError("Addition only available for vectors and values of matching supported types")
-            elif str(value.type)[:2]=="<U":
-                if str(self.type)[:2]=="<U":
-                    return Vector(self._data+value._data)
-                else:
-                    raise TypeError("Addition only available for vectors and values of matching supported types")
+            if value.type in "int64 float64".split() and self.type in "int64 float64".split():
+                return Vector(self._data+value._data)
+            elif str(value.type)[:2]=="<U" and str(self.type)[:2]=="<U":
+                return Vector(self._data+value._data)
             else:
-                raise TypeError(f"Addition not suportted for {value.type}")
+                raise TypeError("Addition only available for vectors and values of matching supported types")
         elif isinstance(value,(int,float,np.number)) and self.type in "int64 float64".split():
             return Vector(self._data+value)
         elif isinstance(value,str) and str(self.type)[:2]=="<U":
@@ -183,11 +176,16 @@ class Vector(Generic[TypeVar("var")]):
     #* INDEXATION
     # Getter
     def __getitem__(self,index):
-        return self._data[index]
+        try:
+            return self._data[index]
+        except IndexError:
+            raise IndexError("Object is 0-dimensional. 0 indexes supported, but 1 were given")
     # Setter
     def __setitem__(self,index,value):
-        self._data[index]=value
-        return
+        try:
+            self._data[index]=value
+        except IndexError:
+            raise IndexError("Object is 0-dimensional. 0 indexes supported, but 1 were given")
     
     #* LENGTH
     # Length
