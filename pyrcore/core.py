@@ -170,9 +170,6 @@ class Vector(Generic[TypeVar("var")]):
         else:
             raise TypeError("Power operation is not supported for non-numerical values")
     
-    #* IN-PLACE ARITHMETIC OPERATORS
-    # Addtion
-    
     #* INDEXATION
     # Getter
     def __getitem__(self,index):
@@ -195,4 +192,7 @@ class Vector(Generic[TypeVar("var")]):
     #* SCREEN
     # Representation
     def __repr__(self):
-        return f"c({", ".join(value for value in self._data)})"
+        return f"c({", ".join(str(value) for value in self._data)})"
+    # Printing (__str__ method)
+    def __str__(self):
+        return f"{"\t".join(str(value) for value in self._data)}"
