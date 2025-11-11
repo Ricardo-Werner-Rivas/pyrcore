@@ -244,24 +244,6 @@ class Vector(Generic[TypeVar("var")]):
         else:
             raise TypeError(f"Absolute value unary method only available for numeric vectors, not {self.type} type vectors")
     
-    #* ITERATION
-    # __iter__
-    def __iter__(self):
-        return self
-    # __next__
-    def __next__(self):
-        try:
-            self._pos
-        except:
-            self._pos=0
-        finally:
-            if self._pos<len(self._data):
-                result=self._data[self._pos]
-                self._pos+=1
-            else:
-                raise StopIteration
-        return result
-    
     #* INDEXATION
     # Getter
     def __getitem__(self,index):
