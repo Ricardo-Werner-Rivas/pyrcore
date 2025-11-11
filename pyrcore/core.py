@@ -261,6 +261,9 @@ class Vector(Generic[TypeVar("var")]):
     # Representation
     def __repr__(self):
         return f"c({", ".join(str(value) for value in self._data)})"
+    # HTML representation
+    def _repr_html_(self):
+        return f"<p>c(<br>{",<br>".join(str(value) for value in self._data)}<br>)</p>"
     # Printing (__str__ method)
     def __str__(self):
         return f"{"\t".join(str(value) for value in self._data)}"
