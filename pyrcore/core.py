@@ -170,6 +170,26 @@ class Vector(Generic[TypeVar("var")]):
         else:
             raise TypeError("Power operation is not supported for non-numerical values")
     
+    #* UNARY METHODS
+    # Negative
+    def __neg__(self):
+        if self.type in "int64 float64":
+            return Vector(-self._data)
+        else:
+            raise TypeError(f"Negative unary method only available for numeric vectors, not {self.type} type vectors")
+    # Positive
+    def __pos__(self):
+        if self.type in "int64 float64":
+            return Vector(+self._data)
+        else:
+            raise TypeError(f"Positive unary method only available for numeric vectors, not {self.type} type vectors")
+    # Absolute value
+    def __abs__(self):
+        if self.type in "int64 float64":
+            return Vector(abs(self._data))
+        else:
+            raise TypeError(f"Absolute value unary method only available for numeric vectors, not {self.type} type vectors")
+    
     #* INDEXATION
     # Getter
     def __getitem__(self,index):
