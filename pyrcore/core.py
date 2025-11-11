@@ -61,39 +61,39 @@ class Vector(Generic[TypeVar("var")]):
     # Equality
     def __eq__(self,value):
         if isinstance(value,Vector):
-            return Vector(self._data==value._data)
+            return self._data==value._data
         else:
-            return Vector(self._data==value)
+            return self._data==value
     # Difference
     def __ne__(self,value):
         if isinstance(value,Vector):
-            return Vector(self._data!=value._data)
+            return self._data!=value._data
         else:
-            return Vector(self._data!=value)
+            return self._data!=value
     # Less than
     def __lt__(self,value):
         if isinstance(value,Vector):
-            return Vector(self._data<value._data)
+            return self._data<value._data
         else:
-            return Vector(self._data,value)
+            return self._data,value
     # Less or equal
     def __le__(self,value):
         if isinstance(value,Vector):
-            return Vector(self._data<=value._data)
+            return self._data<=value._data
         else:
-            return Vector(self._data<=value)
+            return self._data<=value
     # Greater than
     def __gt__(self,value):
         if isinstance(value,Vector):
-            return Vector(self._data>value._data)
+            return self._data>value._data
         else:
-            return Vector(self._data>value)
+            return self._data>value
     # Greater or equal
     def __ge__(self,value):
         if isinstance(value,Vector):
-            return Vector(self._data>=value._data)
+            return self._data>=value._data
         else:
-            return Vector(self._data>=value)
+            return self._data>=value
     
     #* ARITHMETIC OPERATIONS
     # Addition
@@ -251,6 +251,7 @@ class Vector(Generic[TypeVar("var")]):
     # Setter
     def __setitem__(self,index,value):
         self._data[index]=value
+    #! No deleter
     
     #* LENGTH
     # Length
