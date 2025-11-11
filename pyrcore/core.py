@@ -152,19 +152,19 @@ class Vector(Generic[TypeVar("var")]):
         else:
             raise TypeError("Fraction not supported for non-numerical values")
     # Integer division
-    def __floordiv__(self,value):
+    def __rfloordiv__(self,value):
         if isinstance(value,(int,float,np.number)) and self.type in "int64 float64".split():
             return Vector(value//self._data)
         else:
             raise TypeError("Integer division not supported for non-numerical values")
     # Module
-    def __mod__(self,value):
+    def __rmod__(self,value):
         if isinstance(value,(int,float,np.number)) and self.type in "int64 float64".split():
             return Vector(value%self._data)
         else:
             raise TypeError("Module operation is not supported for non-numerical values")
     # Power
-    def __pow__(self,value):
+    def __rpow__(self,value):
         if isinstance(value,(int,float,np.number)) and self.type in "int64 float64".split():
             return Vector(value**self._data)
         else:
