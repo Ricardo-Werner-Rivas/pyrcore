@@ -41,6 +41,44 @@ class Vector(Generic[TypeVar("var")]):
     def names(self):
         return self._names
     
+    #* COMPARATIVE METHODS
+    # Equality
+    def __eq__(self,value):
+        if isinstance(value,Vector):
+            return Vector(self._data==value._data)
+        else:
+            return Vector(self._data==value)
+    # Difference
+    def __ne__(self,value):
+        if isinstance(value,Vector):
+            return Vector(self._data!=value._data)
+        else:
+            return Vector(self._data!=value)
+    # Less than
+    def __lt__(self,value):
+        if isinstance(value,Vector):
+            return Vector(self._data<value._data)
+        else:
+            return Vector(self._data,value)
+    # Less or equal
+    def __le__(self,value):
+        if isinstance(value,Vector):
+            return Vector(self._data<=value._data)
+        else:
+            return Vector(self._data<=value)
+    # Greater than
+    def __gt__(self,value):
+        if isinstance(value,Vector):
+            return Vector(self._data>value._data)
+        else:
+            return Vector(self._data>value)
+    # Greater or equal
+    def __ge__(self,value):
+        if isinstance(value,Vector):
+            return Vector(self._data>=value._data)
+        else:
+            return Vector(self._data>=value)
+    
     #* ARITHMETIC OPERATIONS
     # Addition
     def __add__(self,value):
