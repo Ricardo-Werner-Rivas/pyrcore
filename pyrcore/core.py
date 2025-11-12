@@ -64,7 +64,7 @@ class Vector(Generic[TypeVar("var")]):
             return self._data==value._data
         else:
             return self._data==value
-    # Difference
+    # Inequality
     def __ne__(self,value):
         if isinstance(value,Vector):
             return self._data!=value._data
@@ -111,17 +111,17 @@ class Vector(Generic[TypeVar("var")]):
             return Vector(self._data+value)
         else:
             raise TypeError("Addition only available for vectors and values of matching supported types")
-    # Substraction
+    # Difference
     def __sub__(self,value):
         if isinstance(value,Vector):
             if isinstance(value._data[0],np.number) and isinstance(self._data[0],np.number):
                 return Vector(self._data-value._data)
             else:
-                raise TypeError("Substraction not supported for non-numerical values")
+                raise TypeError("Difference not supported for non-numerical values")
         elif isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
             return Vector(self._data-value)
         else:
-            raise TypeError("Substraction not supported for non-numerical values")
+            raise TypeError("Difference not supported for non-numerical values")
     # Product
     def __mul__(self,value):
         if isinstance(value,Vector):
@@ -187,12 +187,12 @@ class Vector(Generic[TypeVar("var")]):
             return Vector(value+self._data)
         else:
             raise TypeError("Addition only available for vectors and values of matching supported types")
-    # Substraction
+    # Difference
     def __rsub__(self,value):
         if isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
             return Vector(value-self._data)
         else:
-            raise TypeError("Substraction not supported for non-numerical values")
+            raise TypeError("Difference not supported for non-numerical values")
     # Product
     def __rmul__(self,value):
         if isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
