@@ -8,16 +8,17 @@ You can install the `pyrcore` package from **PyPI** like so:
 pip install pyrcore
 ```
 ## Intended features
-* Support for vectors
+* Support for atomic vectors and combination function `c()`
 * Support for matrixes
-* Support for `ts` (time series)
-* Support for `mts` (multivariate time series)
+* Support for `ts` class (time series)
+* Support for `mts` class (multivariate time series)
+* Support for `ts()` function
 ## Dependency policy
 This project aims to be as package independent as possible.
 
-Dependency on `numpy` can be counted on.
+At the moment, this project depends on `numpy`.
 
-This project will **not** depend on `pandas` for core functionalities.
+This project will **not** depend on `pandas` for **core functionalities**.
 ## Contribution
 This project is part of my Final Degree Project (in spanish: *Trabajo de Fin de Grado* or *TFG*), so I won't be accepting contributions to this repository until the project is finished and defended.
 However, no rule forbids me to learn from other people, so I'll be reading pull requests from forked repositories, but I will code any changes myself.
