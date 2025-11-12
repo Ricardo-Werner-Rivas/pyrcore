@@ -1,12 +1,12 @@
 #* LEGEND
 #! Important or deliberately missing
-#* Start new section
+#* Section
 
 #* IMPORTS
 import numpy as np
 from typing import TypeVar,Generic,Any
 
-#* CLASSES
+#* MAIN CLASS
 # Create vector class with Generic
 class Vector(Generic[TypeVar("var")]):
     """
