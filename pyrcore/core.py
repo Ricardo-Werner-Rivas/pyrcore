@@ -10,7 +10,7 @@ class Vector(Generic[TypeVar("var")]):
     #* BASIC METHODS
     # __init__
     def __init__(self,data:Any=None,**attributes):
-        if isinstance(data,(int,float,str,np.number,np.str_,dict)):
+        if isinstance(data,(int,float,str,dict,np.number,np.str_)):
             data=[data]
         elif isinstance(data,(list,np.ndarray)):
             pass
@@ -18,7 +18,7 @@ class Vector(Generic[TypeVar("var")]):
             data=[]
         else:
             data=list(data)
-        self._names=attributes["names"] if "names" in attributes else None
+        self._names=attributes["names"] if attributes and "names" in attributes else None
         if isinstance(data,np.ndarray):
             self._data=data
         else:
