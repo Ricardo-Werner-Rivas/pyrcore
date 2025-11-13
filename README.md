@@ -16,7 +16,7 @@ pip install pyrcore
 ## Dependency policy
 This project aims to be as package independent as possible.
 
-At the moment, this project depends on `numpy`.
+At the moment, this project depends on `numpy` for core functionalities and `pandas` for optional ones.
 
 This project will **not** depend on `pandas` for **core functionalities**.
 ## Contribution
@@ -30,7 +30,7 @@ There are two branches:
 * **TestPyPI**: for pre-releases or development versions.
 
 Pull requests from TestPyPI to PyPI will only be done by the owner when a new release is ready.
-
+### Branch merging
 To merge branches properly with PyPI branch in your cloned repository, you will need to have the `.gitattributes` file in the PyPI branch and execute the following commands, while in repo directory, in your PowerShell:
 ```powershell
 git config merge.keepPyPIFiles.name "Keep README.md and setup.cfg from PyPI branch on merge"
