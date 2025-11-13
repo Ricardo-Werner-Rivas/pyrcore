@@ -16,7 +16,7 @@ pip install -i https://test.pypi.org/simple/ pyrcore --no-deps
 ## Dependency policy
 This project aims to be as package independent as possible.
 
-At the moment, this project depends on `numpy`.
+At the moment, this project depends on `numpy` for core functionalities and `pandas` for optional ones.
 
 This project will **not** depend on `pandas` for **core functionalities**.
 ## Contribution
