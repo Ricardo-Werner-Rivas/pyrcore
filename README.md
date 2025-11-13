@@ -20,9 +20,9 @@ This project aims to be as package independent as possible.
 
 At the moment, this project depends on `numpy` for core functionalities and `pandas` for optional ones.
 
-This project will **NOT** depend on `pandas` for **core functionalities**.
+This project will **NOT** depend on `pandas` for <u>**core functionalities**</u>.
 ## Contribution
-This project is part of my Final Degree Project (in spanish: *Trabajo de Fin de Grado* or *TFG*), so I won't be accepting contributions to this repository until the project is finished and defended.
+This project is part of my <u>Final Degree Project</u> (in spanish: *Trabajo de Fin de Grado* or *TFG*), so I won't be accepting contributions to this repository until the project is finished and defended.
 However, no rule forbids me to learn from other people, so I'll be reading pull requests from forked repositories, but I will code any changes myself.
 
 Once the project is defended, contributions will be open. To contribute, fork this repository and clone it locally.
