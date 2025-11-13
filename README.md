@@ -41,4 +41,4 @@ Or in your git bash terminal:
 git config merge.keepPyPIFiles.name "Keep README.md and setup.cfg from PyPI branch on merge"
 git config merge.keepPyPIFiles.driver "bash -c 'cp $(git rev-parse --show-toplevel)/$3 $2'"
 ```
-This way, READMEs and setup files will not be overwritten in the PyPI branch.
+This way, `README.md` and `setup.cfg` files will not be overwritten in the PyPI branch.
