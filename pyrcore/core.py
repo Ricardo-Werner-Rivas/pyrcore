@@ -2,6 +2,7 @@
 #! Deliberately missing
 #* Section
 #^ Important
+#// Alternative or deprecated code
 
 #* IMPORTS
 import numpy as np
