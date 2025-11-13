@@ -1,7 +1,9 @@
 # `pyrcore`
 Python package aiming to create a core of R programming language to optimize time series management.
 ## Supported Python distributions
-This project is created and tested using the **CPython** team distribution.
+* [CPython](https://www.python.org/downloads)
+
+This project is created and tested using the [3.13.9 **CPython** team distribution](https://www.python.org/downloads/release/python-3139).
 ## Installation
 You can install the latest development version of the `pyrcore` package from **TestPyPI** like so:
 ```powershell
