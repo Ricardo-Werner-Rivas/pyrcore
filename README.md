@@ -3,7 +3,7 @@ Python package aiming to create a core of R programming language to optimize tim
 ## Supported Python distributions
 * [CPython](https://www.python.org/downloads)
 
-This project is created and tested using the [3.13.9 **CPython** team distribution](https://www.python.org/downloads/release/python-3139).
+This project is created and tested using the [3.13.9 CPython team distribution](https://www.python.org/downloads/release/python-3139).
 ## Instalation
 You can install the `pyrcore` package from **PyPI** like so:
 ```powershell
@@ -20,7 +20,7 @@ This project aims to be as package independent as possible.
 
 At the moment, this project depends on `numpy` for core functionalities and `pandas` for optional ones.
 
-This project will **not** depend on `pandas` for **core functionalities**.
+This project will **NOT** depend on `pandas` for **core functionalities**.
 ## Contribution
 This project is part of my Final Degree Project (in spanish: *Trabajo de Fin de Grado* or *TFG*), so I won't be accepting contributions to this repository until the project is finished and defended.
 However, no rule forbids me to learn from other people, so I'll be reading pull requests from forked repositories, but I will code any changes myself.
