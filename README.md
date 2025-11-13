@@ -8,11 +8,11 @@ You can install the latest development version of the `pyrcore` package from **T
 pip install -i https://test.pypi.org/simple/ pyrcore --no-deps
 ```
 ## Intended features
-* Support for atomic vectors and combination function `c()`
-* Support for matrixes
-* Support for `ts` class (time series)
-* Support for `mts` class (multivariate time series)
-* Support for `ts()` function
+* Support for R atomic vectors and combination function `c()`
+* Support for R matrixes
+* Support for R `ts` class (time series)
+* Support for R `mts` class (multivariate time series)
+* Support for R `ts()` function
 ## Dependency policy
 This project aims to be as package independent as possible.
 
