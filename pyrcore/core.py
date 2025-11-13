@@ -1,6 +1,7 @@
 #* LEGEND
-#! Important or deliberately missing
+#! Deliberately missing
 #* Section
+#^ Important
 
 #* IMPORTS
 import numpy as np
