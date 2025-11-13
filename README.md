@@ -8,11 +8,11 @@ You can install the `pyrcore` package from **PyPI** like so:
 pip install pyrcore
 ```
 ## Intended features
-* Support for atomic vectors and combination function `c()`
-* Support for matrixes
-* Support for `ts` class (time series)
-* Support for `mts` class (multivariate time series)
-* Support for `ts()` function
+* Support for R atomic vectors and combination function `c()`
+* Support for R matrixes
+* Support for `ts` R class (time series)
+* Support for `mts` R class (multivariate time series)
+* Support for `ts()` R function
 ## Dependency policy
 This project aims to be as package independent as possible.
 
