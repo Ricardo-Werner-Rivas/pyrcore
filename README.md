@@ -10,9 +10,9 @@ pip install pyrcore
 ## Intended features
 * Support for R atomic vectors and combination function `c()`
 * Support for R matrixes
-* Support for `ts` R class (time series)
-* Support for `mts` R class (multivariate time series)
-* Support for `ts()` R function
+* Support for R `ts` class (time series)
+* Support for R `mts` class (multivariate time series)
+* Support for R `ts()` function
 ## Dependency policy
 This project aims to be as package independent as possible.
 
