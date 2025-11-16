@@ -1,5 +1,5 @@
 #* LEGEND
-#! Deliberately missing
+#! Missing
 #* Section
 #^ Important
 #// Alternative or deprecated code
@@ -16,7 +16,9 @@ class Vector(Generic[TypeVar("var")]):
     """
     #* BASIC METHODS
     # __init__
+    #^ Provisional
     def __init__(self,data:Any=None,**attributes):
+        #! CORRECT TYPE IMPLEMENTATION
         if isinstance(data,(int,float,str,dict,np.number,np.str_)):
             data=[data]
         elif isinstance(data,(list,np.ndarray)):
@@ -25,7 +27,6 @@ class Vector(Generic[TypeVar("var")]):
             data=[]
         else:
             data=list(data)
-        self._names=attributes["names"] if attributes and "names" in attributes else None
         if isinstance(data,np.ndarray):
             self._data=data
         else:
@@ -57,7 +58,7 @@ class Vector(Generic[TypeVar("var")]):
     @property
     # Getter
     def names(self):
-        return self._names
+        return self._attributes["names"] if "names" in self._attributes else None
     # Attributes
     @property
     # Getter
@@ -173,6 +174,9 @@ class Vector(Generic[TypeVar("var")]):
             return Vector(self._data%value)
         else:
             raise TypeError("Module operation is not supported for non-numerical values")
+    # Divmod
+    def __divmod__(self,value):
+        return self//value,self%value
     # Power
     def __pow__(self,value):
         if isinstance(value,Vector):
@@ -224,6 +228,9 @@ class Vector(Generic[TypeVar("var")]):
             return Vector(value%self._data)
         else:
             raise TypeError("Module operation is not supported for non-numerical values")
+    # Divmod
+    def __divmod__(self,value):
+        return value//self,value%self
     # Power
     def __rpow__(self,value):
         if isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
@@ -257,8 +264,14 @@ class Vector(Generic[TypeVar("var")]):
         return self._data[index]
     # Setter
     def __setitem__(self,index,value):
-        self._data[index]=value
-    #! No deleter
+        if value==None:
+            data=list(self._data)
+            data.remove(self._data[index])
+            self._data=np.array(data)
+            #! Name removal from "names"
+        else:
+            self._data[index]=value
+    #^ No deleter
     
     #* LENGTH
     # Length
@@ -269,9 +282,14 @@ class Vector(Generic[TypeVar("var")]):
     # Representation
     def __repr__(self):
         return f"c({", ".join(str(value) for value in self._data)})"
+        #! Names implementation
     # HTML representation
     def _repr_html_(self):
         return f"<p>c(<br>{",<br>".join(str(value) for value in self._data)}<br>)</p>"
+        #! Names implementation
     # Printing (__str__ method)
     def __str__(self):
-        return f"{"\t".join(str(value) for value in self._data)}"
+        if "names" in self.attributes:
+            return f"{"\n".join([f"{name}: {str(value)}" for name,value in dict(zip(self.names,self._data)).items()])}"
+        else:
+            return f"{"\t".join(str(value) for value in self._data)}"
