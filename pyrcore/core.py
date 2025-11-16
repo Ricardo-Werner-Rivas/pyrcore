@@ -18,7 +18,7 @@ class Vector(Generic[TypeVar("var")]):
     # __init__
     #^ Provisional
     def __init__(self,data:Any=None,**attributes):
-        #! CORRECT TYPE IMPLEMENTATION
+        #! MISSING CORRECT TYPE IMPLEMENTATION
         if isinstance(data,(int,float,str,dict,np.number,np.str_)):
             data=[data]
         elif isinstance(data,(list,np.ndarray)):
@@ -261,6 +261,7 @@ class Vector(Generic[TypeVar("var")]):
     #* INDEXATION
     # Getter
     def __getitem__(self,index):
+        #! Missing name implemention as index (using <list>.index(<value>) method)
         return self._data[index]
     # Setter
     def __setitem__(self,index,value):
@@ -268,7 +269,7 @@ class Vector(Generic[TypeVar("var")]):
             data=list(self._data)
             data.remove(self._data[index])
             self._data=np.array(data)
-            #! Name removal from "names"
+            #! Missing name removal from "names"
         else:
             self._data[index]=value
     #^ No deleter
@@ -282,11 +283,11 @@ class Vector(Generic[TypeVar("var")]):
     # Representation
     def __repr__(self):
         return f"c({", ".join(str(value) for value in self._data)})"
-        #! Names implementation
+        #! Missing names implementation
     # HTML representation
     def _repr_html_(self):
         return f"<p>c(<br>{",<br>".join(str(value) for value in self._data)}<br>)</p>"
-        #! Names implementation
+        #! Missing names implementation
     # Printing (__str__ method)
     def __str__(self):
         if "names" in self.attributes:
