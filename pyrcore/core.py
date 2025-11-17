@@ -282,15 +282,19 @@ class Vector(Generic[TypeVar("var")]):
     #* SCREEN
     # Representation
     def __repr__(self):
-        return f"c({", ".join(str(value) for value in self._data)})"
-        #! Missing names implementation
+        if self.names:
+            return f"c({", ".join(f"{name}={str(value)}" for name,value in dict(zip(self.names,self._data)).items())})"
+        else:
+            return f"c({", ".join(str(value) for value in self._data)})"
     # HTML representation
     def _repr_html_(self):
-        return f"<p>c(<br>{",<br>".join(str(value) for value in self._data)}<br>)</p>"
-        #! Missing names implementation
+        if self.names:
+            return f"<p>c(<br>{",<br>".join(f"{name}={str(value)}" for name,value in dict(zip(self.names,self._data)).items())}<br>)</p>"
+        else:
+            return f"<p>c(<br>{",<br>".join(str(value) for value in self._data)}<br>)</p>"
     # Printing (__str__ method)
     def __str__(self):
         if "names" in self.attributes:
-            return f"{"\n".join([f"{name}: {str(value)}" for name,value in dict(zip(self.names,self._data)).items()])}"
+            return f"{"\n".join(f"{name}: {str(value)}" for name,value in dict(zip(self.names,self._data)).items())}"
         else:
             return f"{"\t".join(str(value) for value in self._data)}"
