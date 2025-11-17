@@ -11,7 +11,7 @@
 
 #* IMPORTS
 import numpy as np
-from typing import TypeVar,Generic,Any
+from typing import TypeVar,Generic
 
 #* MAIN CLASS
 # Create vector class with Generic
@@ -22,9 +22,8 @@ class Vector(Generic[TypeVar("var")]):
     #* BASIC METHODS
     # __init__
     #^ Provisional
-    def __init__(self,data:Any=None,**attributes):
-        #! MISSING CORRECT TYPE IMPLEMENTATION
-        if isinstance(data,(int,float,str,dict,np.number,np.str_)):
+    def __init__(self,data:int|float|str|tuple|list|np.number|np.str_|None=None,**attributes):
+        if isinstance(data,(int,float,str,np.number,np.str_)):
             data=[data]
         elif isinstance(data,(list,np.ndarray)):
             pass
@@ -41,8 +40,18 @@ class Vector(Generic[TypeVar("var")]):
         self._attributes=attributes or {}
         if self._data.dtype=="object":
             raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
-        self._type=self._data.dtype
-    # View attribute
+        if "int" in str(self._data.dtype):
+            self._data=np.array([int(value) for value in data],dtype=object)
+            self._type="int"
+        elif "float" in str(self._data.dtype):
+            self._data=np.array([float(value) for value in self._data],dtype=object)
+            self._type="float"
+        elif "str" in str(self._data.dtype) or "<U" in str(self._data.dtype):
+            self._data=np.array([str(value) for value in self._data],dtype=object)
+            self._type="str"
+        else:
+            self._type=str(self._data.dtype)
+    # Get/set attribute
     def attr(self,attribute:str,value=None):
         if value is None:
             return self._attributes[attribute]
@@ -59,6 +68,11 @@ class Vector(Generic[TypeVar("var")]):
     # Getter
     def type(self):
         return self._type
+    # Setter
+    @type.setter
+    def type(self,class_name:str):
+        self._type=class_name
+        self._data=np.array([eval(self._type)(value) for value in self._data],dtype=object)
     # Names
     @property
     # Getter
@@ -289,7 +303,10 @@ class Vector(Generic[TypeVar("var")]):
         elif value==None:
             data=list(self._data)
             data.remove(data[data.index(self._data[index],index)])
-            self._data=np.array(data)
+            try:
+                self._data=np.array([eval(self.type)(value) for value in data],dtype=object)
+            except:
+                raise TypeError("New elements must respect de vectors typing")
             if self.names:
                 self.names.remove(self.names[index])
         else:
