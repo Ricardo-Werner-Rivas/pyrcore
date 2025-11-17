@@ -229,7 +229,7 @@ class Vector(Generic[TypeVar("var")]):
         else:
             raise TypeError("Module operation is not supported for non-numerical values")
     # Divmod
-    def __divmod__(self,value):
+    def __rdivmod__(self,value):
         return value//self,value%self
     # Power
     def __rpow__(self,value):
