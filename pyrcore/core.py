@@ -57,7 +57,7 @@ class Vector(Generic[TypeVar("var")]):
     # Names
     @property
     # Getter
-    def names(self):
+    def names(self)->list|None:
         return self._attributes["names"] if "names" in self._attributes else None
     # Attributes
     @property
@@ -261,15 +261,32 @@ class Vector(Generic[TypeVar("var")]):
     #* INDEXATION
     # Getter
     def __getitem__(self,index):
-        #! Missing name implemention as index (using <list>.index(<value>) method)
-        return self._data[index]
+        if self.names and isinstance(index,str):
+            if index in self.names:
+                return self._data[self.names.index(index)]
+            else:
+                raise IndexError(f"Index \"{index}\" not in vector")
+        else:
+            return self._data[index]
     # Setter
     def __setitem__(self,index,value):
-        if value==None:
+        if self.names and isinstance(index,str):
+            if index in self.names:
+                if value==None:
+                    data=list(self._data)
+                    data.remove(data[self.names.index(index)])
+                    self._data=np.array(data)
+                    self.names.remove(index)
+                else:
+                    self._data[self.names.index(index)]=value
+            else:
+                raise IndexError(f"Index \"{index}\" not in vector")
+        elif value==None:
             data=list(self._data)
-            data.remove(self._data[index])
+            data.remove(data[data.index(self._data[index],index)])
             self._data=np.array(data)
-            #! Missing name removal from "names"
+            if self.names:
+                self.names.remove(self.names[index])
         else:
             self._data[index]=value
     #^ No deleter
