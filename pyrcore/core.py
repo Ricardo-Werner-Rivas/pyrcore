@@ -1,11 +1,13 @@
+#*===============================================================================================================================
 #* LEGEND
 #! Missing
 #* Section
 #^ Important
 # Normal comment
 #// Alternative or deprecated code
+#*===============================================================================================================================
 
-#^ The different types of comments in the legend require the "Colorful Comments Refreshed" extension for VSCode
+#^ The different types of comments require the "Colorful Comments Refreshed" extension for VSCode to be properly distinguished
 
 #* IMPORTS
 import numpy as np
