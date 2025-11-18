@@ -17,7 +17,34 @@ from typing import TypeVar,Generic
 # Create vector class with Generic
 class Vector(Generic[TypeVar("var")]):
     """
-    Replicates R atomic vectors
+    Replicates R atomic vectors.
+    
+    ---
+    Attributes:
+        data (`numpy.array`, Hidden): An array storing all the data in its native Python type (not forced to `numpy` types).
+            Attribute `data` is not multi-type, exactly as R atomic vectors.
+        attributes (`dict`, Hidden): Dictionary storing the R vector attribute "names" and metada introduced by the user.
+        type (`str`, Hidden): String with the type of the elements of the vector.
+    ---
+    
+    ## Methods
+        :attr: *`MethodType`*
+        Gets or sets the value of an attribute
+        :structure: *`MethodType`*
+        Changes the dictionary of attributes and returns the object (`Vector`)
+    ---
+    
+    ## Properties
+    **type**: *`MethodType`*
+    * **Getter**: Gets the hidden attribute `type`.
+    * **Setter**: Changes the type of the values in the vector.
+    
+    **names**: *`MethodType`*
+    
+        **Getter only**. Gets the names of the vector values.
+    **attributes**: *`MethodType`*
+    
+        **Getter only**. Gets the hidden attribute `attributes`.
     """
     #* BASIC METHODS
     # __init__
