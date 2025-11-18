@@ -61,6 +61,8 @@ class Vector(Generic[TypeVar("var")]):
     # Updating attributes
     def structure(self,**attributes):
         self._attributes.update(attributes)
+        if "names" not in self._attributes:
+            self._attributes["names"]=None
         return self
     
     #* PROPERTIES
