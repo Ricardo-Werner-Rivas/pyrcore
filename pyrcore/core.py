@@ -21,7 +21,6 @@ class Vector(Generic[TypeVar("var")]):
     """
     #* BASIC METHODS
     # __init__
-    #^ Provisional
     def __init__(self,data:int|float|str|tuple|list|np.number|np.str_|None=None,**attributes):
         if isinstance(data,(int,float,str,np.number,np.str_)):
             data=[data]
@@ -38,6 +37,8 @@ class Vector(Generic[TypeVar("var")]):
         if None in self._data:
             self._data=np.array([value for value in self._data[self._data!=None]])
         self._attributes=attributes or {}
+        if "names" not in self._attributes:
+            self._attributes["names"]=None
         if self._data.dtype=="object":
             raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
         if "int" in str(self._data.dtype):
@@ -77,7 +78,7 @@ class Vector(Generic[TypeVar("var")]):
     @property
     # Getter
     def names(self)->list|None:
-        return self._attributes["names"] if "names" in self._attributes else None
+        return self._attributes["names"]
     # Attributes
     @property
     # Getter
