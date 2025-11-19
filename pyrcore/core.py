@@ -1,6 +1,7 @@
 #*===============================================================================================================================
 #* LEGEND
 #! Missing
+#? Questions
 #* Section
 #^ Important
 # Normal comment
@@ -15,7 +16,7 @@ from typing import TypeVar,Generic,Any
 
 #* MAIN CLASS
 # Create vector class with Generic
-class Vector(Generic[TypeVar("var")]):
+class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|list|tuple|None")]):
     """
     Replicates R atomic vectors.\n
     This class can be imported for documentation purposes. For vector creation you'll want to use the combination function (`c()`).\n
@@ -39,7 +40,7 @@ class Vector(Generic[TypeVar("var")]):
         * **No deleter**.
     2. **names**: *`MethodType`*
         * **Getter**: Gets the names of the vector values.
-        * **No setter**.
+        * **Setter**: Changes the names of the vector values. Receives an iterable with the new names.
         * **No deleter**.
     3. **attributes**: *`MethodType`*
         * **Getter**: Gets the hidden attribute `attributes`.
@@ -48,24 +49,24 @@ class Vector(Generic[TypeVar("var")]):
     """
     #* BASIC METHODS
     # __init__
-    def __init__(self,data:int|float|str|tuple|list|None=None,**attributes):
+    def __init__(self,data:int|float|str|tuple|list|None,**attributes):
         """
         Arguments:
-            data (`int`|`float`|`str`|`tuple`|`list`|`None`, Optional): Object containing the value/s for the vector.
+            data (`int`|`float`|`str`|`tuple`|`list`|`None`): Object containing the value/s for the vector.
                 For vector creation, combination function (`c()`) is recommended.
             **attributes (`dict`, Optional): Stream of keyword arguments containing the attributes for the vector.
                 Atomic vectors only support attribute "names" and metadata introduced by the user.
         """
         if isinstance(data,(int,float,str,np.number,np.str_)):
             data=[data]
-        elif isinstance(data,(list,np.ndarray)):
+        elif isinstance(data,list):
             pass
         elif data==None:
             data=[]
         else:
             data=list(data)
         if isinstance(data,np.ndarray):
-            self._data=data
+            self._data=np.array([value for value in data])
         else:
             self._data=np.array(data)
         if None in self._data:
@@ -104,10 +105,10 @@ class Vector(Generic[TypeVar("var")]):
         if value is None:
             return self._attributes[attribute]
         elif attribute=="names" and len(value)!=len(self._data):
-            raise ValueError("Given both parameters. Only one expected.")
+            raise ValueError("Number of names should be equal to number of values")
         else:
             self._attributes[attribute]=value
-    # Updating attributes
+    # Update attributes
     def structure(self,atts:dict[str,Any]|None=None,**attributes):
         """
         Updates attributes dictionary. Similar to R `structure` function.
@@ -143,16 +144,24 @@ class Vector(Generic[TypeVar("var")]):
     def type(self,class_name:str):
         self._type=class_name
         self._data=np.array([eval(self._type)(value) for value in self._data],dtype=object)
+    #^ No deleter
     # Names
     @property
     # Getter
-    def names(self)->list|None:
+    def names(self)->list[str]|None:
         return self._attributes["names"]
+    # Setter
+    @names.setter
+    def names(self,names:"list[str]|tuple[str]|Vector[str]"):
+        self._attributes["names"]=names
+    #^ No deleter
     # Attributes
     @property
     # Getter
     def attributes(self):
         return self._attributes
+    #^ No setter
+    #^ No deleter
     
     #* COMPARATIVE METHODS
     # Equality
@@ -403,7 +412,7 @@ class Vector(Generic[TypeVar("var")]):
             return f"<p>c(<br>{",<br>".join(str(value) for value in self._data)}<br>)</p>"
     # Printing (__str__ method)
     def __str__(self):
-        if "names" in self.attributes:
+        if self.names:
             return f"{"\n".join(f"{name}: {str(value)}" for name,value in dict(zip(self.names,self._data)).items())}"
         else:
             return f"{"\t".join(str(value) for value in self._data)}"
