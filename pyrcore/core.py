@@ -279,7 +279,7 @@ class Vector(Generic[TypeVar("var")]):
             raise TypeError("Power operation is not supported for non-numerical values")
     
     #* REFLEXED ARITHMETIC OPERATIONS
-    #! Add support for new data type management
+    #! Add support for newly implemented data type management
     # Addition
     def __radd__(self,value):
         if isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
