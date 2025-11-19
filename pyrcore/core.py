@@ -11,14 +11,14 @@
 
 #* IMPORTS
 import numpy as np
-from typing import TypeVar,Generic
+from typing import TypeVar,Generic,Any
 
 #* MAIN CLASS
 # Create vector class with Generic
 class Vector(Generic[TypeVar("var")]):
     """
-    Replicates R atomic vectors.
-    
+    Replicates R atomic vectors.\n
+    This class can be imported for documentation purposes. For vector creation you'll want to use the combination function (`c()`).\n
     ---
     Attributes:
         data (`numpy.array`, Hidden): An array storing all the data in its native Python type (not forced to `numpy` types).
@@ -26,29 +26,36 @@ class Vector(Generic[TypeVar("var")]):
         attributes (`dict`, Hidden): Dictionary storing the R vector attribute "names" and metada introduced by the user.
         type (`str`, Hidden): String with the type of the elements of the vector.
     ---
-    
-    ## Methods
+    \n## Methods
         :attr: *`MethodType`*
         Gets or sets the value of an attribute
         :structure: *`MethodType`*
         Changes the dictionary of attributes and returns the object (`Vector`)
     ---
-    
-    ## Properties
-    **type**: *`MethodType`*
-    * **Getter**: Gets the hidden attribute `type`.
-    * **Setter**: Changes the type of the values in the vector.
-    
-    **names**: *`MethodType`*
-    
-        **Getter only**. Gets the names of the vector values.
-    **attributes**: *`MethodType`*
-    
-        **Getter only**. Gets the hidden attribute `attributes`.
+    \n## Properties
+    1. **type**: *`MethodType`*
+        * **Getter**: Gets the hidden attribute `type`.
+        * **Setter**: Changes the type of the values in the vector.
+        * **No deleter**.
+    2. **names**: *`MethodType`*
+        * **Getter**: Gets the names of the vector values.
+        * **No setter**.
+        * **No deleter**.
+    3. **attributes**: *`MethodType`*
+        * **Getter**: Gets the hidden attribute `attributes`.
+        * **No setter**.
+        * **No deleter**.
     """
     #* BASIC METHODS
     # __init__
-    def __init__(self,data:int|float|str|tuple|list|np.number|np.str_|None=None,**attributes):
+    def __init__(self,data:int|float|str|tuple|list|None=None,**attributes):
+        """
+        Arguments:
+            data (`int`|`float`|`str`|`tuple`|`list`|`None`, Optional): Object containing the value/s for the vector.
+                For vector creation, combination function (`c()`) is recommended.
+            **attributes (`dict`, Optional): Stream of keyword arguments containing the attributes for the vector.
+                Atomic vectors only support attribute "names" and metadata introduced by the user.
+        """
         if isinstance(data,(int,float,str,np.number,np.str_)):
             data=[data]
         elif isinstance(data,(list,np.ndarray)):
@@ -66,7 +73,9 @@ class Vector(Generic[TypeVar("var")]):
         self._attributes=attributes or {}
         if "names" not in self._attributes:
             self._attributes["names"]=None
-        if self._data.dtype=="object":
+        elif len(self._attributes["names"])!=len(self._data):
+            raise IndexError("List of names has different length than the data.")
+        if self._data.dtype=="object" and self._data!=np.array([]):
             raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
         if "int" in str(self._data.dtype):
             self._data=np.array([int(value) for value in data],dtype=object)
@@ -80,16 +89,47 @@ class Vector(Generic[TypeVar("var")]):
         else:
             self._type=str(self._data.dtype)
     # Get/set attribute
-    def attr(self,attribute:str,value=None):
+    def attr(self,attribute:str,value:Any=None):
+        """
+        Gets an the value of an attribute if `value` not provided.\n
+        If `value` is provided, attribute is set to that value.\n
+        ---
+        Arguments:
+            attribute (`str`): Attribute to get or set.
+            value (`Any`|`None`, Optional): New value of the attribute.
+        ---
+        Returns:
+            Any: Value of the fetched attribute (if `value` not given).
+        """
         if value is None:
             return self._attributes[attribute]
+        elif attribute=="names" and len(value)!=len(self._data):
+            raise ValueError("Given both parameters. Only one expected.")
         else:
             self._attributes[attribute]=value
     # Updating attributes
-    def structure(self,**attributes):
+    def structure(self,atts:dict[str,Any]|None=None,**attributes):
+        """
+        Updates attributes dictionary. Similar to R `structure` function.
+        Returns the `Vector` object.\n
+        ---
+        Arguments:
+            atts (`dict[str|Any]`|`None`, Optional): Dictionary with the attributes changes.
+            **attributes (Optional): Stream of attributes introduced manually.
+        Both cannot be introduced at the same time.\n
+        ---
+        Returns:
+            Vector: Returns the `Vector` object with the updated attributes.
+        """
+        if atts and attributes:
+            raise ValueError("Given both parameters. Only one expected.")
+        else:
+            attributes=attributes or atts
         self._attributes.update(attributes)
         if "names" not in self._attributes:
             self._attributes["names"]=None
+        elif len(self._attributes["names"])!=len(self._data):
+            raise IndexError("List of names has different length than the data.")
         return self
     
     #* PROPERTIES
