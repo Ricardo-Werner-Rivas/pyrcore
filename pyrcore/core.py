@@ -196,70 +196,70 @@ class Vector(Generic[TypeVar("var")]):
     # Addition
     def __add__(self,value):
         if isinstance(value,Vector):
-            if isinstance(value._data[0],np.number) and isinstance(self._data[0],np.number):
+            if value.type in "int float".split() and self.type in "int float".split():
                 return Vector(self._data+value._data)
-            elif isinstance(value._data[0],np.str_) and isinstance(self._data[0],np.str_):
+            elif value.type=="str" and self.type=="str":
                 return Vector(self._data+value._data)
             else:
                 raise TypeError("Addition only available for vectors and values of matching supported types")
-        elif isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        elif isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(self._data+value)
-        elif isinstance(value,str) and isinstance(self._data[0],np.str_):
+        elif isinstance(value,(str,np.str_)) and self.type=="str":
             return Vector(self._data+value)
         else:
             raise TypeError("Addition only available for vectors and values of matching supported types")
     # Difference
     def __sub__(self,value):
         if isinstance(value,Vector):
-            if isinstance(value._data[0],np.number) and isinstance(self._data[0],np.number):
+            if value.type in "int float".split() and self.type in "int float".split():
                 return Vector(self._data-value._data)
             else:
                 raise TypeError("Difference not supported for non-numerical values")
-        elif isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        elif isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(self._data-value)
         else:
             raise TypeError("Difference not supported for non-numerical values")
     # Product
     def __mul__(self,value):
         if isinstance(value,Vector):
-            if isinstance(value._data[0],np.number) and isinstance(self._data[0],np.number):
+            if value.type in "int float".split() and self.type in "int float".split():
                 return Vector(self._data*value._data)
             else:
                 raise TypeError("Multiplication not supported for non-numerical values")
-        elif isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        elif isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(self._data*value)
         else:
             raise TypeError("Multiplication not supported for non-numerical values")
     # Fraction
     def __truediv__(self,value):
         if isinstance(value,Vector):
-            if isinstance(value._data[0],np.number) and isinstance(self._data[0],np.number):
+            if value.type in "int float".split() and self.type in "int float".split():
                 return Vector(self._data/value._data)
             else:
                 raise TypeError("Fraction not supported for non-numerical values")
-        elif isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        elif isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(self._data/value)
         else:
             raise TypeError("Fraction not supported for non-numerical values")
     # Floor division (integer result)
     def __floordiv__(self,value):
         if isinstance(value,Vector):
-            if isinstance(value._data[0],np.number) and isinstance(self._data[0],np.number):
+            if value.type in "int float".split() and self.type in "int float".split():
                 return Vector(self._data//value._data)
             else:
                 raise TypeError("Integer division not supported for non-numerical values")
-        elif isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        elif isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(self._data//value)
         else:
             raise TypeError("Integer division not supported for non-numerical values")
     # Module
     def __mod__(self,value):
         if isinstance(value,Vector):
-            if isinstance(value._data[0],np.number) and isinstance(self._data[0],np.number):
+            if value.type in "int float".split() and self.type in "int float".split():
                 return Vector(self._data%value._data)
             else:
                 raise TypeError("Module operation is not supported for non-numerical values")
-        elif isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        elif isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(self._data%value)
         else:
             raise TypeError("Module operation is not supported for non-numerical values")
@@ -269,52 +269,51 @@ class Vector(Generic[TypeVar("var")]):
     # Power
     def __pow__(self,value):
         if isinstance(value,Vector):
-            if isinstance(value._data[0],np.number) and isinstance(self._data[0],np.number):
+            if value.type in "int float".split() and self.type in "int float".split():
                 return Vector(self._data**value._data)
             else:
                 raise TypeError("Power operation is not supported for non-numerical values")
-        elif isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        elif isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(self._data**value)
         else:
             raise TypeError("Power operation is not supported for non-numerical values")
     
     #* REFLEXED ARITHMETIC OPERATIONS
-    #! Add support for newly implemented data type management
     # Addition
     def __radd__(self,value):
-        if isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        if isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(value+self._data)
-        elif isinstance(value,str) and isinstance(self._data[0],np.str_):
+        elif isinstance(value,(str,np.str_)) and self.type=="str":
             return Vector(value+self._data)
         else:
             raise TypeError("Addition only available for vectors and values of matching supported types")
     # Difference
     def __rsub__(self,value):
-        if isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        if isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(value-self._data)
         else:
             raise TypeError("Difference not supported for non-numerical values")
     # Product
     def __rmul__(self,value):
-        if isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        if isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(value*self._data)
         else:
             raise TypeError("Multiplication not supported for non-numerical values")
     # Fraction
     def __rtruediv__(self,value):
-        if isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        if isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(value/self._data)
         else:
             raise TypeError("Fraction not supported for non-numerical values")
     # Integer division
     def __rfloordiv__(self,value):
-        if isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        if isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(value//self._data)
         else:
             raise TypeError("Integer division not supported for non-numerical values")
     # Module
     def __rmod__(self,value):
-        if isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        if isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(value%self._data)
         else:
             raise TypeError("Module operation is not supported for non-numerical values")
@@ -323,7 +322,7 @@ class Vector(Generic[TypeVar("var")]):
         return value//self,value%self
     # Power
     def __rpow__(self,value):
-        if isinstance(value,(int,float,np.number)) and isinstance(self._data[0],np.number):
+        if isinstance(value,(int,float,np.number)) and self.type in "int float".split():
             return Vector(value**self._data)
         else:
             raise TypeError("Power operation is not supported for non-numerical values")
@@ -331,19 +330,19 @@ class Vector(Generic[TypeVar("var")]):
     #* UNARY METHODS
     # Negative
     def __neg__(self):
-        if isinstance(self._data[0],np.number):
+        if self.type in "int float".split():
             return Vector(-self._data)
         else:
             raise TypeError(f"Negative unary method only available for numeric vectors, not {self.type} type vectors")
     # Positive
     def __pos__(self):
-        if isinstance(self._data[0],np.number):
+        if self.type in "int float".split():
             return Vector(+self._data)
         else:
             raise TypeError(f"Positive unary method only available for numeric vectors, not {self.type} type vectors")
     # Absolute value
     def __abs__(self):
-        if isinstance(self._data[0],np.number):
+        if self.type in "int float".split():
             return Vector(abs(self._data))
         else:
             raise TypeError(f"Absolute value unary method only available for numeric vectors, not {self.type} type vectors")
