@@ -20,8 +20,8 @@ pip install pyrcore
 |R `mts` class|❌|❌|
 |`ts()` function|❌|❌|
 ## Intended features
-* Support for R atomic vectors &rarr; Implemented in [TestPyPI](https://github.com/Ricardo-Werner-Rivas/pyrcore/tree/TestPyPI)
-* Support for combination function `c()` &rarr; Implemented in [TestPyPI](https://github.com/Ricardo-Werner-Rivas/pyrcore/tree/TestPyPI)
+* Support for R atomic vectors
+* Support for combination function `c()`
 * Support for R matrixes
 * Support for `matrix()` R function
 * Support for R `ts` class (time series)
