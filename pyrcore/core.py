@@ -17,7 +17,7 @@ from typing import TypeVar,Generic,Any
 
 #* MAIN CLASS
 # Create vector class with Generic
-class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|list|tuple|None")]):
+class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|None")]):
     """
     Replicates R atomic vectors.\n
     This class can be imported for documentation purposes. For vector creation you'll want to use the combination function (`c()`).\n
@@ -50,10 +50,10 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|list|tuple|N
     """
     #* BASIC METHODS
     # __init__
-    def __init__(self,data:int|float|str|tuple|list|None,**attributes):
+    def __init__(self,data:int|float|np.number|str|np.str_|tuple|list|None,**attributes):
         """
         Arguments:
-            data (`int`|`float`|`str`|`tuple`|`list`|`None`): Object containing the value/s for the vector.
+            data (`int`|`float`|`numpy.number`|`str`|`numpy.str_`|`tuple`|`list`|`None`): Object containing the value/s for the vector.
                 For vector creation, combination function (`c()`) is recommended.
             **attributes (`dict`, Optional): Stream of keyword arguments containing the attributes for the vector.
                 Atomic vectors only support attribute "names" and metadata introduced by the user.
