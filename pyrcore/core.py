@@ -404,7 +404,20 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
     # HTML representation
     def _repr_html_(self):
         if self.names:
-            return f"<p>{"&emsp;·&emsp;".join(f"{name}={str(value)}" for name,value in dict(zip(self.names,self._data)).items())}</p>"
+            headers=[f"<th>{name}</th>" for name in self.names]
+            values=[f"<td>{value}</td>" for value in self._data]
+            return f"""
+            <table>
+                <thead>
+                    <tr>
+                        {"\n".join(headers)}
+                    </tr>
+                </thead>
+                <tr>
+                    {"\n".join(values)}
+                </tr>
+            </table>
+            """
         else:
             return f"<p>{"&emsp;·&emsp;".join(str(value) for value in self._data)}</p>"
     # Printing (__str__ method)
