@@ -72,10 +72,8 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
             self._data=np.array(data)
         if None in self._data:
             self._data=np.array([value for value in self._data[self._data!=None]])
-        self._attributes=attributes or {}
-        if "names" not in self._attributes:
-            self._attributes["names"]=None
-        elif len(self._attributes["names"])!=len(self._data):
+        self._attributes=attributes or {"names":[]}
+        if len(self._attributes["names"])>0!=len(self._data):
             raise IndexError("List of names has different length than the data.")
         if self._data.dtype=="object" and self._data!=np.array([]):
             raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
@@ -128,9 +126,7 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
         else:
             attributes=attributes or atts
         self._attributes.update(attributes)
-        if "names" not in self._attributes:
-            self._attributes["names"]=None
-        elif len(self._attributes["names"])!=len(self._data):
+        if len(self._attributes["names"])>0!=len(self._data):
             raise IndexError("List of names has different length than the data.")
         return self
     

@@ -63,6 +63,7 @@ def c(*data:list,**named_data:dict[str,])->Vector:
                     Please report this in the issues page: https://github.com/Ricardo-Werner-Rivas/pyrcore/issues
                     
                     Include the following message, raised by the error, in your report:
-                    \"{excep}\""""
+                    \"{excep}\"
+                    \nThank you for your help."""
                 ) from None
         return Vector(data_list,names=names)
