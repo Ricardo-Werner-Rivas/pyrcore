@@ -36,7 +36,7 @@ def c(*data:list,**named_data:dict[str,])->Vector:
         return Vector(None)
     else:
         names=list(named_data.keys()) if named_data else None
-        data=data or named_data
+        data=data or list(named_data.values())
         data_list=[]
         for value in data:
             if isinstance(value,np.generic):
