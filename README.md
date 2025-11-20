@@ -9,8 +9,12 @@ You can install the latest development version of the `pyrcore` package from **T
 ```powershell
 pip install -i https://test.pypi.org/simple/ pyrcore --no-deps
 ```
+## Current features
+* Support for R atomic vectors
+* Support for combination function `c()`
 ## Intended features
-* Support for R atomic vectors and combination function `c()`
+* ~~Support for R atomic vectors~~
+* ~~Support for combination function `c()`~~
 * Support for R matrixes
 * Support for R `ts` class (time series)
 * Support for R `mts` class (multivariate time series)
