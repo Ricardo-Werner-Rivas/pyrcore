@@ -72,20 +72,20 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
             self._data=np.array(data)
         if None in self._data:
             self._data=np.array([value for value in self._data[self._data!=None]])
-        self._attributes=attributes or {"names":[]}
-        if len(self._attributes["names"])>0!=len(self._data):
+        self._attributes=attributes or {"names":None}
+        if self._attributes["names"] and len(self._attributes["names"])!=len(self._data):
             raise IndexError("List of names has different length than the data.")
         if self._data.dtype=="object" and self._data!=np.array([]):
             raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
         if "int" in str(self._data.dtype):
             self._data=np.array([int(value) for value in data],dtype=object)
-            self._type="int"
+            self._type=int
         elif "float" in str(self._data.dtype):
             self._data=np.array([float(value) for value in self._data],dtype=object)
-            self._type="float"
+            self._type=float
         elif "str" in str(self._data.dtype) or "<U" in str(self._data.dtype):
             self._data=np.array([str(value) for value in self._data],dtype=object)
-            self._type="str"
+            self._type=str
         else:
             self._type=str(self._data.dtype)
     # Get/set attribute
@@ -126,7 +126,7 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
         else:
             attributes=attributes or atts
         self._attributes.update(attributes)
-        if len(self._attributes["names"])>0!=len(self._data):
+        if self._attributes["names"] and len(self._attributes["names"])!=len(self._data):
             raise IndexError("List of names has different length than the data.")
         return self
     
@@ -149,7 +149,7 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
         return self._attributes["names"]
     # Setter
     @names.setter
-    def names(self,names:"list[str]|tuple[str]|Vector[str]"):
+    def names(self,names:"list[str]|tuple[str]|Vector[str]|None"):
         self._attributes["names"]=names
     #^ No deleter
     # Attributes
@@ -404,9 +404,9 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
     # HTML representation
     def _repr_html_(self):
         if self.names:
-            return f"<p>c(<br>{",<br>".join(f"{name}={str(value)}" for name,value in dict(zip(self.names,self._data)).items())}<br>)</p>"
+            return f"<p>{"&emsp;·&emsp;".join(f"{name}={str(value)}" for name,value in dict(zip(self.names,self._data)).items())}</p>"
         else:
-            return f"<p>c(<br>{",<br>".join(str(value) for value in self._data)}<br>)</p>"
+            return f"<p>{"&emsp;·&emsp;".join(str(value) for value in self._data)}</p>"
     # Printing (__str__ method)
     def __str__(self):
         if self.names:
