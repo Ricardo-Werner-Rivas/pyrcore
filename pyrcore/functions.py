@@ -1,13 +1,13 @@
-#*=============================================================================================================================
+#*==============================================================================================================================
 #* LEGEND
-#*-----------------------------------------------------------------------------------------------------------------------------
+#*------------------------------------------------------------------------------------------------------------------------------
 #! Missing
 #? Questions
 #* Section
 #^ Important
 # Normal comment
 #// Alternative or deprecated code
-#*=============================================================================================================================
+#*==============================================================================================================================
 
 #^ The different types of comments require the "Colorful Comments Refreshed" extension for VSCode to be properly distinguished
 
@@ -25,7 +25,7 @@ def c(*data:list,**named_data:dict[str,])->Vector:
     ---
     Arguments:
         *data (`list`): Stream of unnamed values for the vector.
-        **named_data (`dict`): Stream of named values for the vector. They are passed as keyword arguments.
+        **named_data (`dict[str,Any]`): Stream of named values for the vector. They are passed as keyword arguments.
     ---
     Returns:
         Vector: Atomic vector "Rlike".
