@@ -9,9 +9,21 @@ You can install the `pyrcore` package from **PyPI** like so:
 ```powershell
 pip install pyrcore
 ```
+## Current features
+|Feature|PyPI|TestPyPI|
+|-------|----|--------|
+|R atomic vectors|❌|✅|
+|Combination function `c()`|❌|✅|
+|R matrixes|❌|❌|
+|`matrix()` function|❌|❌|
+|R `ts` class|❌|❌|
+|R `mts` class|❌|❌|
+|`ts()` function|❌|❌|
 ## Intended features
-* Support for R atomic vectors and combination function `c()`
+* Support for R atomic vectors &rarr; Implemented in [TestPyPI](https://github.com/Ricardo-Werner-Rivas/pyrcore/tree/TestPyPI)
+* Support for combination function `c()` &rarr; Implemented in [TestPyPI](https://github.com/Ricardo-Werner-Rivas/pyrcore/tree/TestPyPI)
 * Support for R matrixes
+* Support for `matrix()` R function
 * Support for R `ts` class (time series)
 * Support for R `mts` class (multivariate time series)
 * Support for R `ts()` function
