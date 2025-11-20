@@ -50,9 +50,4 @@ To merge branches properly with PyPI branch in your cloned repository, you will 
 git config merge.keepPyPIFiles.name "Keep README.md and setup.cfg from PyPI branch on merge"
 git config merge.keepPyPIFiles.driver "bash -c 'cp $(git rev-parse --show-toplevel)/$3 $2'"
 ```
-Or in your git bash terminal:
-```bash
-git config merge.keepPyPIFiles.name "Keep README.md and setup.cfg from PyPI branch on merge"
-git config merge.keepPyPIFiles.driver "bash -c 'cp $(git rev-parse --show-toplevel)/$3 $2'"
-```
 This way, `README.md` and `setup.cfg` files will not be overwritten in the PyPI branch.
