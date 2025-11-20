@@ -23,7 +23,7 @@ At the moment, this project depends on `numpy` for core functionalities and `pan
 This project will **NOT** depend on `pandas` for <ins>**core functionalities**</ins>.
 ## Contribution
 This project is part of my <ins>Final Degree Project</ins> (in spanish: *Trabajo de Fin de Grado* or *TFG*), so I won't be accepting contributions to this repository until the project is finished and defended.
-However, no rule forbids me to learn from other people, so I'll be reading pull requests from forked repositories, but I will code any changes myself.
+However, no rule forbids me to learn from other people, so I'll be reading pull requests from forked repositories, but I will code any changes myself. I will not incorporate any changes that I don't understand.
 
 Once the project is defended, contributions will be open. To contribute, fork this repository and clone it locally.
 
