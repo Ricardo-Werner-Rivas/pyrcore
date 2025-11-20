@@ -2,6 +2,7 @@
 #* LEGEND
 #*------------------------------------------------------------------------------------------------------------------------------
 #! Missing
+#& Missing unimportant
 #? Questions
 #* Section
 #^ Important
@@ -20,6 +21,7 @@ import numpy as np
 #* FUNCTIONS
 # Combination function (c(), for vector creation)
 def c(*data:list,**named_data:dict[str,])->Vector:
+    #& Missing comments for code
     """
     Creates an atomic vector like in R. The returned object if a `Vector` instance.\n
     ---
