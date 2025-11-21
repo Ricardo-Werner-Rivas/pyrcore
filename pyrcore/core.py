@@ -54,7 +54,7 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
     """
     #* BASIC METHODS
     # __init__
-    def __init__(self,data:int|float|np.number|str|np.str_|tuple|list|None,**attributes):
+    def __init__(self,data:int|float|np.number|str|np.str_|tuple|list|None=None,**attributes):
         """
         Arguments:
             data (`int`|`float`|`numpy.number`|`str`|`numpy.str_`|`tuple`|`list`|`None`): Object containing the value/s for the vector.
