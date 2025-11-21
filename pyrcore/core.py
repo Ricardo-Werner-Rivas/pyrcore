@@ -54,15 +54,15 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
     """
     #* BASIC METHODS
     # __init__
-    def __init__(self,data:int|float|np.number|str|np.str_|tuple|list|None=None,**attributes):
+    def __init__(self,data:int|float|np.number|str|np.str_|bool|np.bool|tuple|list|None=None,**attributes):
         """
         Arguments:
-            data (`int`|`float`|`numpy.number`|`str`|`numpy.str_`|`tuple`|`list`|`None`): Object containing the value/s for the vector.
+            data (`int`|`float`|`numpy.number`|`str`|`numpy.str_`|`bool`|`np.bool`|`tuple`|`list`|`None`): Object containing the value/s for the vector.
                 For vector creation, combination function (`c()`) is recommended.
             **attributes (`dict`, Optional): Stream of keyword arguments containing the attributes for the vector.
                 Atomic vectors only support attribute "names" and metadata introduced by the user.
         """
-        if isinstance(data,(int,float,str,np.number,np.str_)):
+        if isinstance(data,(int,float,str,bool,np.number,np.str_,np.bool)):
             data=[data]
         elif isinstance(data,list):
             pass
