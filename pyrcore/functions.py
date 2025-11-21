@@ -22,7 +22,6 @@ import numpy as np
 # Combination function (c(), for vector creation)
 def c(*data:list,numpy:bool=False,**named_data:dict[str,])->Vector:
     #& Missing comments for code
-    #^ REVISE TRANSFORMATION PROCESS TO AVOID DOUBLE APPLICATION
     """
     Creates an atomic vector like in R. The returned object if a `Vector` instance.\n
     ---
@@ -52,7 +51,7 @@ def c(*data:list,numpy:bool=False,**named_data:dict[str,])->Vector:
         # Prepare the data to vectorize it
         for value in data:
             # If data is to be set to Python native types and it is in NumPy types
-            if isinstance(value,np.generic) and not numpy:
+            if isinstance(value,(np.generic,np.ndarray)) and not numpy:
                 # If value is an array
                 if isinstance(value,np.ndarray):
                     # List its values in Python native types
