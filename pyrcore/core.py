@@ -13,12 +13,15 @@
 #^ The different types of comments require the "Colorful Comments Refreshed" extension for VSCode to be properly distinguished
 
 #* IMPORTS
+# NumPy
 import numpy as np
+# TypeVar,Generic,Any
 from typing import TypeVar,Generic,Any
 
 #* MAIN CLASS
 # Create vector class with Generic
 class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|None")]):
+    #& Missing code comments
     """
     Replicates R atomic vectors.\n
     This class can be imported for documentation purposes. For vector creation you'll want to use the combination function (`c()`).\n
