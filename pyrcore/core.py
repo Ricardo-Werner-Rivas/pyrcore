@@ -79,7 +79,7 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
         self._attributes=attributes or {"names":None}
         if self._attributes["names"] and len(self._attributes["names"])!=len(self._data):
             raise IndexError("List of names has different length than the data.")
-        if self._data.dtype=="object" and self._data!=np.array([]):
+        if self._data.dtype=="object":
             raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
         if "int" in str(self._data.dtype):
             self._data=np.array([int(value) for value in data],dtype=object)
