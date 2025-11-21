@@ -27,9 +27,9 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
     This class can be imported for documentation purposes. For vector creation you'll want to use the combination function (`c()`).\n
     ---
     Attributes:
-        data (`numpy.array`, Hidden): An array storing all the data in its native Python type (not forced to `numpy` types).
+        data (`numpy.array`, Hidden): A *NumPy* array storing all the data in its native Python type (not forced to `numpy` types).
             Attribute `data` is not multi-type, exactly as R atomic vectors.
-        attributes (`dict`, Hidden): Dictionary storing the R vector attribute "names" and metada introduced by the user.
+        attributes (`dict`, Hidden): Dictionary storing the R vector attribute `"names"` and metada introduced by the user.
         type (`str`, Hidden): String with the type of the elements of the vector.
     ---
     \n## Methods
@@ -54,11 +54,13 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
     """
     #* BASIC METHODS
     # __init__
-    def __init__(self,data:int|float|np.number|str|np.str_|bool|np.bool|tuple|list|None=None,**attributes):
+    def __init__(self,data:int|float|np.number|str|np.str_|bool|np.bool|tuple|list|None=None,*,numpy:bool=False,**attributes):
         """
         Arguments:
-            data (`int`|`float`|`numpy.number`|`str`|`numpy.str_`|`bool`|`np.bool`|`tuple`|`list`|`None`): Object containing the value/s for the vector.
+            data (`int`|`float`|`numpy.number`|`str`|`numpy.str_`|`bool`|`numpy.bool`|`tuple`|`list`|`None`, Optional): Object containing the value/s for the vector.
                 For vector creation, combination function (`c()`) is recommended.
+            numpy (`bool`, Optional): Tells wether if values are set to be in native Python types (`False`) or to *NumPy* types (`True`).
+                Set to `False` by default.
             **attributes (`dict`, Optional): Stream of keyword arguments containing the attributes for the vector.
                 Atomic vectors only support attribute "names" and metadata introduced by the user.
         """
@@ -81,17 +83,19 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
             raise IndexError("List of names has different length than the data.")
         if self._data.dtype=="object":
             raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
-        if "int" in str(self._data.dtype):
-            self._data=np.array([int(value) for value in data],dtype=object)
-            self._type=int
-        elif "float" in str(self._data.dtype):
-            self._data=np.array([float(value) for value in self._data],dtype=object)
-            self._type=float
-        elif "str" in str(self._data.dtype) or "<U" in str(self._data.dtype):
-            self._data=np.array([str(value) for value in self._data],dtype=object)
-            self._type=str
-        else:
-            self._type=str(self._data.dtype)
+        self._type=str(self._data.dtype)
+        if not numpy:
+            if "int" in str(self._data.dtype):
+                self._data=np.array([int(value) for value in data],dtype=object)
+                self._type=int
+            elif "float" in str(self._data.dtype):
+                self._data=np.array([float(value) for value in self._data],dtype=object)
+                self._type=float
+            elif isinstance(self._data[0],np.str_):
+                self._data=np.array([str(value) for value in self._data],dtype=object)
+                self._type=str
+            else:
+                self._type=str(self._data.dtype)
     # Get/set attribute
     def attr(self,attribute:str,value=None):
         """
