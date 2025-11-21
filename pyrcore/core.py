@@ -16,7 +16,7 @@
 # NumPy
 import numpy as np
 # TypeVar,Generic,Any
-from typing import TypeVar,Generic
+from typing import TypeVar,Generic,Any
 
 #* MAIN CLASS
 # Create vector class with Generic
@@ -93,7 +93,7 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
         else:
             self._type=str(self._data.dtype)
     # Get/set attribute
-    def attr(self,attribute:str,value=None):
+    def attr(self,attribute:str,value:Any=None):
         """
         Gets an the value of an attribute if `value` not provided.\n
         If `value` is provided, attribute is set to that value.\n
@@ -112,7 +112,7 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
         else:
             self._attributes[attribute]=value
     # Update attributes
-    def structure(self,atts:dict[str,]|None=None,**attributes):
+    def structure(self,atts:dict[str,Any]|None=None,**attributes):
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `Vector` object.\n
