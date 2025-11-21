@@ -64,18 +64,19 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
             **attributes (`dict`, Optional): Stream of keyword arguments containing the attributes for the vector.
                 Atomic vectors only support attribute "names" and metadata introduced by the user.
         """
-        if isinstance(data,list):
-            pass
-        elif isinstance(data,(int,float,str,bool,np.number,np.str_,np.bool)):
-            data=[data]
-        elif data==None:
-            data=[]
-        else:
-            data=list(data)
-        if isinstance(data,np.ndarray):
-            self._data=np.array([value for value in data])
-        else:
-            self._data=np.array(data)
+        #// if isinstance(data,list):
+        #//     pass
+        #// elif isinstance(data,(int,float,str,bool,np.number,np.str_,np.bool)):
+        #//     data=[data]
+        #// elif data==None:
+        #//     data=[]
+        #// else:
+        #//     data=list(data)
+        #// if isinstance(data,np.ndarray):
+        #//     self._data=np.array([value for value in data])
+        #// else:
+        #//     self._data=np.array(data)
+        self._data=np.array(data)
         if None in self._data:
             self._data=np.array([value for value in self._data[self._data!=None]])
         self._attributes=attributes or {"names":None}
