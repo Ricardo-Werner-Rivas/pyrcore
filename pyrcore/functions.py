@@ -23,7 +23,6 @@ import numpy as np
 def c(*data:list,numpy:bool=False,**named_data:dict[str,])->Vector:
     #& Missing comments for code
     #^ REVISE TRANSFORMATION PROCESS TO AVOID DOUBLE APPLICATION
-    #! Missing "NumPy" argument implementation
     """
     Creates an atomic vector like in R. The returned object if a `Vector` instance.\n
     ---
@@ -87,4 +86,4 @@ def c(*data:list,numpy:bool=False,**named_data:dict[str,])->Vector:
                     \"{excep}\"
                     \nThank you for your help."""
                 ) from None
-        return Vector(data_list,names=names)
+        return Vector(data_list,names=names,numpy=numpy)
