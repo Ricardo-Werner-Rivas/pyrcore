@@ -20,34 +20,53 @@ import numpy as np
 
 #* FUNCTIONS
 # Combination function (c(), for vector creation)
-def c(*data:list,**named_data:dict[str,])->Vector:
+def c(*data:list,numpy:bool=False,**named_data:dict[str,])->Vector:
     #& Missing comments for code
+    #^ REVISE TRANSFORMATION PROCESS TO AVOID DOUBLE APPLICATION
+    #! Missing "NumPy" argument implementation
     """
     Creates an atomic vector like in R. The returned object if a `Vector` instance.\n
     ---
     Arguments:
         *data (`list`): Stream of unnamed values for the vector.
+        numpy (`bool`, Optional): Tells wether if values in the vector are to be set to native Python types (`False`) or to *NumPy* types (`True`).
+                Set to `False` (**Python** types) by default.
         **named_data (`dict[str,Any]`): Stream of named values for the vector. They are passed as keyword arguments.
     ---
     Returns:
-        Vector: Atomic vector "Rlike".
+        Vector: Atomic vector "R-like".
     """
+    # Raise error if both named and unnamed data are given
     if data and named_data:
         raise ValueError("Vector cannot store both named and unnamed data")
+    # Return empty vector if no data was introduced
     elif not data and not named_data:
-        return Vector(None)
+        return Vector()
+    # In the rest of cases (*data or **named_data)
     else:
-        names=list(named_data.keys()) if named_data else None
+        # Store the names
+        names=list(named_data.keys()) if named_data else None # If no names, then store None
+        # Prepare the passed data
         data=data or list(named_data.values())
+        # Empty list to store the data
         data_list=[]
+        # Prepare the data to vectorize it
         for value in data:
-            if isinstance(value,np.generic):
+            # If data is to be set to Python native types and it is in NumPy types
+            if isinstance(value,np.generic) and not numpy:
+                # If value is an array
                 if isinstance(value,np.ndarray):
+                    # List its values in Python native types
                     value=[item.item() for item in value]
+                # Else
                 else:
+                    # Put its Python equivalent in a list
                     value=[value.item()]
+            # Else, if value is a dictionary
             elif isinstance(value,dict):
+                # Take its values
                 value=list(value.values())
+            # Else, 
             elif isinstance(value,Vector):
                 value=[item for item in value._data]
             elif not isinstance(value,(list,tuple)):
