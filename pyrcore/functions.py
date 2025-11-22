@@ -27,7 +27,7 @@ def c(*data:list,numpy:bool=False,**named_data:dict[str,])->Vector:
     ---
     Arguments:
         *data (`list`): Stream of unnamed values for the vector.
-        numpy (`bool`, Optional): Tells wether if values in the vector are to be set to native Python types (`False`) or to *NumPy* types (`True`).
+        numpy (`bool`, Optional): Tells wether if values in the vector are to be set to native Python types (`False`) or to be kept in *NumPy* types (`True`).
                 Set to `False` (**Python** types) by default.
         **named_data (`dict[str,Any]`): Stream of named values for the vector. They are passed as keyword arguments.
     ---
@@ -50,16 +50,25 @@ def c(*data:list,numpy:bool=False,**named_data:dict[str,])->Vector:
         data_list=[]
         # Prepare the data to vectorize it
         for value in data:
+            # Initialize data_type
+            data_type=None
             # If data is to be set to Python native types and it is in NumPy types
             if isinstance(value,(np.generic,np.ndarray)) and not numpy:
                 # If value is an array
                 if isinstance(value,np.ndarray):
-                    # List its values in Python native types
-                    value=[item.item() for item in value]
+                    # Try listing
+                    try:
+                        # List its values in Python native types
+                        value=[item.item() for item in value]
+                    # If array is 0-dimensional
+                    except TypeError:
+                        value=[value.item()]
+                        data_type=str(type(value[0]))
                 # Else
                 else:
                     # Put its Python equivalent in a list
                     value=[value.item()]
+                    data_type=str(type(value[0]))
             # Else, if value is a dictionary
             elif isinstance(value,dict):
                 # Take its values
@@ -68,12 +77,17 @@ def c(*data:list,numpy:bool=False,**named_data:dict[str,])->Vector:
             elif isinstance(value,Vector):
                 value=[item for item in value._data]
             elif not isinstance(value,(list,tuple)):
-                value=[value]
+                try:
+                    value=list(value)
+                except TypeError:
+                    value=[value]
+                    data_type=str(type(value[0]))
             data_list.extend(value)
             try:
                 Vector(data_list)
             except TypeError:
-                data_type=str(type(value))
+                if not data_type:
+                    data_type=str(type(value))
                 data_type=data_type[data_type.find("'")+1:data_type.rfind("'")]
                 raise TypeError(f"Data type \"{data_type}\" not supported for atomic vectors") from None
             except Exception as excep:
