@@ -20,7 +20,7 @@ import numpy as np
 
 #* FUNCTIONS
 # Combination function (c(), for vector creation)
-def c(*data:list,numpy:bool=False,**named_data:dict[str,])->Vector:
+def c(*data:list,**named_data:dict[str,])->Vector:
     #& Missing comments for code
     """
     Creates an atomic vector like in R. The returned object if a `Vector` instance.\n
@@ -53,7 +53,7 @@ def c(*data:list,numpy:bool=False,**named_data:dict[str,])->Vector:
             # Initialize data_type
             data_type=None
             # If data is to be set to Python native types and it is in NumPy types
-            if isinstance(value,(np.generic,np.ndarray)) and not numpy:
+            if isinstance(value,(np.generic,np.ndarray)):
                 # If value is an array
                 if isinstance(value,np.ndarray):
                     # Try listing
@@ -99,4 +99,4 @@ def c(*data:list,numpy:bool=False,**named_data:dict[str,])->Vector:
                     \"{excep}\"
                     \nThank you for your help."""
                 ) from None
-        return Vector(data_list,names=names,numpy=numpy)
+        return Vector(data_list,names=names)

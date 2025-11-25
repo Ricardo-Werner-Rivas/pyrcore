@@ -54,13 +54,11 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
     """
     #* BASIC METHODS
     # __init__
-    def __init__(self,data:int|float|np.number|str|np.str_|bool|np.bool|tuple|list|None=None,*,numpy:bool=False,**attributes):
+    def __init__(self,data:int|float|np.number|str|np.str_|bool|np.bool|tuple|list|None=None,**attributes):
         """
         Arguments:
             data (`int`|`float`|`numpy.number`|`str`|`numpy.str_`|`bool`|`numpy.bool`|`tuple`|`list`|`None`, Optional): Object containing the value/s for the vector.
                 For vector creation, combination function (`c()`) is recommended.
-            numpy (`bool`, Optional): Tells wether if values are set to be in native Python types (`False`) or to *NumPy* types (`True`).
-                Set to `False` by default.
             **attributes (`dict`, Optional): Stream of keyword arguments containing the attributes for the vector.
                 Atomic vectors only support attribute "names" and metadata introduced by the user.
         """
@@ -85,18 +83,17 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
         if self._data.dtype=="object":
             raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
         self._type=str(self._data.dtype)
-        if not numpy:
-            if "int" in str(self._data.dtype):
-                self._data=np.array([int(value) for value in data],dtype=object)
-                self._type=int
-            elif "float" in str(self._data.dtype):
-                self._data=np.array([float(value) for value in self._data],dtype=object)
-                self._type=float
-            elif isinstance(self._data[0],np.str_):
-                self._data=np.array([str(value) for value in self._data],dtype=object)
-                self._type=str
-            else:
-                self._type=str(self._data.dtype)
+        if "int" in str(self._data.dtype):
+            self._data=np.array([int(value) for value in data],dtype=object)
+            self._type=int
+        elif "float" in str(self._data.dtype):
+            self._data=np.array([float(value) for value in self._data],dtype=object)
+            self._type=float
+        elif isinstance(self._data[0],np.str_):
+            self._data=np.array([str(value) for value in self._data],dtype=object)
+            self._type=str
+        else:
+            self._type=str(self._data.dtype)
     # Get/set attribute
     def attr(self,attribute:str,value=None):
         """
@@ -147,11 +144,11 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
         return self._type
     # Setter
     @type.setter
-    def type(self,class_name:"type|str"):
-        if isinstance(class_name,type):
-            self._type=class_name
+    def type(self,new_type:"type|str"):
+        if isinstance(new_type,type):
+            self._type=new_type
         else:
-            self._type=eval(class_name)
+            self._type=eval(new_type)
         self._data=np.array([self._type(value) for value in self._data],dtype=object)
     #^ No deleter
     # Names
