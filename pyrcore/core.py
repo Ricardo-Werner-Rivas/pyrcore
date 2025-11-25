@@ -62,14 +62,14 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
             **attributes (`dict`, Optional): Stream of keyword arguments containing the attributes for the vector.
                 Atomic vectors only support attribute "names" and metadata introduced by the user.
         """
-        if isinstance(data,list):
-            pass
-        elif isinstance(data,(int,float,str,bool,np.number,np.str_,np.bool)):
-            data=[data]
-        elif data==None:
+        #// if isinstance(data,list):
+        #//     pass
+        #// elif isinstance(data,(int,float,str,bool,np.number,np.str_,np.bool)):
+        #//     data=[data]
+        if data==None:
             data=[]
-        else:
-            data=list(data)
+        #// else:
+        #//     data=list(data)
         if isinstance(data,np.ndarray):
             self._data=np.array([value for value in data])
         else:
@@ -83,17 +83,16 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
         if self._data.dtype=="object":
             raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
         self._type=str(self._data.dtype)
-        if "int" in str(self._data.dtype):
+        #? Maybe implement my own type object (such as dtype from NumPy)
+        if "int" in self.type:
             self._data=np.array([int(value) for value in data],dtype=object)
             self._type=int
-        elif "float" in str(self._data.dtype):
+        elif "float" in self.type:
             self._data=np.array([float(value) for value in self._data],dtype=object)
             self._type=float
         elif isinstance(self._data[0],np.str_):
             self._data=np.array([str(value) for value in self._data],dtype=object)
             self._type=str
-        else:
-            self._type=str(self._data.dtype)
     # Get/set attribute
     def attr(self,attribute:str,value=None):
         """
