@@ -413,7 +413,7 @@ class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|N
     def _repr_html_(self):
         if self.names:
             headers=[f"<th>{name}</th>" for name in self.names]
-            values=[f"<td>{value}</td>" for value in self._data]
+            values=[f"<td style=\"text-align: center;\">{value}</td>" for value in self._data]
             return f"""
             <table>
                 <thead>
