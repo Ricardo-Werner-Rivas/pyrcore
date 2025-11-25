@@ -27,8 +27,6 @@ def c(*data:list,**named_data:dict[str,])->Vector:
     ---
     Arguments:
         *data (`list`): Stream of unnamed values for the vector.
-        numpy (`bool`, Optional): Tells wether if values in the vector are to be set to native Python types (`False`) or to be kept in *NumPy* types (`True`).
-                Set to `False` (**Python** types) by default.
         **named_data (`dict[str,Any]`): Stream of named values for the vector. They are passed as keyword arguments.
     ---
     Returns:
