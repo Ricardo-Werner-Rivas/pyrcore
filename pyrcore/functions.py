@@ -23,14 +23,14 @@ import numpy as np
 def c(*data:list,**named_data:dict[str,])->Vector:
     #& Missing comments for code
     """
-    Creates an atomic vector like in R. The returned object if a `Vector` instance.\n
+    Creates an *R-like* atomic vector. The returned object is a `Vector` instance.\n
     ---
     Arguments:
         *data (`list`): Stream of unnamed values for the vector.
         **named_data (`dict[str,Any]`): Stream of named values for the vector. They are passed as keyword arguments.
     ---
     Returns:
-        Vector: Atomic vector "R-like".
+        Vector: *R-like* atomic vector.
     """
     # Raise error if both named and unnamed data are given
     if data and named_data:
