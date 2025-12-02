@@ -7,7 +7,7 @@
 #* Section
 #^ Important
 # Normal comment
-#// Alternative or deprecated code
+#// Deprecated code
 #*==============================================================================================================================
 
 #^ The different types of comments require the "Colorful Comments Refreshed" extension for VSCode to be properly distinguished
