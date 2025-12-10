@@ -17,10 +17,12 @@
 import numpy as np
 # TypeVar and Generic
 from typing import TypeVar,Generic
+# Generate "Vector" type var with TypeVar
+VectorTyping=TypeVar("int|float|numpy.number|str|numpy.str_|None")
 
 #* MAIN CLASS
 # Create vector class with Generic
-class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|None")]):
+class Vector(Generic[VectorTyping]):
     #& Missing code comments
     """
     Replicates R atomic vectors.\n
