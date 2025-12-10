@@ -18,7 +18,7 @@ import numpy as np
 # TypeVar and Generic
 from typing import TypeVar,Generic
 # Generate "Vector" type var with TypeVar
-VT=TypeVar("SupportedTypes",int,float,np.number,str,np.str_,None)
+VT=TypeVar("SupportedTypes",int,float,str,bool,None)
 
 #* MAIN CLASS
 # Create vector class with Generic
@@ -56,10 +56,10 @@ class Vector(Generic[VT]):
     """
     #* BASIC METHODS
     # __init__
-    def __init__(self,data:int|float|np.number|str|np.str_|bool|np.bool|tuple|list|None=None,**attributes):
+    def __init__(self,data:list,**attributes):
         """
         Arguments:
-            data (`int`|`float`|`numpy.number`|`str`|`numpy.str_`|`bool`|`numpy.bool`|`tuple`|`list`|`None`, Optional): Object containing the value/s for the vector.
+            data (`list`): Object containing the value/s for the vector.
                 For vector creation, combination function (`c()`) is recommended.
             **attributes (`dict`, Optional): Stream of keyword arguments containing the attributes for the vector.
                 Atomic vectors only support attribute "names" and metadata introduced by the user.
@@ -72,12 +72,15 @@ class Vector(Generic[VT]):
         #//     data=[]
         #// else:
         #//     data=list(data)
+        
         #// if isinstance(data,np.ndarray):
         #//     self._data=np.array([value for value in data])
-        if data==None:
-            data=[]
-        else:
-            self._data=np.array(data)
+        
+        #// if data==None:
+        #//     data=[]
+        #// else:
+        #//     self._data=np.array(data)
+        
         self._data=np.array(data)
         if None in self._data:
             self._data=np.array([value for value in self._data[self._data!=None]])
@@ -87,7 +90,7 @@ class Vector(Generic[VT]):
         if self._data.dtype=="object":
             raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
         self._type=str(self._data.dtype)
-        #? Maybe implement my own type object (such as dtype from NumPy)
+        #? Maybe implement my own type object family (such as dtype from NumPy)
         if "int" in self.type:
             self._data=np.array([int(value) for value in data],dtype=object)
             self._type=int

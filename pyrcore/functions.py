@@ -37,7 +37,7 @@ def c(*data:list,**named_data:dict[str,])->Vector:
         raise ValueError("Vector cannot store both named and unnamed data")
     # Return empty vector if no data was introduced
     elif not data and not named_data:
-        return Vector()
+        return Vector([])
     # In the rest of cases (*data or **named_data)
     else:
         # Store the names
