@@ -20,7 +20,7 @@ from typing import TypeVar,Generic
 
 #* MAIN CLASS
 # Create vector class with Generic
-class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|tuple|list|None")]):
+class Vector(Generic[TypeVar("int|float|numpy.number|str|numpy.str_|None")]):
     #& Missing code comments
     """
     Replicates R atomic vectors.\n
