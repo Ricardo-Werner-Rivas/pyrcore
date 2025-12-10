@@ -50,42 +50,38 @@ def c(*data:list,**named_data:dict[str,])->Vector:
         for value in data:
             # Initialize data_type
             data_type=None
-            # If data is to be set to Python native types and it is in NumPy types
-            if isinstance(value,(np.generic,np.ndarray)):
-                # If value is an array
-                if isinstance(value,np.ndarray):
-                    # Try listing
-                    try:
-                        # List its values in Python native types
-                        value=[item.item() for item in value]
-                    # If array is 0-dimensional
-                    except TypeError:
-                        value=[value.item()]
-                        data_type=str(type(value[0]))
-                # Else
-                else:
+            # If data is in NumPy scalar types
+            if isinstance(value,np.generic):
+                # Put its Python equivalent in a list
+                value=[value.item()]
+            # Else, if value is a NumPy array
+            elif isinstance(value,np.ndarray):
+                # Try listing
+                try:
+                    # List its values in Python native types
+                    value=[item.item() for item in value]
+                # If array is 0-dimensional
+                except TypeError:
                     # Put its Python equivalent in a list
                     value=[value.item()]
-                    data_type=str(type(value[0]))
             # Else, if value is a dictionary
             elif isinstance(value,dict):
                 # Take its values
                 value=list(value.values())
-            # Else, 
+            # Else, if value is an R-like vector (class Vector)
             elif isinstance(value,Vector):
+                # List its values
                 value=[item for item in value._data]
             elif not isinstance(value,(list,tuple)):
                 try:
                     value=list(value)
                 except TypeError:
                     value=[value]
-                    data_type=str(type(value[0]))
             data_list.extend(value)
             try:
                 Vector(data_list)
             except TypeError:
-                if not data_type:
-                    data_type=str(type(value))
+                data_type=str(type(value[0])) if "'list'" in str(type(value)) else str(type(value))
                 data_type=data_type[data_type.find("'")+1:data_type.rfind("'")]
                 raise TypeError(f"Data type \"{data_type}\" not supported for atomic vectors") from None
             except Exception as excep:
