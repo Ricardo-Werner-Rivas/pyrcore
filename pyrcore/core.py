@@ -18,11 +18,11 @@ import numpy as np
 # TypeVar and Generic
 from typing import TypeVar,Generic
 # Generate "Vector" type var with TypeVar
-VectorTyping=TypeVar("int|float|numpy.number|str|numpy.str_|None")
+VT=TypeVar("SupportedTypes",int,float,np.number,str,np.str_,None)
 
 #* MAIN CLASS
 # Create vector class with Generic
-class Vector(Generic[VectorTyping]):
+class Vector(Generic[VT]):
     #& Missing code comments
     """
     Replicates R atomic vectors.\n
@@ -64,8 +64,6 @@ class Vector(Generic[VectorTyping]):
             **attributes (`dict`, Optional): Stream of keyword arguments containing the attributes for the vector.
                 Atomic vectors only support attribute "names" and metadata introduced by the user.
         """
-        if data==None:
-            data=[]
         #// if isinstance(data,list):
         #//     pass
         #// elif isinstance(data,(int,float,str,bool,np.number,np.str_,np.bool)):
@@ -74,8 +72,10 @@ class Vector(Generic[VectorTyping]):
         #//     data=[]
         #// else:
         #//     data=list(data)
-        if isinstance(data,np.ndarray):
-            self._data=np.array([value for value in data])
+        #// if isinstance(data,np.ndarray):
+        #//     self._data=np.array([value for value in data])
+        if data==None:
+            data=[]
         else:
             self._data=np.array(data)
         self._data=np.array(data)
