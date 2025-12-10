@@ -15,7 +15,7 @@
 #* IMPORTS
 # NumPy
 import numpy as np
-# TypeVar,Generic
+# TypeVar and Generic
 from typing import TypeVar,Generic
 
 #* MAIN CLASS
