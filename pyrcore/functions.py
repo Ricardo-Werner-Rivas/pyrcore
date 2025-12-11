@@ -14,7 +14,7 @@
 
 #* IMPORTS
 # Class Vector
-from .classes import Vector
+from .core import Vector
 # NumPy
 import numpy as np
 
@@ -74,7 +74,7 @@ def c(*data:list,**named_data:dict[str,])->Vector:
                 value=[item for item in value._data]
             elif not isinstance(value,(list,tuple)):
                 try:
-                    value=list(value)
+                    value=list(value) if type(value)!=str else [value]
                 except TypeError:
                     value=[value]
             data_list.extend(value)
