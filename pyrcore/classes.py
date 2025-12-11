@@ -77,5 +77,53 @@ class matrix(Vector,Generic[MT]):
                 data=c(data,[0 for i in range(nrow*ncol-len(data))])
             else:
                 data=c(data,[None for i in range(nrow*ncol-len(data))])
+        elif len(data)>nrow*ncol:
+            data=data[:nrow*ncol]
         
-        #! Implement "byrow"
+        data=data._data.reshape((nrow,ncol),order="C" if byrow else "F")
+        super().__init__(data,**attributes)
+        self._data=data
+        self._attributes["dim"]=(nrow,ncol)
+        if dimnames:
+            self._attributes["dimnames"]=(
+                list(dimnames[0]) if dimnames[0] else None,
+                list(dimnames[1]) if dimnames[1] else None
+            )
+        else:
+            self._attributes.setdefault("dimnames",(None,None))
+    
+    #* PROPERTIES
+    # Number of rows
+    @property
+    # Getter
+    def nrow(self)->int:
+        return self.attributes["dim"][0]
+    #^ No setter
+    #^ No deleter
+    
+    # Number of columns
+    @property
+    # Getter
+    def ncol(self)->int:
+        return self.attributes["dim"][1]
+    #^ No setter
+    #^ No deleter
+    
+    # Dimensions
+    @property
+    # Getter
+    def dim(self)->tuple[int,int]:
+        return self.attributes["dim"]
+    #^ No setter
+    #^ No deleter
+    
+    # Names of rows and columns (dimnames)
+    @property
+    # Getter
+    def dimnames(self)->tuple[Iterable[str],Iterable[str]]:
+        return self.attributes["dimnames"]
+    #^ No setter
+    #^ No deleter
+    
+    # Names of rows
+    #! Finish properties
