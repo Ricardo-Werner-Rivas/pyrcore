@@ -22,6 +22,7 @@ VT=TypeVar("SupportedTypes",int,float,str,bool,None)
 
 #* MAIN CLASS
 # Create vector class with Generic
+#? Create base class for comfortable inheritance
 class Vector(Generic[VT]):
     #& Missing code comments
     """
