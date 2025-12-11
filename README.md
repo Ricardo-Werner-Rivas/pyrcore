@@ -3,7 +3,7 @@ Python package aiming to create a core of R programming language to optimize tim
 ## Supported Python distributions
 * [CPython](https://www.python.org/downloads)
 
-This project is created and tested using the [3.13.9 CPython team distribution](https://www.python.org/downloads/release/python-3139).
+This project is created and tested using the [3.13.11 CPython team distribution](https://www.python.org/downloads/release/python-31311/).
 ## Instalation
 You can install the `pyrcore` package from **PyPI** like so:
 ```powershell
@@ -45,7 +45,7 @@ There are two branches:
 
 Pull requests from TestPyPI to PyPI will only be done by the owner when a new release is ready.
 ### Branch merging
-To merge branches properly with PyPI branch in your cloned repository, you will need to have the `.gitattributes` file in the PyPI branch and execute the following commands, while in repo directory, in your PowerShell:
+To merge branches properly with PyPI branch in your cloned repository, you will need to have the `.gitattributes` file in the PyPI branch and execute the following commands, while in repo directory, in your **PowerShell**:
 ```powershell
 git config merge.keepPyPIFiles.name "Keep README.md and setup.cfg from PyPI branch on merge"
 git config merge.keepPyPIFiles.driver "bash -c 'cp $(git rev-parse --show-toplevel)/$3 $2'"
