@@ -114,7 +114,17 @@ class Vector(Generic[VT]):
             Any: Value of the fetched attribute (if `value` not given).
         """
         if value is None:
-            return self._attributes[attribute]
+            try:
+                return self._attributes[attribute]
+            except KeyError:
+                return None
+            except Exception as excep:
+                raise type(excep)(
+                    f"""A fatal error occured, please report this in our issues page: https://github.com/Ricardo-Werner-Rivas/pyrcore/issues
+                    Include the following error message in your report:
+                    {excep}
+                    """
+                ) from None
         elif attribute=="names" and len(value)!=len(self._data):
             raise ValueError("Number of names should be equal to number of values")
         else:
@@ -127,7 +137,7 @@ class Vector(Generic[VT]):
         ---
         Arguments:
             atts (`dict[str|Any]`|`None`, Optional): Dictionary with the attributes changes.
-            **attributes (Optional): Stream of attributes introduced manually.
+            **attributes (Optional): Stream of attributes manually introduced.
         Both cannot be introduced at the same time.\n
         ---
         Returns:
@@ -171,7 +181,7 @@ class Vector(Generic[VT]):
     @property
     # Getter
     def attributes(self):
-        return self._attributes
+        return {key:value for key,value in self._attributes.items() if value is not None}
     #^ No setter
     #^ No deleter
     
