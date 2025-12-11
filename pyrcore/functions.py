@@ -14,7 +14,7 @@
 
 #* IMPORTS
 # Class Vector
-from .core import Vector
+from .classes import Vector
 # NumPy
 import numpy as np
 
