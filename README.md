@@ -3,7 +3,7 @@ Python package aiming to create a core of R programming language to optimize tim
 ## Supported Python distributions
 * [CPython](https://www.python.org/downloads)
 
-This project is created and tested using the [3.13.9 CPython team distribution](https://www.python.org/downloads/release/python-3139).
+This project is created and tested using the [3.13.11 CPython team distribution](https://www.python.org/downloads/release/python-31311/).
 ## Installation
 You can install the latest development version of the `pyrcore` package from **TestPyPI** like so:
 ```powershell
