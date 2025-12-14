@@ -24,7 +24,7 @@ from .functions import c
 
 #* TYPING
 # Define new variable types with TypeVar
-MT=TypeVar("SupportedTypes") # For matrixes
+MT=TypeVar("SupportedTypes",int,float) # For matrixes
 
 #* CLASS "matrix"
 class matrix(RObject,Generic[MT]):
@@ -75,14 +75,17 @@ class matrix(RObject,Generic[MT]):
         if len(data)<nrow*ncol:
             if data.type in [int,float]:
                 data=c(data,[0 for i in range(nrow*ncol-len(data))])
+            elif data.type==bool:
+                data=c(data,[False for i in range(nrow*ncol-len(data))])
             else:
                 data=c(data,[None for i in range(nrow*ncol-len(data))])
         elif len(data)>nrow*ncol:
             data=data[:nrow*ncol]
         
+        data_type=data._type
         data=data._data.reshape((nrow,ncol),order="C" if byrow else "F")
         super().__init__(data,**attributes)
-        self._data=data
+        self._type=data_type
         self._attributes["dim"]=(nrow,ncol)
         if dimnames:
             self._attributes["dimnames"]=(
@@ -126,4 +129,32 @@ class matrix(RObject,Generic[MT]):
     #^ No deleter
     
     # Names of rows
-    #! Finish properties
+    @property
+    # Getter
+    def rownames(self)->Vector[str]:
+        return c(self.dimnames[0])
+    # Setter
+    @rownames.setter
+    def rownames(self,names:Iterable[str]|None):
+        self._attributes["dimnames"][0]=names
+    #^ No deleter
+    
+    # Names of columns
+    @property
+    # Getter
+    def colnames(self)->Vector[str]:
+        return c(self._attributes["dimnames"][1])
+    # Setter
+    @colnames.setter
+    def colnames(self,names:Iterable[str]|None):
+        self._attributes["dimnames"][1]=names
+    #^ No deleter
+    
+    # Type
+    #^ Getter was inherited
+    # Setter
+    @RObject.type.setter
+    def type(self,new_type:"type|str"):
+        super().type=new_type
+        self._data=np.array([self._type(value) for value in self._data.ravel()]).reshape(self.nrow,self.ncol)
+    #^ No deleter
