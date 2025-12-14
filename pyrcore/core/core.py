@@ -20,7 +20,7 @@ from abc import abstractmethod,ABCMeta
 class RObject(metaclass=ABCMeta):
     #& Missing code comments
     """
-    Base class for all R-based or *R-like* object or class in this package.
+    Base class for every R-based or *R-like* object or class in this package.
     """
     #* METHODS
     # __init__
