@@ -94,16 +94,19 @@ class Vector(RObject,Generic[VT]):
         if self._data.dtype=="object":
             raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
         self._type=str(self._data.dtype)
-        #? Maybe implement my own type object family (such as dtype from NumPy)
+        #? Maybe implement my own type object family (such as dtypes from NumPy)
         if "int" in self.type:
-            self._data=np.array([int(value) for value in data],dtype=object)
+            #// self._data=np.array([int(value) for value in data],dtype=object)
             self._type=int
         elif "float" in self.type:
-            self._data=np.array([float(value) for value in self._data],dtype=object)
+            #// self._data=np.array([float(value) for value in self._data],dtype=object)
             self._type=float
         elif isinstance(self._data[0],np.str_):
-            self._data=np.array([str(value) for value in self._data],dtype=object)
+            #// self._data=np.array([str(value) for value in self._data],dtype=object)
             self._type=str
+        else:
+            self._type=eval(self._type[self._type.find("'")+1:self._type.rfind("'")])
+        self._data=np.array([value.item() for value in self._data])
     # Get/set attribute
     def attr(self,attribute:str,value=None):
         super().attr(attribute,value)
