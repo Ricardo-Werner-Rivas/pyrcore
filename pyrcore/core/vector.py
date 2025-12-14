@@ -135,6 +135,7 @@ class Vector(RObject,Generic[VT]):
     
     #* PROPERTIES
     # Type
+    #^ Getter was inherited
     # Setter
     @RObject.type.setter
     def type(self,new_type:"type|str"):
