@@ -10,15 +10,15 @@ You can install the `pyrcore` package from **PyPI** like so:
 pip install pyrcore
 ```
 ## Current features
-|Feature|PyPI|TestPyPI|
-|-------|----|--------|
-|R atomic vectors|❌|✅|
-|Combination function `c()`|❌|✅|
-|R matrixes|❌|❌|
-|`matrix()` function|❌|❌|
-|R `ts` class|❌|❌|
-|R `mts` class|❌|❌|
-|`ts()` function|❌|❌|
+|Feature|PyPI|TestPyPI|Stable|
+|-------|----|--------|------|
+|R atomic vectors|❌|✅|✅|
+|Combination function `c()`|❌|✅|✅|
+|R matrixes|❌|✅|❌|
+|`matrix()` function|❌|❌||
+|R `ts` class|❌|❌||
+|R `mts` class|❌|❌||
+|`ts()` function|❌|❌||
 ## Intended features
 * Support for R atomic vectors
 * Support for combination function `c()`
