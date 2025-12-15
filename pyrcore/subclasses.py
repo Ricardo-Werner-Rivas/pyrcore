@@ -95,6 +95,21 @@ class matrix(RObject,Generic[MT]):
         else:
             self._attributes.setdefault("dimnames",(None,None))
     
+    # Get/set attribute
+    def attr(self,attribute:str,value=None):
+        if value is None:
+            super().attr(attribute,value)
+        elif attribute=="dimnames" and any((len(value[0])>self.nrow,len(value[1])>self.ncol)):
+            raise ValueError(f"{"Row" if len(value[0])>self.nrow else "Column"} names iterable can't be larger than {"row" if len(value[0])>self.nrow else "column"}'s length")
+        else:
+            self._attributes[attribute]=value
+    
+    # Structure
+    def structure(self,atts:dict[str,]|None=None,**attributes):
+        super().structure(atts,**attributes)
+        if len(self.attributes["dimnames"][0])>self.nrow or len(self.attributes["dimnames"][1])>self.ncol:
+            raise IndexError(f"{"Row" if len(self.attributes["dimnames"][0])>self.nrow else "Column"} names iterable can't be larger than {"row" if len(self.attributes["dimnames"][0])>self.nrow else "column"}'s length")
+    
     #* PROPERTIES
     # Number of rows
     @property
@@ -158,3 +173,6 @@ class matrix(RObject,Generic[MT]):
         super().type=new_type
         self._data=np.array([self._type(value) for value in self._data.ravel()]).reshape(self.nrow,self.ncol)
     #^ No deleter
+    
+    #* DUNDER METHODS
+    #! All
