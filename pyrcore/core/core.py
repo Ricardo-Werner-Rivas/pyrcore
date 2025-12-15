@@ -8,6 +8,7 @@
 #^ Important
 # Normal comment
 #// Deprecated code
+#¡ Needed code for abstractmethod redefinition
 #*===============================================================================================================================
 
 #^ The different types of comments require the "Colorful Comments Refreshed" extension for VSCode to be properly distinguished
@@ -44,18 +45,19 @@ class RObject(metaclass=ABCMeta):
         Returns:
             Any: Value of the fetched attribute (if `value` not given).
         """
-        if value is None:
-            try:
-                return self._attributes[attribute]
-            except KeyError:
-                return None
-            except Exception as excep:
-                raise type(excep)(
-                    f"""A fatal error occured, please report this in our issues page: https://github.com/Ricardo-Werner-Rivas/pyrcore/issues
-                    Include the following error message in your report:
-                    {excep}
-                    """
-                ) from None
+        #¡ if value is None:
+        try:
+            return self._attributes[attribute]
+        except KeyError:
+            return None
+        except Exception as excep:
+            raise type(excep)(
+                f"""A fatal error occured, please report this in our issues page: https://github.com/Ricardo-Werner-Rivas/pyrcore/issues
+                Include the following error message in your report:
+                {excep}
+                """
+            ) from None
+        #¡ else/elif ...:
     # Structure
     @abstractmethod
     def structure(self,atts:dict[str,]|None=None,**attributes):
