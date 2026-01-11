@@ -200,7 +200,30 @@ class matrix(RObject,Generic[MT]):
         return self._data>=value._data if isinstance(value,matrix) else self._data>=value
     
     #* ARITHMETIC OPERATIONS DUNDER METHODS
-    #! Missing
+    # Addition
+    def __add__(self,value):
+        if isinstance(value,matrix):
+            if self.dim==value.dim:
+                return self._data+value._data
+            else:
+                raise ArithmeticError("Dimensions are not compatible")
+        elif isinstance(value,Vector):
+            if len(value)>self.nrow*self.ncol:
+                raise ArithmeticError("More values in Vector than in matrix")
+            elif len(value)==self.nrow*self.ncol:
+                return self._data+matrix(value)._data
+            else:
+                result=self._data.copy()
+                for j in range(self.ncol):
+                    for i in range(self.nrow):
+                        if i+j>=len(value):
+                            break
+                        result[i,j]+=value[i+j]
+                return result
+        elif isinstance(value,(int,float)):
+            return self._data+value
+        else:
+            raise TypeError("Data type not operable with matrixes")
     
-    #* DUNDER METHODS (rest)
+    # Difference
     #! Missing
