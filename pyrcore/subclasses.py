@@ -174,5 +174,33 @@ class matrix(RObject,Generic[MT]):
         self._data=np.array([self._type(value) for value in self._data.ravel()]).reshape(self.nrow,self.ncol)
     #^ No deleter
     
-    #* DUNDER METHODS
-    #! All
+    #* COMPARATIVE DUNDER METHODS
+    # Equality
+    def __eq__(self,value):
+        return self._data==value._data if isinstance(value,matrix) else self._data==value
+    
+    # Inequality
+    def __ne__(self,value):
+        return self._data!=value._data if isinstance(value,matrix) else self._data!=value
+    
+    # Less than
+    def __lt__(self,value):
+        return self._data<value._data if isinstance(value,matrix) else self._data<value
+    
+    # Less or equal
+    def __le__(self,value):
+        return self._data<=value._data if isinstance(value,matrix) else self._data<=value
+    
+    # Greater than
+    def __gt__(self,value):
+        return self._data>value._data if isinstance(value,matrix) else self._data>value
+    
+    # Greater or equal
+    def __ge__(self,value):
+        return self._data>=value._data if isinstance(value,matrix) else self._data>=value
+    
+    #* ARITHMETIC OPERATIONS DUNDER METHODS
+    #! Missing
+    
+    #* DUNDER METHODS (rest)
+    #! Missing
