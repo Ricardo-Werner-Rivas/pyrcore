@@ -205,7 +205,7 @@ class Vector(RObject,Generic[VT]):
             else:
                 raise TypeError("Addition only available for vectors and values of matching supported types")
         elif isinstance(value,(int,float,np.number)) and self.type in [int,float]:
-            return Vector(self._data+value)
+            return Vector(self._data+value,names=self.names)
         elif isinstance(value,(str,np.str_)) and self.type==str:
             return Vector(self._data+value,names=self.names)
         else:
