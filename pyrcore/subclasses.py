@@ -204,14 +204,14 @@ class matrix(RObject,Generic[MT]):
     def __add__(self,value):
         if isinstance(value,matrix):
             if self.dim==value.dim:
-                return self._data+value._data
+                return matrix(c((self._data+value._data).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
             else:
                 raise ArithmeticError("Dimensions are not compatible")
         elif isinstance(value,Vector):
             if len(value)>self.nrow*self.ncol:
                 raise ArithmeticError("More values in Vector than in matrix")
             elif len(value)==self.nrow*self.ncol:
-                return self._data+matrix(value)._data
+                return matrix(c((self._data+matrix(value)._data).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
             else:
                 result=self._data.copy()
                 for j in range(self.ncol):
@@ -221,7 +221,7 @@ class matrix(RObject,Generic[MT]):
                         result[i,j]+=value[i+j]
                 return result
         elif isinstance(value,(int,float)):
-            return self._data+value
+            return matrix(c((self._data+value).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         else:
             data_type=str(type(value))
             data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
@@ -231,14 +231,14 @@ class matrix(RObject,Generic[MT]):
     def __sub__(self,value):
         if isinstance(value,matrix):
             if self.dim==value.dim:
-                return self._data-value._data
+                return matrix(c((self._data-value._data).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
             else:
                 raise ArithmeticError("Dimensions are not compatible")
         elif isinstance(value,Vector):
             if len(value)>self.nrow*self.ncol:
                 raise ArithmeticError("More values in Vector than in matrix")
             elif len(value)==self.nrow*self.ncol:
-                return self._data-matrix(value)._data
+                return matrix(c((self._data-matrix(value)._data).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
             else:
                 result=self._data.copy()
                 for j in range(self.ncol):
@@ -246,9 +246,9 @@ class matrix(RObject,Generic[MT]):
                         if i+j>=len(value):
                             break
                         result[i,j]-=value[i+j]
-                return result
+                return matrix(c((result).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         elif isinstance(value,(int,float)):
-            return self._data-value
+            return matrix(c((self._data-value).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         else:
             data_type=str(type(value))
             data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
