@@ -105,7 +105,7 @@ class Vector(RObject,Generic[VT]):
             self._type=str
         else:
             self._type=eval(self._type[self._type.find("'")+1:self._type.rfind("'")])
-        self._data=np.array([value.item() for value in self._data])
+        self._data=np.array([value.item() for value in self._data],dtype=object)
     # Get/set attribute
     def attr(self,attribute:str,value=None):
         if value is None:
