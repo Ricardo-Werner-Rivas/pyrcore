@@ -209,17 +209,24 @@ class matrix(RObject,Generic[MT]):
                 raise ArithmeticError("Dimensions are not compatible")
         elif isinstance(value,Vector):
             if len(value)>self.nrow*self.ncol:
-                raise ArithmeticError("More values in Vector than in matrix")
+                raise ArithmeticError("More values in vector than in matrix")
             elif len(value)==self.nrow*self.ncol:
-                return matrix(c((self._data+matrix(value)._data).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
+                return matrix(c(self._data.flatten()+value._data),self.nrow,self.ncol,True,attributes=self.attributes)
             else:
                 result=self._data.copy()
+                pos=0
+                end=False
                 for j in range(self.ncol):
                     for i in range(self.nrow):
-                        if i+j>=len(value):
+                        try:
+                            result[i,j]+=value[pos]
+                        except IndexError:
+                            end=True
                             break
-                        result[i,j]+=value[i+j]
-                return result
+                        pos+=1
+                    if end:
+                        break
+                return matrix(c(result.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         elif isinstance(value,(int,float)):
             return matrix(c((self._data+value).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         else:
@@ -236,17 +243,24 @@ class matrix(RObject,Generic[MT]):
                 raise ArithmeticError("Dimensions are not compatible")
         elif isinstance(value,Vector):
             if len(value)>self.nrow*self.ncol:
-                raise ArithmeticError("More values in Vector than in matrix")
+                raise ArithmeticError("More values in vector than in matrix")
             elif len(value)==self.nrow*self.ncol:
-                return matrix(c((self._data-matrix(value)._data).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
+                return matrix(c(self._data.flatten()-value._data),self.nrow,self.ncol,True,attributes=self.attributes)
             else:
                 result=self._data.copy()
+                pos=0
+                end=False
                 for j in range(self.ncol):
                     for i in range(self.nrow):
-                        if i+j>=len(value):
+                        try:
+                            result[i,j]-=value[pos]
+                        except IndexError:
+                            end=True
                             break
-                        result[i,j]-=value[i+j]
-                return matrix(c((result).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
+                        pos+=1
+                    if end:
+                        break
+                return matrix(c(result.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         elif isinstance(value,(int,float)):
             return matrix(c((self._data-value).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         else:
@@ -255,4 +269,38 @@ class matrix(RObject,Generic[MT]):
             raise TypeError(f"Object type {data_type} is not operable with matrixes")
     
     # Product
+    def __mul__(self,value):
+        if isinstance(value,matrix):
+            if self.dim==value.dim:
+                return matrix(c((self._data*value._data).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
+            else:
+                raise ArithmeticError("Dimensions are not compatible")
+        elif isinstance(value,Vector):
+            if len(value)>self.nrow*self.ncol:
+                raise ArithmeticError("More values in vector than in matrix")
+            elif len(value)==self.nrow*self.ncol:
+                return matrix(c(self._data.flatten()*value._data),self.nrow,self.ncol,True,attributes=self.attributes)
+            else:
+                result=self._data.copy()
+                pos=0
+                end=False
+                for j in range(self.ncol):
+                    for i in range(self.nrow):
+                        try:
+                            result[i,j]*=value[pos]
+                        except IndexError:
+                            end=True
+                            break
+                        pos+=1
+                    if end:
+                        break
+                return matrix(c(result.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
+        elif isinstance(value,(int,float)):
+            return matrix(c((self._data-value).flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
+        else:
+            data_type=str(type(value))
+            data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
+            raise TypeError(f"Object type {data_type} is not operable with matrixes")
+    
+    # Division
     #! Missing
