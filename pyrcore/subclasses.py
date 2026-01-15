@@ -24,7 +24,7 @@ from .functions import c
 
 #* TYPING
 # Define new variable types with TypeVar
-MT=TypeVar("SupportedTypes",int,float) # For matrixes
+MT=TypeVar("MatrixDataTypes",constraints=(int,float,str,bool,None)) # For matrixes
 
 #* CLASS "matrix"
 class matrix(RObject,Generic[MT]):
@@ -39,7 +39,7 @@ class matrix(RObject,Generic[MT]):
     # __init__
     def __init__(
         self,
-        data:Vector|Iterable|None=None,nrow:int|None=None,ncol:int|None=None,byrow:bool=False,
+        data:Vector[int|float]|Iterable|None=None,nrow:int|None=None,ncol:int|None=None,byrow:bool=False,
         *,
         dimnames:tuple[Iterable[str]|None,Iterable[str]|None]|None=None,
         **attributes
