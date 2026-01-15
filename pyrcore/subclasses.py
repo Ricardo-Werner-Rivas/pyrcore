@@ -15,7 +15,7 @@
 #* IMPORTS
 # NumPy
 import numpy as np
-# TypeVar and Generic
+# TypeVar, Generic and Iterable
 from typing import TypeVar,Generic,Iterable
 # Class RObject
 from .core import RObject,Vector
