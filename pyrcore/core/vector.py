@@ -8,6 +8,7 @@
 #^ Important
 # Normal comment
 #// Deprecated code
+#¡ Inherited
 #*===============================================================================================================================
 
 #^ The different types of comments require the "Colorful Comments Refreshed" extension for VSCode to be properly distinguished
@@ -135,7 +136,7 @@ class Vector(RObject,Generic[VT]):
     
     #* PROPERTIES
     # Type
-    #^ Getter was inherited
+    #¡ Getter was inherited
     # Setter
     @RObject.type.setter
     def type(self,new_type:"type|str"):
@@ -154,7 +155,7 @@ class Vector(RObject,Generic[VT]):
         self._attributes["names"]=names
     #^ No deleter
     
-    #^ Inherited "attributes" property
+    #¡ Inherited "attributes" property
     
     #* COMPARATIVE METHODS
     # Equality

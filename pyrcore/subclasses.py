@@ -8,6 +8,7 @@
 #^ Important
 # Normal comment
 #// Deprecated code
+#¡ Inherited
 #*===============================================================================================================================
 
 #^ The different types of comments require the "Colorful Comments Refreshed" extension for VSCode to be properly distinguished
@@ -165,8 +166,10 @@ class matrix(RObject,Generic[MT]):
         self._attributes["dimnames"][1]=names
     #^ No deleter
     
+    #¡ Inherited "attributes" property
+    
     # Type
-    #^ Getter was inherited
+    #¡ Getter was inherited
     # Setter
     @RObject.type.setter
     def type(self,new_type:"type|str"):
