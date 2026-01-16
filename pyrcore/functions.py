@@ -18,16 +18,17 @@ from .core import Vector
 # NumPy
 import numpy as np
 
-#* FUNCTIONS
-# Combination function (c(), for vector creation)
-def c(*data:list,**named_data:dict[str,])->Vector:
+#* COMBINATION FUNCTION (c(), for vector creation)
+def c(*data,**named_data:dict[str,])->Vector:
     #& Missing comments for code
     """
     Creates an *R-like* atomic vector. The returned object is a `Vector` instance.\n
     ---
     Arguments:
-        *data (`list`): Stream of unnamed values for the vector.
+        *data (`Any`): Stream of unnamed values for the vector, resulting in a tuple of values.
+            Values can be of any type.
         **named_data (`dict[str,Any]`): Stream of named values for the vector. They are passed as keyword arguments.
+            Values can be of any type. Arguments' names will be the names for the vector.
     ---
     Returns:
         Vector: *R-like* atomic vector.
@@ -42,6 +43,8 @@ def c(*data:list,**named_data:dict[str,])->Vector:
     else:
         # Store the names
         names=list(named_data.keys()) if named_data else None # If no names, then store None
+        # Create an "attributes" variable
+        attributes:dict[str,]={"names":names}
         # Prepare the passed data
         data=data or list(named_data.values())
         # Empty list to store the data
@@ -67,11 +70,12 @@ def c(*data:list,**named_data:dict[str,])->Vector:
                 # If array contains Python built-in type objects
                 except AttributeError:
                     value=[item.item() for item in np.array(list(value))]
+                # General exception
                 except Exception as excep:
                     raise type(excep)(
                         "A fatal error has occured. Please report this in our issues page: {}\
-                            \n\nPlease include, along with the error type, the following message in your report:\n\"{}\""\
-                            .format("https://github.com/Ricardo-Werner-Rivas/pyrcore/issues",excep)
+                        \n\nPlease include, along with the error type, the following message in your report:\n\"{}\""\
+                        .format("https://github.com/Ricardo-Werner-Rivas/pyrcore/issues",excep)
                     )
             # Else, if value is a dictionary
             elif isinstance(value,dict):
@@ -79,6 +83,9 @@ def c(*data:list,**named_data:dict[str,])->Vector:
                 value=list(value.values())
             # Else, if value is an R-like vector (class Vector)
             elif isinstance(value,Vector):
+                # Store its attributes
+                attributes.update(value.attributes)
+                attributes["names"]=names if names else attributes["names"]
                 # List its values
                 value=[item for item in value._data]
             elif not isinstance(value,(list,tuple)):
@@ -102,4 +109,4 @@ def c(*data:list,**named_data:dict[str,])->Vector:
                     \"{excep}\"
                     \nThank you for your help."""
                 ) from None
-        return Vector(data_list,names=names)
+        return Vector(data_list,names=names,attributes=attributes)
