@@ -25,7 +25,7 @@ from .functions import c
 
 #* TYPING
 # Define new variable types with TypeVar
-MT=TypeVar("MatrixDataTypes",constraints=(int,float,str,bool,None)) # For matrixes
+MT=TypeVar("MatrixDataTypes") # For matrixes
 
 #* CLASS "matrix"
 class matrix(RObject,Generic[MT]):

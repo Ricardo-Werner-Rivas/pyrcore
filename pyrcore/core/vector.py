@@ -23,7 +23,7 @@ from .core import RObject
 
 #* TYPING
 # Define new variable types with TypeVar
-VT=TypeVar("VectorDataTypes",constraints=(int,float,str,bool,None))
+VT=TypeVar("VectorDataTypes")
 
 #* CLASS "Vector"
 # Create vector class with Generic
