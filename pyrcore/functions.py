@@ -64,6 +64,15 @@ def c(*data:list,**named_data:dict[str,])->Vector:
                 except TypeError:
                     # Put its Python equivalent in a list
                     value=[value.item()]
+                # If array contains Python built-in type objects
+                except AttributeError:
+                    value=[item.item() for item in np.array(list(value))]
+                except Exception as excep:
+                    raise type(excep)(
+                        "A fatal error has occured. Please report this in our issues page: {}\
+                            \n\nPlease include, along with the error type, the following message in your report:\n\"{}\""\
+                            .format("https://github.com/Ricardo-Werner-Rivas/pyrcore/issues",excep)
+                    )
             # Else, if value is a dictionary
             elif isinstance(value,dict):
                 # Take its values
