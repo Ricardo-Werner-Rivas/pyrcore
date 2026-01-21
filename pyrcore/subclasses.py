@@ -445,5 +445,23 @@ class matrix(RObject,Generic[MT]):
             data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
             raise TypeError(f"Object type {data_type} is not operable with matrixes")
     
-    # Matricial product
+    # Matrix product
+    def __matmul__(self,value:"matrix|np.ndarray"):
+        if isinstance(value,(matrix,Vector)):
+            if self.ncol==value.nrow:
+                return matrix(c((self._data@value._data).flatten()),self.nrow,value.ncol,True,attributes=self.attributes)
+            else:
+                raise ArithmeticError("Dimension conditions for matrix product are not met")
+        elif isinstance(value,np.ndarray):
+            if self.ncol==value.shape[0]:
+                return matrix(c((self._data@value).flatten()),self.nrow,value.shape[1])
+            else:
+                raise ArithmeticError("Dimension conditions for matrix product are not met")
+        else:
+            data_type=str(type(value))
+            data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
+            raise TypeError(f"Object type {data_type} cannot be matricially multiplied")
+    
+    #* REFLEXED ARITHMETIC DUNDER METHODS
+    # Addition
     #! Missing
