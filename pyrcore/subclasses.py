@@ -467,4 +467,11 @@ class matrix(RObject,Generic[MT]):
     def __radd__(self,value):
         return self+value
     # Difference
+    def __rsub__(self,value):
+        if isinstance(value,Vector):
+            if len(value)!=self._data.size:
+                raise ArithmeticError("Unmatching sizes")
+        else:
+            return (self-value)*-1
+    # Product
     #! Missing
