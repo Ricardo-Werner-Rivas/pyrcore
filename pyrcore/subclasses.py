@@ -466,6 +466,7 @@ class matrix(RObject,Generic[MT]):
     # Addition
     def __radd__(self,value):
         return self+value
+    
     # Difference
     def __rsub__(self,value):
         if isinstance(value,Vector):
@@ -473,5 +474,10 @@ class matrix(RObject,Generic[MT]):
                 raise ArithmeticError("Unmatching sizes")
         else:
             return (self-value)*-1
+    
     # Product
+    def __rmul__(self,value):
+        return self*value
+    
+    # Division
     #! Missing
