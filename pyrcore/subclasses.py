@@ -446,7 +446,7 @@ class matrix(RObject,Generic[MT]):
             raise TypeError(f"Object type {data_type} is not operable with matrixes")
     
     # Matrix product
-    def __matmul__(self,value:"matrix|np.ndarray"):
+    def __matmul__(self,value:"matrix|Vector|np.ndarray"):
         if isinstance(value,(matrix,Vector)):
             if self.ncol==value.nrow:
                 return matrix(c((self._data@value._data).flatten()),self.nrow,value.ncol,True,attributes=self.attributes)
@@ -464,4 +464,7 @@ class matrix(RObject,Generic[MT]):
     
     #* REFLEXED ARITHMETIC DUNDER METHODS
     # Addition
+    def __radd__(self,value):
+        return self+value
+    # Difference
     #! Missing
