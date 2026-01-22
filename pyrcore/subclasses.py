@@ -476,4 +476,8 @@ class matrix(RObject,Generic[MT]):
         return self*value
     
     # Division
+    def __rtruediv__(self,value):
+        return (self/value)**-1
+    
+    # Integer division (floor division)
     #! Missing
