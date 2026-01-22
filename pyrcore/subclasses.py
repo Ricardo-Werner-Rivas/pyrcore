@@ -480,4 +480,8 @@ class matrix(RObject,Generic[MT]):
         return (self/value)**-1
     
     # Integer division (floor division)
+    def __rfloordiv__(self,value):
+        return (self//value)**-1
+    
+    # Module
     #! Missing
