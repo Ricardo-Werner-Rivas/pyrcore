@@ -484,4 +484,8 @@ class matrix(RObject,Generic[MT]):
         return (self//value)**-1
     
     # Module
+    def __rmod__(self,value):
+        return value%self
+    
+    # Divmod
     #! Missing
