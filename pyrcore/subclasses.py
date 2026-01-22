@@ -469,11 +469,7 @@ class matrix(RObject,Generic[MT]):
     
     # Difference
     def __rsub__(self,value):
-        if isinstance(value,Vector):
-            if len(value)!=self._data.size:
-                raise ArithmeticError("Unmatching sizes")
-        else:
-            return (self-value)*-1
+        return (self-value)*-1
     
     # Product
     def __rmul__(self,value):
