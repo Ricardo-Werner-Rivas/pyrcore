@@ -473,4 +473,8 @@ class matrix(RObject,Generic[MT]):
             raise TypeError(f"Object type {data_type} is not operable with matrixes")
     
     # Divmod
+    def __divmod__(self,value):
+        return value//self,value%self
+    
+    # Power
     #! Missing
