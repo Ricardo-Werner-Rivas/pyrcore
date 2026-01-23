@@ -218,17 +218,12 @@ class matrix(RObject,Generic[MT]):
             else:
                 result=self._data.copy()
                 pos=0
-                end=False
                 for j in range(self.ncol):
                     for i in range(self.nrow):
-                        try:
-                            result[i,j]+=value[pos]
-                        except IndexError:
-                            end=True
-                            break
+                        if pos>=len(value):
+                            pos=0
+                        result[i,j]+=value[pos]
                         pos+=1
-                    if end:
-                        break
                 return matrix(c(result.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         elif isinstance(value,(int,float)):
             return matrix(c(self._data.flatten()+value),self.nrow,self.ncol,True,attributes=self.attributes)
@@ -252,17 +247,12 @@ class matrix(RObject,Generic[MT]):
             else:
                 result=self._data.copy()
                 pos=0
-                end=False
                 for j in range(self.ncol):
                     for i in range(self.nrow):
-                        try:
-                            result[i,j]-=value[pos]
-                        except IndexError:
-                            end=True
-                            break
+                        if pos>=len(value):
+                            pos=0
+                        result[i,j]-=value[pos]
                         pos+=1
-                    if end:
-                        break
                 return matrix(c(result.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         elif isinstance(value,(int,float)):
             return matrix(c(self._data.flatten()-value),self.nrow,self.ncol,True,attributes=self.attributes)
@@ -286,17 +276,12 @@ class matrix(RObject,Generic[MT]):
             else:
                 result=self._data.copy()
                 pos=0
-                end=False
                 for j in range(self.ncol):
                     for i in range(self.nrow):
-                        try:
-                            result[i,j]*=value[pos]
-                        except IndexError:
-                            end=True
-                            break
+                        if pos>=len(value):
+                            pos=0
+                        result[i,j]*=value[pos]
                         pos+=1
-                    if end:
-                        break
                 return matrix(c(result.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         elif isinstance(value,(int,float)):
             return matrix(c(self._data.flatten()*value),self.nrow,self.ncol,True,attributes=self.attributes)
@@ -320,17 +305,12 @@ class matrix(RObject,Generic[MT]):
             else:
                 result=self._data.copy()
                 pos=0
-                end=False
                 for j in range(self.ncol):
                     for i in range(self.nrow):
-                        try:
-                            result[i,j]/=value[pos]
-                        except IndexError:
-                            end=True
-                            break
+                        if pos>=len(value):
+                            pos=0
+                        result[i,j]/=value[pos]
                         pos+=1
-                    if end:
-                        break
                 return matrix(c(result.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         elif isinstance(value,(int,float)):
             return matrix(c(self._data.flatten()/value),self.nrow,self.ncol,True,attributes=self.attributes)
@@ -354,17 +334,12 @@ class matrix(RObject,Generic[MT]):
             else:
                 result=self._data.copy()
                 pos=0
-                end=False
                 for j in range(self.ncol):
                     for i in range(self.nrow):
-                        try:
-                            result[i,j]//=value[pos]
-                        except IndexError:
-                            end=True
-                            break
+                        if pos>=len(value):
+                            pos=0
+                        result[i,j]//=value[pos]
                         pos+=1
-                    if end:
-                        break
                 return matrix(c(result.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         elif isinstance(value,(int,float)):
             return matrix(c(self._data.flatten()//value),self.nrow,self.ncol,True,attributes=self.attributes)
@@ -388,17 +363,12 @@ class matrix(RObject,Generic[MT]):
             else:
                 result=self._data.copy()
                 pos=0
-                end=False
                 for j in range(self.ncol):
                     for i in range(self.nrow):
-                        try:
-                            result[i,j]%=value[pos]
-                        except IndexError:
-                            end=True
-                            break
+                        if pos>=len(value):
+                            pos=0
+                        result[i,j]%=value[pos]
                         pos+=1
-                    if end:
-                        break
                 return matrix(c(result.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         elif isinstance(value,(int,float)):
             return matrix(c(self._data.flatten()%value),self.nrow,self.ncol,True,attributes=self.attributes)
@@ -426,17 +396,12 @@ class matrix(RObject,Generic[MT]):
             else:
                 result=self._data.copy()
                 pos=0
-                end=False
                 for j in range(self.ncol):
                     for i in range(self.nrow):
-                        try:
-                            result[i,j]**=value[pos]
-                        except IndexError:
-                            end=True
-                            break
+                        if pos>=len(value):
+                            pos=0
+                        result[i,j]**=value[pos]
                         pos+=1
-                    if end:
-                        break
                 return matrix(c(result.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
         elif isinstance(value,(int,float)):
             return matrix(c(self._data.flatten()**value),self.nrow,self.ncol,True,attributes=self.attributes)
