@@ -15,7 +15,7 @@ pip install -i https://test.pypi.org/simple/ pyrcore --no-deps
 ## Intended features
 * ~~Support for R atomic vectors~~ (stable)
 * ~~Support for combination function `c()`~~ (stable)
-* Support for R matrixes and R `matrix()` function
+* <ins>Support for R matrixes and R `matrix()` function</ins> (in process)
 * Support for R `ts` class (time series)
 * Support for R `mts` class (multivariate time series)
 * Support for R `ts()` function
