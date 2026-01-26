@@ -473,8 +473,32 @@ class matrix(RObject,Generic[MT]):
             raise TypeError(f"Object type {data_type} is not operable with matrixes")
     
     # Divmod
-    def __divmod__(self,value):
+    def __rdivmod__(self,value):
         return value//self,value%self
     
     # Power
+    def __rpow__(self,value):
+        if isinstance(value,(int,float)):
+            return matrix(c(value**self._data.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
+        elif isinstance(value,Vector):
+            if len(value)>self.nrow*self.ncol:
+                raise ArithmeticError("More values in vector than in matrix")
+            elif len(value)==self.nrow*self.ncol:
+                return matrix(c(value._data**self._data.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
+            else:
+                result=self._data.copy()
+                pos=0
+                for j in range(self.ncol):
+                    for i in range(self.nrow):
+                        if pos>=len(value):
+                            pos=0
+                        result[i,j]=value[pos]**result[i,j]
+                        pos+=1
+                return matrix(c(result.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
+        else:
+            data_type=str(type(value))
+            data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
+            raise TypeError(f"Object type {data_type} is not operable with matrixes")
+    
+    # Matrix product
     #! Missing
