@@ -419,7 +419,7 @@ class matrix(RObject,Generic[MT]):
                 raise ArithmeticError("Dimension conditions for matrix product are not met")
         elif isinstance(value,np.ndarray):
             if self.ncol==value.shape[0]:
-                return matrix(c((self._data@value).flatten()),self.nrow,value.shape[1])
+                return matrix(c((self._data@value).flatten()),self.nrow,value.shape[1],True,attributes=self.attributes)
             else:
                 raise ArithmeticError("Dimension conditions for matrix product are not met")
         else:
@@ -501,4 +501,57 @@ class matrix(RObject,Generic[MT]):
             raise TypeError(f"Object type {data_type} is not operable with matrixes")
     
     # Matrix product
+    def __rmatmul__(self,value):
+        if isinstance(value,np.ndarray):
+            if self.ncol==value.shape[0]:
+                return matrix(c((value@self._data).flatten()),self.nrow,value.shape[1],True,attributes=self.attributes)
+            else:
+                raise ArithmeticError("Dimension conditions for matrix product are not met")
+        else:
+            data_type=str(type(value))
+            data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
+            raise TypeError(f"Object type {data_type} cannot be matricially multiplied")
+    
+    #* UNARY DUNDER METHODS
+    # Negative
+    def __neg__(self):
+        try:
+            return matrix(c(-self._data.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
+        except TypeError:
+            raise TypeError("Negative unary method only available for numeric matrixes") from None
+        except Exception as excep:
+            raise type(excep)(
+                "A fatal error has occured. Please report this in our issues page: {}\
+                \n\nPlease include, along with the error type, the following message in your report:\n\"{}\""\
+                .format("https://github.com/Ricardo-Werner-Rivas/pyrcore/issues",excep)
+            ) from None
+    
+    # Positive
+    def __pos__(self):
+        try:
+            return matrix(c(+self._data.flatten()),self.nrow,self.ncol,True,attributes=self.attributes)
+        except TypeError:
+            raise TypeError("Positive unary method only available for numeric matrixes") from None
+        except Exception as excep:
+            raise type(excep)(
+                "A fatal error has occured. Please report this in our issues page: {}\
+                \n\nPlease include, along with the error type, the following message in your report:\n\"{}\""\
+                .format("https://github.com/Ricardo-Werner-Rivas/pyrcore/issues",excep)
+            ) from None
+    
+    # Absolute value
+    def __abs__(self):
+        try:
+            return matrix(c(abs(self._data.flatten())),self.nrow,self.ncol,True,attributes=self.attributes)
+        except TypeError:
+            raise TypeError("Absolute value unary method only available for numeric matrixes") from None
+        except Exception as excep:
+            raise type(excep)(
+                "A fatal error has occured. Please report this in our issues page: {}\
+                \n\nPlease include, along with the error type, the following message in your report:\n\"{}\""\
+                .format("https://github.com/Ricardo-Werner-Rivas/pyrcore/issues",excep)
+            ) from None
+    
+    #* INDEXATION DUNDER METHODS
+    # Getter
     #! Missing
