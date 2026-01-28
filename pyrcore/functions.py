@@ -76,7 +76,7 @@ def c(*data,**named_data:dict[str,])->Vector:
                         "A fatal error has occured. Please report this in our issues page: {}\
                         \n\nPlease include, along with the error type, the following message in your report:\n\"{}\""\
                         .format("https://github.com/Ricardo-Werner-Rivas/pyrcore/issues",excep)
-                    )
+                    ) from None
             # Else, if value is a dictionary
             elif isinstance(value,dict):
                 # Take its values
