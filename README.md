@@ -1,4 +1,6 @@
 # `pyrcore`
+![Version](https://img.shields.io/pypi/v/pyrcore)
+
 Python package aiming to create a core of R programming language to optimize time series management.
 ## Supported Python distributions
 * [CPython](https://www.python.org/downloads)
