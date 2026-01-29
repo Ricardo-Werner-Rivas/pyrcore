@@ -554,4 +554,52 @@ class matrix(RObject,Generic[MT]):
     
     #* INDEXATION DUNDER METHODS
     # Getter
+    def __getitem__(self,index):
+        try:
+            return self._data[index]
+        except IndexError:
+            if len(index)!=2:
+                raise IndexError(
+                    "Given one index. Two were expected"
+                ) from None
+            else:
+                raise IndexError(
+                    "One index is out of bounds"
+                ) from None
+        except Exception as excep:
+            raise type(excep)(
+                "A fatal error has occured. Please report this in our issues page: {}\
+                \n\nPlease include, along with the error type, the following message in your report:\n\"{}\""\
+                .format("https://github.com/Ricardo-Werner-Rivas/pyrcore/issues",excep)
+            ) from None
+    
+    # Setter
+    def __setitem__(self,index,value):
+        try:
+            self._data[index]=value
+        except IndexError:
+            if len(index)!=2:
+                raise IndexError(
+                    "Given one index. Two were expected"
+                ) from None
+            else:
+                raise IndexError(
+                    "One index is out of bounds"
+                ) from None
+        except Exception as excep:
+            raise type(excep)(
+                "A fatal error has occured. Please report this in our issues page: {}\
+                \n\nPlease include, along with the error type, the following message in your report:\n\"{}\""\
+                .format("https://github.com/Ricardo-Werner-Rivas/pyrcore/issues",excep)
+            ) from None
+    
+    #^ No deleter
+    
+    #* LENGTH
+    # Length
+    def __len__(self):
+        return self._data.size
+    
+    #* SCREEN
+    # Representation
     #! Missing
