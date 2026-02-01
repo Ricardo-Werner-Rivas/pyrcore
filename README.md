@@ -15,7 +15,7 @@ Python package aiming to create a core of R programming language to optimize tim
 * [CPython](https://www.python.org/downloads)
 
 This project is created and tested using the [3.13.11 CPython team distribution](https://www.python.org/downloads/release/python-31311/).
-## Instalation
+## Installation
 You can install the `pyrcore` package from **PyPI** like so:
 ```powershell
 pip install pyrcore
