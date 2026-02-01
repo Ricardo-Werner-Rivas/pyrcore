@@ -1,9 +1,16 @@
 # `pyrcore`
-[![Python](https://img.shields.io/badge/python->=3.13.11-&)](https://www.python.org/downloads/release/python-31311/)
-[![Version](https://img.shields.io/pypi/v/pyrcore)](https://pypi.org/project/pyrcore/)
-![License](https://img.shields.io/github/license/Ricardo-Werner-Rivas/pyrcore)
+[Python]:https://img.shields.io/badge/python-3.13.11-&
+[Supported Python]:https://img.shields.io/badge/python->=3.13.11-&
+[Version]:https://img.shields.io/pypi/v/pyrcore
+[License]:https://img.shields.io/github/license/Ricardo-Werner-Rivas/pyrcore
 
 Python package aiming to create a core of R programming language to optimize time series management.
+
+|About|Information|
+|---|---|
+|Development Python version|[![Python]](https://www.python.org/downloads/release/python-31311/)|
+|Supported Python versions|![Supported Python]|
+|Packaging|[![Version]](https://pypi.org/project/pyrcore/) ![License]|
 ## Supported Python distributions
 * [CPython](https://www.python.org/downloads)
 
