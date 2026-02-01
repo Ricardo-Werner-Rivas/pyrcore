@@ -54,3 +54,65 @@ git config merge.keepPyPIFiles.name "Keep README.md and setup.cfg from PyPI bran
 git config merge.keepPyPIFiles.driver "bash -c 'cp $(git rev-parse --show-toplevel)/$3 $2'"
 ```
 This way, `README.md` and `setup.cfg` files will not be overwritten in the PyPI branch.
+### Building
+To build the project you only have to fork this repository and clone your fork.
+
+Each code file starts with a comment legend. For this to be useful, you will need to install the <ins>"Colorful Comments Refreshed"</ins> extension for **VSCode** and change the last tag from `todo` to `¡`.
+<details>
+<summary>The final configuration of the extension (in user's <code>settings.json</code>) is the following:</summary>
+
+```json
+{
+    "colorful-comments-refreshed.tags": [
+        {
+            "tag": "!",
+            "color": "#FF2D00",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "?",
+            "color": "#0076FF",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "//",
+            "color": "#474747",
+            "strikethrough": true,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "^",
+            "color": "#EAF622",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "*",
+            "color": "#28FF00",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "&",
+            "color": "#FF06A0",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "~",
+            "color": "#BE00FF",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "¡",
+            "color": "#FF8C00",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        }
+    ]
+}
+```
+</details>
