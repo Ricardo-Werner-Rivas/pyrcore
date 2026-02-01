@@ -602,4 +602,8 @@ class matrix(RObject,Generic[MT]):
     
     #* SCREEN
     # Representation
+    def __repr__(self):
+        return f"matrix(c({", ".join(value for value in self._data.flatten())}),{self.nrow},{self.ncol},{True},attributes={self.attributes})"
+    
+    # HTML representation
     #! Missing
