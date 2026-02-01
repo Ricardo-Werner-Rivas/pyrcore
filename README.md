@@ -40,3 +40,65 @@ There are two branches:
 * **TestPyPI**: for pre-releases or development versions.
 
 Pull requests from TestPyPI to PyPI will only be done by the owner when a new release is ready.
+### Building
+To build the project you only have to fork this repository and clone your fork.
+
+Each code file starts with a comment legend. For this to be useful, you will need to install the <ins>"Colorful Comments Refreshed"</ins> extension for **VSCode** and change the last tag from `todo` to `¡`.
+<details>
+<summary>The final configuration of the extension (in user's <code>settings.json</code>) is the following:</summary>
+
+```json
+{
+    "colorful-comments-refreshed.tags": [
+        {
+            "tag": "!",
+            "color": "#FF2D00",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "?",
+            "color": "#0076FF",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "//",
+            "color": "#474747",
+            "strikethrough": true,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "^",
+            "color": "#EAF622",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "*",
+            "color": "#28FF00",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "&",
+            "color": "#FF06A0",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "~",
+            "color": "#BE00FF",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        },
+        {
+            "tag": "¡",
+            "color": "#FF8C00",
+            "strikethrough": false,
+            "backgroundColor": "transparent"
+        }
+    ]
+}
+```
+</details>
