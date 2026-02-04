@@ -10,7 +10,7 @@ Python package aiming to create a core of R programming language to optimize tim
 |---|---|
 |Development Python version|[![Python]](https://www.python.org/downloads/release/python-31311/)|
 |Supported Python distributions|[![Supported CPython]](https://www.python.org/downloads)|
-|Packaging|[![Version]](https://pypi.org/project/pyrcore/) ![License]|
+|Packaging|[![Version]](https://pypi.org/project/pyrcore/) [![License]](https://github.com/Ricardo-Werner-Rivas/pyrcore/blob/PyPI/LICENSE)|
 ## Installation
 You can install the `pyrcore` package from **PyPI** like so:
 ```powershell
