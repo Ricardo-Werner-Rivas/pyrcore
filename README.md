@@ -50,13 +50,6 @@ There are two branches:
 * **TestPyPI**: for pre-releases or development versions.
 
 Pull requests from TestPyPI to PyPI will only be done by the owner when a new release is ready.
-### Branch merging
-To merge branches properly with PyPI branch in your cloned repository, you will need to have the `.gitattributes` file in the PyPI branch and execute the following commands, while in repo directory, in your **PowerShell**:
-```powershell
-git config merge.keepPyPIFiles.name "Keep README.md and setup.cfg from PyPI branch on merge"
-git config merge.keepPyPIFiles.driver "bash -c 'cp $(git rev-parse --show-toplevel)/$3 $2'"
-```
-This way, `README.md` and `setup.cfg` files will not be overwritten in the PyPI branch.
 ### Building
 To build the project you only have to fork this repository and clone your fork.
 
@@ -119,3 +112,11 @@ Each code file starts with a comment legend. For this to be useful, you will nee
 }
 ```
 </details>
+
+### Branch merging
+To merge branches properly with PyPI branch in your cloned repository, you will need to have the `.gitattributes` file in the PyPI branch and execute the following commands, while in repo directory, in your **PowerShell**:
+```powershell
+git config merge.keepPyPIFiles.name "Keep README.md and setup.cfg from PyPI branch on merge"
+git config merge.keepPyPIFiles.driver "bash -c 'cp $(git rev-parse --show-toplevel)/$3 $2'"
+```
+This way, `README.md` and `setup.cfg` files will not be overwritten in the PyPI branch.
