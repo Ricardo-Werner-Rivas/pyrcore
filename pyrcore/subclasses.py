@@ -603,7 +603,20 @@ class matrix(RObject,Generic[MT]):
     #* SCREEN
     # Representation
     def __repr__(self):
-        return f"matrix(c({", ".join(value for value in self._data.flatten())}),{self.nrow},{self.ncol},{True},attributes={self.attributes})"
+        return f"matrix(c({", ".join(str(value) for value in self._data.flatten())}),{self.nrow},{self.ncol},{True},attributes={self.attributes})"
     
     # HTML representation
-    #! Missing
+    def _repr_html_(self):
+        representation=f"""<table>"""
+        for row in self._data:
+            representation+=f"""
+                <tr>
+                    {"\n".join([f"<td style=\"text-align: center;\">{value}</td>" for value in row])}
+                </tr>"""
+        representation+=f"""
+        </table>"""
+        return representation
+    
+    # Printing (__str__ method)
+    def __str__(self):
+        return f"{"\n".join(["\t".join(str(value) for value in row) for row in self._data])}"
