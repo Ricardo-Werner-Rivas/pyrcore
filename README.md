@@ -21,7 +21,7 @@ pip install pyrcore
 |-------|----|--------|------|
 |R atomic vectors|❌|✅|**Stable**|
 |Combination function `c()`|❌|✅|**Stable**|
-|R matrixes and `matrix()` function|❌|❌|Development|
+|R matrixes and `matrix()` function|❌|✅|Functional|
 |R `ts` class|❌|❌||
 |R `mts` class|❌|❌||
 |`ts()` function|❌|❌||
