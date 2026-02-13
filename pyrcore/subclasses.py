@@ -99,7 +99,7 @@ class matrix(RObject,Generic[MT]):
     # Get/set attribute
     def attr(self,attribute:str,value=None):
         if value is None:
-            super().attr(attribute,value)
+            return super().attr(attribute,value)
         elif attribute=="dimnames" and any((len(value[0])>self.nrow,len(value[1])>self.ncol)):
             raise ValueError(f"{"Row" if len(value[0])>self.nrow else "Column"} names iterable can't be larger than {"row" if len(value[0])>self.nrow else "column"}'s length")
         else:
@@ -173,8 +173,8 @@ class matrix(RObject,Generic[MT]):
     # Setter
     @RObject.type.setter
     def type(self,new_type:"type|str"):
-        super().type=new_type
-        self._data=np.array([self._type(value) for value in self._data.ravel()]).reshape(self.nrow,self.ncol)
+        super(matrix,type(self)).type.__set__(self,new_type)
+        self._data=np.array([self._type(value) for value in self._data.ravel()],dtype=object).reshape(self.nrow,self.ncol)
     #^ No deleter
     
     #* COMPARATIVE DUNDER METHODS
