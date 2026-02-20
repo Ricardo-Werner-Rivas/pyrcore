@@ -69,23 +69,6 @@ class Vector(RObject,Generic[VT]):
             **attributes (`dict`, Optional): Stream of keyword arguments containing the attributes for the vector.
                 Atomic vectors only support attribute "names" and metadata introduced by the user.
         """
-        #// if isinstance(data,list):
-        #//     pass
-        #// elif isinstance(data,(int,float,str,bool,np.number,np.str_,np.bool)):
-        #//     data=[data]
-        #// elif data==None:
-        #//     data=[]
-        #// else:
-        #//     data=list(data)
-        
-        #// if isinstance(data,np.ndarray):
-        #//     self._data=np.array([value for value in data])
-        
-        #// if data==None:
-        #//     data=[]
-        #// else:
-        #//     self._data=np.array(data)
-        
         self._data=np.array(data)
         if None in self._data:
             self._data=np.array([value for value in self._data[self._data!=None]])
@@ -96,13 +79,10 @@ class Vector(RObject,Generic[VT]):
             raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
         self._type=str(self._data.dtype)
         if "int" in self.type:
-            #// self._data=np.array([int(value) for value in data],dtype=object)
             self._type=int
         elif "float" in self.type:
-            #// self._data=np.array([float(value) for value in self._data],dtype=object)
             self._type=float
         elif isinstance(self._data[0],np.str_):
-            #// self._data=np.array([str(value) for value in self._data],dtype=object)
             self._type=str
         else:
             self._type=eval(self._type[self._type.find("'")+1:self._type.rfind("'")])
