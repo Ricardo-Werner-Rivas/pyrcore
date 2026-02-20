@@ -109,4 +109,4 @@ def c(*data,**named_data:dict[str,])->Vector:
                     \"{excep}\"
                     \nThank you for your help."""
                 ) from None
-        return Vector(data_list,names=names,attributes=attributes)
+        return Vector(data_list,**attributes)
