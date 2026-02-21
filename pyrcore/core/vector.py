@@ -90,7 +90,7 @@ class Vector(RObject,Generic[VT]):
     # Get/set attribute
     def attr(self,attribute:str,value=None):
         if value is None:
-            super().attr(attribute,value)
+            return super().attr(attribute,value)
         elif attribute=="names" and len(value)!=len(self._data):
             raise ValueError("Number of names should be equal to number of values")
         else:
