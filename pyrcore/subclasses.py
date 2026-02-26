@@ -601,7 +601,6 @@ class matrix(RObject,Generic[MT]):
         return self._data.size
     
     #* SCREEN
-    #! Missing "dimnames" printing implementation
     # Representation
     def __repr__(self):
         return f"matrix(c({", ".join(str(value) for value in self._data.flatten())}),{self.nrow},{self.ncol},{True},**{self.attributes})"
@@ -609,10 +608,18 @@ class matrix(RObject,Generic[MT]):
     # HTML representation
     def _repr_html_(self):
         representation=f"""<table>"""
+        if self.colnames!=None:
+            representation+=f"""
+            <thead>
+                <tr>
+                    {"\n".join([f"<th style=\"text-align: center;\">{value}</th>" for value in self.colnames])}
+                </tr>
+            </thead>"""
         for row in self._data:
+            rname:str=f"<td style=\"text-align: center;\">{self.rownames[self._data.tolist().index(row)]}</td>\n" if self.rownames!=None else ""
             representation+=f"""
                 <tr>
-                    {"\n".join([f"<td style=\"text-align: center;\">{value}</td>" for value in row])}
+                    {f"\n{rname}".join([f"<td style=\"text-align: center;\">{value}</td>" for value in row])}
                 </tr>"""
         representation+=f"""
         </table>"""
@@ -620,4 +627,5 @@ class matrix(RObject,Generic[MT]):
     
     # Printing (__str__ method)
     def __str__(self):
+        #! Missing "dimnames" implementation
         return f"{"\n".join(["\t".join(str(value) for value in row) for row in self._data])}"
