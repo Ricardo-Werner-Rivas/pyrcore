@@ -604,7 +604,7 @@ class matrix(RObject,Generic[MT]):
     #! Missing "dimnames" printing implementation
     # Representation
     def __repr__(self):
-        return f"matrix(c({", ".join(str(value) for value in self._data.flatten())}),{self.nrow},{self.ncol},{True},attributes={self.attributes})"
+        return f"matrix(c({", ".join(str(value) for value in self._data.flatten())}),{self.nrow},{self.ncol},{True},**{self.attributes})"
     
     # HTML representation
     def _repr_html_(self):
