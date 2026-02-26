@@ -601,6 +601,7 @@ class matrix(RObject,Generic[MT]):
         return self._data.size
     
     #* SCREEN
+    #! Missing "dimnames" printing implementation
     # Representation
     def __repr__(self):
         return f"matrix(c({", ".join(str(value) for value in self._data.flatten())}),{self.nrow},{self.ncol},{True},attributes={self.attributes})"
