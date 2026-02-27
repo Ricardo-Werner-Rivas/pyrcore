@@ -148,7 +148,7 @@ class matrix(RObject,Generic[MT]):
     @property
     # Getter
     def rownames(self)->Vector[str]:
-        return c(self.dimnames[0])
+        return c(self.dimnames[0]) if self.dimnames[0] is not None else None
     # Setter
     @rownames.setter
     def rownames(self,names:Iterable[str]|None):
@@ -159,7 +159,7 @@ class matrix(RObject,Generic[MT]):
     @property
     # Getter
     def colnames(self)->Vector[str]:
-        return c(self._attributes["dimnames"][1])
+        return c(self._attributes["dimnames"][1]) if self._attributes["dimnames"][1] is not None else None
     # Setter
     @colnames.setter
     def colnames(self,names:Iterable[str]|None):
@@ -608,20 +608,28 @@ class matrix(RObject,Generic[MT]):
     # HTML representation
     def _repr_html_(self):
         representation=f"""<table>"""
-        if self.colnames!=None:
+        if self.colnames is not None:
             representation+=f"""
             <thead>
-                <tr>
-                    {"\n".join([f"<th style=\"text-align: center;\">{value}</th>" for value in self.colnames])}
+                <tr>{f"\n<th style=\"text-align: center;\"></th>" if self.rownames is not None else ""}
+                    {"\n".join([f"<th style=\"text-align: center;\">[,{col}]</th>" for col in self.colnames])}
                 </tr>
-            </thead>"""
+            </thead>
+            <tbody>"""
         for row in self._data:
-            rname:str=f"<td style=\"text-align: center;\">{self.rownames[self._data.tolist().index(row)]}</td>\n" if self.rownames!=None else ""
+            representation+="""
+            \t<tr>"""
+            if self.rownames is not None:
+                representation+=f"""
+                    <th style=\"text-align: center;\"><b>[{self.rownames[self._data.tolist().index(row.tolist())]},]</b></th>"""
             representation+=f"""
-                <tr>
-                    {f"\n{rname}".join([f"<td style=\"text-align: center;\">{value}</td>" for value in row])}
+                    {"\n".join([f"<td style=\"text-align: center;\">{value}</td>" for value in row])}
                 </tr>"""
-        representation+=f"""
+        representation="\n".join(representation.split("\n")[:-1])
+        if "<tbody>" in representation.split():
+            representation+="""
+            </tbody>"""
+        representation+="""
         </table>"""
         return representation
     
