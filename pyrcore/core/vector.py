@@ -120,6 +120,9 @@ class Vector(RObject,Generic[VT]):
         if self._attributes["names"] and len(self._attributes["names"])!=len(self._data):
             raise IndexError("List of names has different length than the data.")
         return self
+    # Transform to list
+    def tolist(self):
+        return list(self._data)
     
     #* PROPERTIES
     # Type
