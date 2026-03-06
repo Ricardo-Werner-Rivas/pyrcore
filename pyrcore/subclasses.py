@@ -638,6 +638,6 @@ class matrix(RObject,Generic[MT]):
         #? Able to fix space management
         printing=f""
         if self.colnames is not None:
-            printing+="\t "+f"[,{"]\t[,".join(self.colnames)}]\n"
-        printing+="\n".join(["["+(self.rownames[self._data.tolist().index(row.tolist())] if self.rownames is not None else "")+",]\t"+"\t".join(str(value) for value in row) for row in self._data])
+            printing+=("\t " if self.rownames is not None else "")+f"[,{"]\t[,".join(self.colnames)}]\n"
+        printing+="\n".join([("["+self.rownames[self._data.tolist().index(row.tolist())]+",]\t" if self.rownames is not None else "")+"\t".join(str(value) for value in row) for row in self._data])
         return printing
