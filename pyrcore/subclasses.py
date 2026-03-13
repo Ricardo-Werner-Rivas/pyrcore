@@ -635,9 +635,12 @@ class matrix(RObject,Generic[MT]):
     
     # Printing (__str__ method)
     def __str__(self):
-        #? Able to fix space management
         printing=f""
-        if self.colnames is not None:
-            printing+=("\t " if self.rownames is not None else "")+f"[,{"]\t[,".join(self.colnames)}]\n"
-        printing+="\n".join([("["+self.rownames[self._data.tolist().index(row.tolist())]+",]\t" if self.rownames is not None else "")+"\t".join(str(value) for value in row) for row in self._data])
+        if self.rownames is not None or self.colnames is not None:
+            printing+=f"Rows' names: [{", ".join(self.rownames)}]\nColumns' names: [{", ".join(self.colnames)}]\n"
+        printing+=f"Dimensions: ({", ".join([str(dim) for dim in self.dim])})\n\n"
+        printing+="\n".join(["\t".join([str(value) for value in row]) for row in self._data])
+        #// if self.colnames is not None:
+        #//     printing+=("\t " if self.rownames is not None else "")+f"[,{"]\t[,".join(self.colnames)}]\n"
+        #// printing+="\n".join([("["+self.rownames[self._data.tolist().index(row.tolist())]+",]\t" if self.rownames is not None else "")+"\t".join(str(value) for value in row) for row in self._data])
         return printing
