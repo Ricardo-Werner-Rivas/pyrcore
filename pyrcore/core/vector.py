@@ -23,7 +23,7 @@ from .core import RObject
 
 #* TYPING
 # Define new variable types with TypeVar
-VT=TypeVar("VectorDataTypes")
+VT=TypeVar("VectorDataTypes",int,float,str,bool)
 
 #* CLASS "Vector"
 # Create vector class with Generic
@@ -61,7 +61,7 @@ class Vector(RObject,Generic[VT]):
     """
     #* METHODS
     # __init__
-    def __init__(self,data:list,**attributes):
+    def __init__(self,data:list[VT],**attributes):
         """
         Arguments:
             data (`list`): Object containing the value/s for the vector.
@@ -79,8 +79,8 @@ class Vector(RObject,Generic[VT]):
         ) if isinstance(data,np.ndarray) else np.array(data)
         if None in self._data:
             self._data=np.array([value for value in self._data[self._data!=None]])
-        self._attributes=attributes or {"names":None}
-        if self._attributes["names"] and len(self._attributes["names"])!=len(self._data):
+        self._attributes=attributes or {}
+        if "names" in self._attributes and self._attributes["names"] and len(self._attributes["names"])!=len(self._data):
             raise IndexError("List of names has different length than the data.")
         if self._data.dtype=="object":
             raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
@@ -130,7 +130,7 @@ class Vector(RObject,Generic[VT]):
     # Setter
     @RObject.type.setter
     def type(self,new_type:"type|str"):
-        super().type=new_type
+        super(Vector,type(self)).type.__set__(self,new_type)
         self._data=np.array([self._type(value) for value in self._data],dtype=object)
     #^ No deleter
     
@@ -138,14 +138,23 @@ class Vector(RObject,Generic[VT]):
     @property
     # Getter
     def names(self)->list[str]|None:
-        return self._attributes["names"]
+        if "names" in self._attributes and self._attributes["names"] is None:
+            del self._attributes["names"]
+        return self._attributes["names"] if "names" in self._attributes else None
     # Setter
     @names.setter
     def names(self,names:"list[str]|tuple[str]|Vector[str]|None"):
         self._attributes["names"]=names
+        if self._attributes["names"] is None:
+            del self._attributes["names"]
     #^ No deleter
     
-    #¡ Inherited "attributes" property
+    #¡ "attributes" property redefinition
+    @RObject.attributes.getter
+    def attributes(self):
+        if "names" in self._attributes and self._attributes["names"] is None:
+            del self._attributes["names"]
+        return super().attributes
     
     #* COMPARATIVE METHODS
     # Equality

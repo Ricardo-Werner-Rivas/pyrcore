@@ -14,12 +14,12 @@
 
 #* IMPORTS
 # Class Vector
-from .core import Vector
+from .core import Vector,VT
 # NumPy
 import numpy as np
 
 #* COMBINATION FUNCTION (c(), for vector creation)
-def c(*data,**named_data:dict[str,])->Vector:
+def c(*data:VT|list|tuple|np.ndarray,**named_data:VT)->Vector[VT]:
     #& Missing comments for code
     """
     Creates an *R-like* atomic vector. The returned object is a `Vector` instance.\n
@@ -61,15 +61,12 @@ def c(*data,**named_data:dict[str,])->Vector:
             elif isinstance(value,np.ndarray):
                 # Try listing
                 try:
-                    # List its values in Python native types
-                    value=[item.item() for item in value]
+                    # List its values in Python built-in types
+                    value=[item.item() if isinstance(item,np.generic) else item for item in value]
                 # If array is 0-dimensional
                 except TypeError:
                     # Put its Python equivalent in a list
                     value=[value.item()]
-                # If array contains Python built-in type objects
-                except AttributeError:
-                    value=[item.item() for item in np.array(list(value))]
                 # General exception
                 except Exception as excep:
                     raise type(excep)(
@@ -85,7 +82,7 @@ def c(*data,**named_data:dict[str,])->Vector:
             elif isinstance(value,Vector):
                 # Store its attributes
                 attributes.update(value.attributes)
-                attributes["names"]=names if names else attributes["names"]
+                attributes["names"]=names
                 # List its values
                 value=[item for item in value._data]
             elif not isinstance(value,(list,tuple)):
@@ -102,11 +99,8 @@ def c(*data,**named_data:dict[str,])->Vector:
                 raise TypeError(f"Data type \"{data_type}\" not supported for atomic vectors") from None
             except Exception as excep:
                 raise type(excep)(
-                    f"""A fatal error ocurred.
-                    Please report this in the issues page: https://github.com/Ricardo-Werner-Rivas/pyrcore/issues
-                    
-                    Include the following message, raised by the error, in your report:
-                    \"{excep}\"
-                    \nThank you for your help."""
-                ) from None
+                        "A fatal error has occured. Please report this in our issues page: {}\
+                        \n\nPlease include, along with the error type, the following message in your report:\n\"{}\""\
+                        .format("https://github.com/Ricardo-Werner-Rivas/pyrcore/issues",excep)
+                    ) from None
         return Vector(data_list,**attributes)

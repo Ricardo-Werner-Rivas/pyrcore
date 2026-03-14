@@ -25,7 +25,7 @@ from .functions import c
 
 #* TYPING
 # Define new variable types with TypeVar
-MT=TypeVar("MatrixDataTypes") # For matrixes
+MT=TypeVar("MatrixDataTypes",int,float,str) # For matrixes
 
 #* CLASS "matrix"
 class matrix(RObject,Generic[MT]):
@@ -40,7 +40,7 @@ class matrix(RObject,Generic[MT]):
     # __init__
     def __init__(
         self,
-        data:Vector[int|float]|Iterable|None=None,nrow:int|None=None,ncol:int|None=None,byrow:bool=False,
+        data:Vector[MT]|Iterable[MT]|None=None,nrow:int|None=None,ncol:int|None=None,byrow:bool=False,
         *,
         dimnames:tuple[Iterable[str]|None,Iterable[str]|None]|None=None,
         **attributes
@@ -140,7 +140,7 @@ class matrix(RObject,Generic[MT]):
     @property
     # Getter
     def dimnames(self)->tuple[Iterable[str],Iterable[str]]:
-        return self.attributes["dimnames"]
+        return self.attributes["dimnames"] if "dimnames" in self.attributes else None
     #^ No setter
     #^ No deleter
     
@@ -166,7 +166,12 @@ class matrix(RObject,Generic[MT]):
         self._attributes["dimnames"][1]=names
     #^ No deleter
     
-    #¡ Inherited "attributes" property
+    #¡ "attributes" property redefinition
+    @RObject.attributes.getter
+    def attributes(self):
+        if "dimnames" in self._attributes and self._attributes["dimnames"]==(None,None):
+            del self._attributes["dimnames"]
+        return super().attributes
     
     # Type
     #¡ Getter was inherited
