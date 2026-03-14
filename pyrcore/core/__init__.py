@@ -9,4 +9,7 @@ Contains the class `Vector`, which is a subclass of `RObject`.
 Vectors are the base of R behaviour, so they are included in the core of the package.
 """
 from .core import RObject
-from .vector import Vector
+from .vector import Vector,VT
+
+# Declare "__all__" variable
+__all__=["RObject","Vector"]
