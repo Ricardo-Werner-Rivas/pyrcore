@@ -19,9 +19,9 @@ pip install pyrcore
 ## Current features
 |Feature|PyPI|TestPyPI|Status|
 |-------|----|--------|------|
-|R atomic vectors|❌|✅|**Stable**|
-|Combination function `c()`|❌|✅|**Stable**|
-|R matrixes and `matrix()` function|❌|✅|Functional|
+|R atomic vectors|✅|✅|**Stable**|
+|Combination function `c()`|✅|✅|**Stable**|
+|R matrixes and `matrix()` function|✅|✅|**Stable**|
 |R `ts` class|❌|❌||
 |R `mts` class|❌|❌||
 |`ts()` function|❌|❌||
