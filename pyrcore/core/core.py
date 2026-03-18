@@ -60,13 +60,10 @@ class RObject(metaclass=ABCMeta):
         #¡ else/elif ...:
     # Structure
     @abstractmethod
-    def structure(self,atts:dict[str,]|None=None,**attributes):
-        if atts and attributes:
-            raise ValueError("Given both parameters. Only one expected.")
-        else:
-            attributes=attributes or atts
-        self._attributes.update(attributes)
+    def structure(self,**attributes)->RObject:
         ...
+        self._attributes.update(attributes)
+        return self
     
     #* PROPERTIES
     # Type

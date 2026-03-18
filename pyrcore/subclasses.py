@@ -106,10 +106,10 @@ class matrix(RObject,Generic[MT]):
             self._attributes[attribute]=value
     
     # Structure
-    def structure(self,atts:dict[str,]|None=None,**attributes):
-        super().structure(atts,**attributes)
-        if len(self.attributes["dimnames"][0])>self.nrow or len(self.attributes["dimnames"][1])>self.ncol:
-            raise IndexError(f"{"Row" if len(self.attributes["dimnames"][0])>self.nrow else "Column"} names iterable can't be larger than {"row" if len(self.attributes["dimnames"][0])>self.nrow else "column"}'s length")
+    def structure(self,**attributes)->matrix:
+        if all([len(attributes["dimnames"][0])!=self.nrow,attributes["dimnames"][0] is not None]) or all([len(attributes["dimnames"][1])!=self.ncol,attributes["dimnames"][1] is not None]):
+            raise IndexError(f"{"Row" if len(attributes["dimnames"][0])>self.nrow else "Column"} names iterable can't be larger than {"row" if len(attributes["dimnames"][0])>self.nrow else "column"}'s length")
+        return super().structure(**attributes)
     
     #* PROPERTIES
     # Number of rows
