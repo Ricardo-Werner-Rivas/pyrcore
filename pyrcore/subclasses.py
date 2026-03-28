@@ -111,6 +111,25 @@ class matrix(RObject,Generic[MT]):
             raise IndexError(f"{"Row" if len(attributes["dimnames"][0])>self.nrow else "Column"} names iterable can't be larger than {"row" if len(attributes["dimnames"][0])>self.nrow else "column"}'s length")
         return super().structure(**attributes)
     
+    # Determinant
+    def det(self):
+        """
+        Calculates the determinant of the matrix.\n
+        ---
+        Returns:
+            int: Determinant of the matrix
+        """
+        if self.nrow!=self.ncol:
+            raise ValueError("Matrix is not square")
+        elif self.nrow==1:
+            return int(self._data)
+        elif self.nrow==2:
+            return self._data[0,0]*self._data[1,1]-self._data[0,1]*self._data[1,0]
+        elif self.nrow==3:
+            return self._data[0,0]*self._data[1,1]*self._data[2,2]+self._data[1,0]*self._data[2,1]*self._data[0,2]+self._data[0,1]*self._data[1,2]*self._data[2,0]-(self._data[0,2]*self._data[1,1]*self._data[2,0]+self._data[1,2]*self._data[2,1]*self._data[0,0]+self._data[0,1]*self._data[1,0]*self._data[2,2])
+        else:
+            return sum([self._data[0,i]*matrix(np.delete(self._data,i,1)[1:],self.nrow,self.ncol,True,**self.attributes).det() for i in range(self.ncol)])
+    
     #* PROPERTIES
     # Number of rows
     @property
