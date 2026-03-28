@@ -128,7 +128,7 @@ class matrix(RObject,Generic[MT]):
         elif self.nrow==3:
             return self._data[0,0]*self._data[1,1]*self._data[2,2]+self._data[1,0]*self._data[2,1]*self._data[0,2]+self._data[0,1]*self._data[1,2]*self._data[2,0]-(self._data[0,2]*self._data[1,1]*self._data[2,0]+self._data[1,2]*self._data[2,1]*self._data[0,0]+self._data[0,1]*self._data[1,0]*self._data[2,2])
         else:
-            return sum([self._data[0,i]*matrix(np.delete(self._data,i,1)[1:],self.nrow,self.ncol,True,**self.attributes).det() for i in range(self.ncol)])
+            return sum([self._data[0,i]*((-1)**(1+i+1))*matrix(c(np.delete(self._data,i,1)[1:].flatten()),self.nrow-1,self.ncol-1,True,**self.attributes).det() for i in range(self.ncol)])
     
     #* PROPERTIES
     # Number of rows
@@ -159,7 +159,9 @@ class matrix(RObject,Generic[MT]):
     @property
     # Getter
     def dimnames(self)->tuple[Iterable[str],Iterable[str]]:
-        return self.attributes["dimnames"] if "dimnames" in self.attributes else None
+        if "dimnames" not in self.attributes:
+            return (None,None)
+        return self.attributes["dimnames"]
     #^ No setter
     #^ No deleter
     
@@ -178,7 +180,7 @@ class matrix(RObject,Generic[MT]):
     @property
     # Getter
     def colnames(self)->Vector[str]:
-        return c(self._attributes["dimnames"][1]) if self._attributes["dimnames"][1] is not None else None
+        return c(self.dimnames[1]) if self.dimnames[1] is not None else None
     # Setter
     @colnames.setter
     def colnames(self,names:Iterable[str]|None):
