@@ -128,7 +128,7 @@ class matrix(RObject,Generic[MT]):
         elif self.nrow==3:
             return self._data[0,0]*self._data[1,1]*self._data[2,2]+self._data[1,0]*self._data[2,1]*self._data[0,2]+self._data[0,1]*self._data[1,2]*self._data[2,0]-(self._data[0,2]*self._data[1,1]*self._data[2,0]+self._data[1,2]*self._data[2,1]*self._data[0,0]+self._data[0,1]*self._data[1,0]*self._data[2,2])
         else:
-            return sum([self._data[0,i]*((-1)**(1+i+1))*matrix(c(np.delete(self._data,i,1)[1:].flatten()),self.nrow-1,self.ncol-1,True,**self.attributes).det() for i in range(self.ncol)])
+            return sum([self._data[0,i]*((-1)**(1+i+1))*matrix(np.delete(self._data,i,1)[1:].flatten(),self.nrow-1,self.ncol-1,True,**self.attributes).det() for i in range(self.ncol)])
     
     #* PROPERTIES
     # Number of rows
