@@ -35,6 +35,29 @@ class matrix(RObject,Generic[MT]):
     Unlike class `Vector`, this class properly creates the object so no auxiliar functions are needed.\n
     ---
     Attributes:
+        data (`numpy.array`, Hidden): Hidden attribute containing the data of the matrix in the form of a `numpy` array.
+        attributes (`dict`, Hidden): Hidden attribute containing the R like attributes of the matrix.
+    ---
+    ## Methods
+    
+    ---
+    ## Properties\n
+    :nrow: *`MethodType`*\n
+        Gets the number of rows\n
+    :ncol: *`MethodType`*\n
+        Gets the number of columns
+    :dim: *`MethodType`*\n
+        Gets the dimensions of the matrix\n
+    :dimnames: *`MethodType`*\n
+        Gets the names of rows and columns\n
+    :rownames: *`MethodType`*\n
+        Gets/sets the names of the rows\n
+    :colnames: *`MethodType`*\n
+        Gets/sets the names of the columns\n
+    :attributes: *`MethodType`*\n
+        Gets/sets the R like attributes of the matrix
+    :type: *`MethodType`*\n
+        Gets/sets the type of the data
     """
     #* METHODS
     # __init__
@@ -55,7 +78,7 @@ class matrix(RObject,Generic[MT]):
                 and the names for the columns (second position).
                 Any two position iterable works fine. Tuple is recommended if you just want to name the columns, so you can pass the following:
                 ```
-                m=matrix(<data>,<nrow>,2,dimnames=(,["name1","name2"]))
+                m=matrix(<data>,<nrow>,2,dimnames=(None,["name1","name2"]))
                 ```
                 If only an iterable of strings is received, it will be passed to the rows.
             **attributes (`dict`, Optional): Stream of keyword arguments defining the matrix R attributes.
@@ -128,7 +151,7 @@ class matrix(RObject,Generic[MT]):
         elif self.nrow==3:
             return self._data[0,0]*self._data[1,1]*self._data[2,2]+self._data[1,0]*self._data[2,1]*self._data[0,2]+self._data[0,1]*self._data[1,2]*self._data[2,0]-(self._data[0,2]*self._data[1,1]*self._data[2,0]+self._data[1,2]*self._data[2,1]*self._data[0,0]+self._data[0,1]*self._data[1,0]*self._data[2,2])
         else:
-            return sum([self._data[0,i]*((-1)**(1+i+1))*matrix(c(np.delete(self._data,i,1)[1:].flatten()),self.nrow-1,self.ncol-1,True,**self.attributes).det() for i in range(self.ncol)])
+            return sum([self._data[0,i]*((-1)**(1+i+1))*matrix(np.delete(self._data,i,1)[1:].flatten(),self.nrow-1,self.ncol-1,True,**self.attributes).det() for i in range(self.ncol)])
     
     #* PROPERTIES
     # Number of rows
