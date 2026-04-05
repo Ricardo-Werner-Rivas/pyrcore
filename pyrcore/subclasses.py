@@ -26,6 +26,7 @@ from .functions import c
 #* TYPING
 # Define new variable types with TypeVar
 MT=TypeVar("MatrixDataTypes",int,float,str) # For matrixes
+TS=TypeVar("TimeSeriesDataTypes") # For time-series
 
 #* CLASS "matrix"
 class matrix(RObject,Generic[MT]):
@@ -692,3 +693,38 @@ class matrix(RObject,Generic[MT]):
         #//     printing+=("\t " if self.rownames is not None else "")+f"[,{"]\t[,".join(self.colnames)}]\n"
         #// printing+="\n".join([("["+self.rownames[self._data.tolist().index(row.tolist())]+",]\t" if self.rownames is not None else "")+"\t".join(str(value) for value in row) for row in self._data])
         return printing
+
+#* CLASS "TimeSeries"
+class TimeSeries(RObject,Generic[TS]):
+    #& Code comments
+    """
+    Class replicating R univariate time-series.\n
+    ---
+    Attributes:
+    """
+    #* METHODS
+    # __init__
+    def __init__(self,data:Vector[TS],start:Vector[int],end:Vector[int]|None,frequency:int,deltat:int|float,**attributes):
+        """
+        Arguments:
+            data (`TS`): Data for the time-series
+            start (`Vector`|`int`): Starting time of the observations
+            end (`Vector`|`int`|`None`): Time of the last observation
+            frequency (`int`): Number of observations per time unit
+        """
+        super().__init__(data,**attributes)
+        self._type=data._type
+        
+        # Time management
+        self._attributes["start"],self._attributes["end"],self._attributes["frequency"],self._attributes["deltat"]=start,end,frequency,deltat
+        current=start.copy()
+        time=[]
+        for i in range(len(self._data)):
+            time.append(current)
+            if current==end:
+                break
+            current[1]+=1
+            if current[1]>frequency:
+                current[0]+=1
+                current[1]=1
+        self._time=time
