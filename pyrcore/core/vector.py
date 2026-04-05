@@ -103,26 +103,28 @@ class Vector(RObject,Generic[VT]):
         else:
             self._attributes[attribute]=value
     # Update attributes
-    def structure(self,atts:dict[str,]|None=None,**attributes):
+    def structure(self,**attributes):
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `Vector` object.\n
         ---
         Arguments:
-            atts (`dict[str|Any]`|`None`, Optional): Dictionary with the attributes changes.
             **attributes (Optional): Stream of attributes manually introduced.
         Both cannot be introduced at the same time.\n
         ---
         Returns:
             Vector: Returns the `Vector` instance with the updated attributes.
         """
-        super().structure(atts,**attributes)
+        super().structure(**attributes)
         if self._attributes["names"] and len(self._attributes["names"])!=len(self._data):
             raise IndexError("List of names has different length than the data.")
         return self
     # Transform to list
     def tolist(self):
         return list(self._data)
+    # Generate copy
+    def copy(self):
+        return Vector(self.tolist().copy(),**self.attributes)
     
     #* PROPERTIES
     # Type

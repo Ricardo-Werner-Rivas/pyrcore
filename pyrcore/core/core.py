@@ -29,7 +29,7 @@ class RObject(metaclass=ABCMeta):
     def __init__(self,data,**attributes):
         self._data=data
         self._attributes=attributes or {}
-        self._type=type(data)
+        self._type:type=type(data)
         ...
     # Get/set R attribute
     @abstractmethod
@@ -69,7 +69,7 @@ class RObject(metaclass=ABCMeta):
     # Type
     @property
     # Getter
-    def type(self):
+    def type(self)->type:
         return self._type
     # Setter
     @type.setter
@@ -78,7 +78,7 @@ class RObject(metaclass=ABCMeta):
         if isinstance(new_type,type):
             self._type=new_type
         else:
-            self._type=eval(new_type)
+            self._type:type=eval(new_type)
         ...
     #^ No deleter
     
