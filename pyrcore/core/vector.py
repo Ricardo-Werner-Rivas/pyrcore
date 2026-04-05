@@ -123,6 +123,9 @@ class Vector(RObject,Generic[VT]):
     # Transform to list
     def tolist(self):
         return list(self._data)
+    # Generate copy
+    def copy(self):
+        return Vector(self.tolist().copy(),**self.attributes)
     
     #* PROPERTIES
     # Type
