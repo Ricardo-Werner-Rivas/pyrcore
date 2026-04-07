@@ -743,3 +743,20 @@ class TimeSeries(RObject,Generic[TS]):
             self._attributes[other]=1/value
         else:
             self._attributes[attribute]=value
+    
+    # Structure
+    def structure(self,**attributes)->TimeSeries:
+        """
+        Updates attributes dictionary. Similar to R `structure` function.
+        Returns the `TimeSeries` object.\n
+        ---
+        Arguments:
+            **attributes (Optional): Stream of attributes manually introduced.
+        Both cannot be introduced at the same time.\n
+        ---
+        Returns:
+            TimeSeries: Returns the `TimeSeries` instance with the updated attributes.
+        """
+        super().structure(**attributes)
+        self.attr("frequency",self._attributes["frequency"])
+        return self
