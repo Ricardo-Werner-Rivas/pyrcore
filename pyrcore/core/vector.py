@@ -120,10 +120,22 @@ class Vector(RObject,Generic[VT]):
             raise IndexError("List of names has different length than the data.")
         return self
     # Transform to list
-    def tolist(self):
+    def tolist(self)->list:
+        """
+        Returns the data in a `list` object.\n
+        ---
+        Returns:
+            list: Listed data of the `Vector` object.
+        """
         return list(self._data)
     # Generate copy
-    def copy(self):
+    def copy(self)->Vector:
+        """
+        Returns a copy of the `Vector` object stored in a new memory address.\n
+        ---
+        Returns:
+            Vector: Copy of the `Vector` object.
+        """
         return Vector(self.tolist().copy(),**self.attributes)
     
     #* PROPERTIES
