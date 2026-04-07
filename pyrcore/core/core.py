@@ -84,10 +84,9 @@ class RObject(metaclass=ABCMeta):
     
     # Attributes
     @property
-    @abstractmethod
     # Getter
     def attributes(self):
-        #¡ Introduce controls for subclass specific R attributes here
-        return {key:value for key,value in self._attributes.items()}
+        #¡ Introduce controls for subclass specific R attributes
+        return self._attributes
     #^ No setter
     #^ No deleter
