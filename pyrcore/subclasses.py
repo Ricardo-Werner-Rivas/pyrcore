@@ -760,3 +760,8 @@ class TimeSeries(RObject,Generic[TS]):
         super().structure(**attributes)
         self.attr("frequency",self._attributes["frequency"])
         return self
+    
+    # Generate copy
+    def copy(self)->TimeSeries:
+        self._data:Vector[TS]
+        return TimeSeries(self._data.copy(),**self._attributes)
