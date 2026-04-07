@@ -103,7 +103,7 @@ class Vector(RObject,Generic[VT]):
         else:
             self._attributes[attribute]=value
     # Update attributes
-    def structure(self,**attributes):
+    def structure(self,**attributes)->Vector:
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `Vector` object.\n
