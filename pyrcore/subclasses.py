@@ -780,7 +780,9 @@ class TimeSeries(RObject,Generic[TS]):
         Returns:
             pandas.Series: `pandas` equivalent to the `TimeSeries`object.
         """
+        #? Create new index object to comfortably manage time
         from pandas import Series
-        result=Series(self._data._data,index=[f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time])
+        #^ Revise argument `index` in `pandas.Series`
+        result=Series(self._data._data,index=[f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" if self._attributes["frequency"]!=1 else date for date in self._time])
         del Series
         return result
