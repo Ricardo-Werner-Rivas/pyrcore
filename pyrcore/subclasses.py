@@ -765,3 +765,10 @@ class TimeSeries(RObject,Generic[TS]):
     def copy(self)->TimeSeries:
         self._data:Vector[TS]
         return TimeSeries(self._data.copy(),**self._attributes)
+    
+    # Transform to pandas.Series
+    def to_pandas(self):
+        from pandas import Series
+        result=Series(self._data._data,index=[f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time])
+        del Series
+        return result
