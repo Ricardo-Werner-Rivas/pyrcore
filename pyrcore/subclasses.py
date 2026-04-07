@@ -763,11 +763,23 @@ class TimeSeries(RObject,Generic[TS]):
     
     # Generate copy
     def copy(self)->TimeSeries:
+        """
+        Returns a copy of the `TimeSeries` object.\n
+        ---
+        Returns:
+            TimeSeries: Copy of the `TimeSeries` object.
+        """
         self._data:Vector[TS]
         return TimeSeries(self._data.copy(),**self._attributes)
     
     # Transform to pandas.Series
     def to_pandas(self):
+        """
+        Returns a `pandas.Series` object equivalent to the `TimeSeries` object.\n
+        ---
+        Returns:
+            pandas.Series: `pandas` equivalent to the `TimeSeries`object.
+        """
         from pandas import Series
         result=Series(self._data._data,index=[f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time])
         del Series
