@@ -74,7 +74,7 @@ class RObject(metaclass=ABCMeta):
     # Setter
     @type.setter
     @abstractmethod
-    def type(self,new_type:"type|str"):
+    def type(self,new_type:type|str):
         if isinstance(new_type,type):
             self._type=new_type
         else:
