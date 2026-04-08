@@ -16,8 +16,8 @@
 #* IMPORTS
 # NumPy
 import numpy as np
-# TypeVar, Generic and Iterable
-from typing import TypeVar,Generic,Iterable
+# TypeVar, Generic, Iterable and TYPE_CHECKING
+from typing import TypeVar,Generic,Iterable,TYPE_CHECKING
 # Class RObject
 from .core import RObject,Vector
 # Combination function
@@ -27,6 +27,10 @@ from .functions import c
 # Define new variable types with TypeVar
 MT=TypeVar("MatrixDataTypes",int,float,str) # For matrixes
 TS=TypeVar("TimeSeriesDataTypes") # For time-series
+
+# Import pandas.Series only for annotations
+if TYPE_CHECKING:
+    from pandas import Series
 
 #* CLASS "matrix"
 class matrix(RObject,Generic[MT]):
@@ -773,7 +777,7 @@ class TimeSeries(RObject,Generic[TS]):
         return TimeSeries(self._data.copy(),**self._attributes)
     
     # Transform to pandas.Series
-    def to_pandas(self):
+    def to_pandas(self)->Series:
         """
         Returns a `pandas.Series` object equivalent to the `TimeSeries` object.\n
         ---
