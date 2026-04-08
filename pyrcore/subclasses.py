@@ -790,3 +790,13 @@ class TimeSeries(RObject,Generic[TS]):
         result=Series(self._data._data,index=[f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" if self._attributes["frequency"]!=1 else date for date in self._time])
         del Series
         return result
+    
+    #* PROPERTIES
+    # Type
+    #¡ Getter
+    # Setter
+    @RObject.type.setter
+    def type(self,new_type:type|str):
+        super(TimeSeries,type(self)).type.__set__(self,new_type)
+        self._data.type=self._type
+    #^ No deleter
