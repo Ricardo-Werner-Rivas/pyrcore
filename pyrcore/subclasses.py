@@ -784,6 +784,17 @@ class TimeSeries(RObject,Generic[TS]):
         """
         return TimeSeries(c([f"{float(date[0]+self.deltat*(date[1]-1)):.3f}" for date in self._time]),deltat=self.deltat,**self.attributes)
     
+    # Stational indexes
+    def cycle(self)->TimeSeries:
+        """
+        Returns the period of the time unit for each data piece. Replicates R `cycle()` function.\n
+        ---
+        Returns:
+            TimeSeries: A `TimeSeries` object with same dimensions and
+            R attributes as the original containing the stational indexes of each time unit for each data piece.
+        """
+        return TimeSeries(c([date[1] for date in self._time]),deltat=self.deltat,**self.attributes)
+    
     # Generate copy
     def copy(self)->TimeSeries:
         """
