@@ -24,13 +24,12 @@ from .core import RObject,Vector
 from .functions import c
 
 #* TYPING
-# Define new variable types with TypeVar
-MT=TypeVar("MatrixDataTypes",int,float,str) # For matrixes
-TS=TypeVar("TimeSeriesDataTypes") # For time-series
-
 # Import pandas.Series only for annotations
 if TYPE_CHECKING:
     from pandas import Series
+# Define new variable types with TypeVar
+MT=TypeVar("MatrixDataTypes",int,float,str) # For matrixes
+TS=TypeVar("TimeSeriesDataTypes") # For time-series
 
 #* CLASS "matrix"
 class matrix(RObject,Generic[MT]):
