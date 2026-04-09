@@ -3,6 +3,7 @@
 #*-------------------------------------------------------------------------------------------------------------------------------
 #! Missing
 #& Missing unimportant
+#~ Revision notes
 #? Questions
 #* Section
 #^ Important
@@ -28,7 +29,8 @@ VT=TypeVar("VectorDataTypes",int,float,str,bool)
 #* CLASS "Vector"
 # Create vector class with Generic
 class Vector(RObject,Generic[VT]):
-    #& Missing code comments
+    #^ Revise "attr()" and "structure()" methods and "attributes" property
+    #& Code comments
     """
     Replicates R atomic vectors.\n
     This class can be imported for documentation purposes. For vector creation you'll want to use the combination function (`c()`).\n
@@ -94,16 +96,20 @@ class Vector(RObject,Generic[VT]):
         else:
             self._type=eval(self._type[self._type.find("'")+1:self._type.rfind("'")])
         self._data=np.array([value.item() for value in self._data],dtype=object)
+    
     # Get/set attribute
     def attr(self,attribute:str,value=None):
+        #~ Attributes' updating validation
         if value is None:
             return super().attr(attribute,value)
         elif attribute=="names" and len(value)!=len(self._data):
             raise ValueError("Number of names should be equal to number of values")
         else:
             self._attributes[attribute]=value
+    
     # Update attributes
     def structure(self,**attributes)->Vector:
+        #~ Attributes' updating validation
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `Vector` object.\n
@@ -119,6 +125,7 @@ class Vector(RObject,Generic[VT]):
         if self._attributes["names"] and len(self._attributes["names"])!=len(self._data):
             raise IndexError("List of names has different length than the data.")
         return self
+    
     # Transform to list
     def tolist(self)->list:
         """
@@ -128,6 +135,7 @@ class Vector(RObject,Generic[VT]):
             list: Listed data of the `Vector` object.
         """
         return list(self._data)
+    
     # Generate copy
     def copy(self)->Vector:
         """
@@ -140,7 +148,7 @@ class Vector(RObject,Generic[VT]):
     
     #* PROPERTIES
     # Type
-    #¡ Getter was inherited
+    #¡ Getter
     # Setter
     @RObject.type.setter
     def type(self,new_type:type|str):
@@ -166,6 +174,7 @@ class Vector(RObject,Generic[VT]):
     #¡ "attributes" property redefinition
     @RObject.attributes.getter
     def attributes(self):
+        #~ "attributes" property usage
         if "names" in self._attributes and self._attributes["names"] is None:
             del self._attributes["names"]
         return super().attributes

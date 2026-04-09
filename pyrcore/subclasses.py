@@ -3,6 +3,7 @@
 #*-------------------------------------------------------------------------------------------------------------------------------
 #! Missing
 #& Missing unimportant
+#~ Revision notes
 #? Questions
 #* Section
 #^ Important
@@ -33,6 +34,7 @@ TS=TypeVar("TimeSeriesDataTypes") # For time-series
 
 #* CLASS "matrix"
 class matrix(RObject,Generic[MT]):
+    #^ Revise "attr()" and "structure()" methods and "attributes" property
     #& Missing code comments
     """
     Replicates R matrixes and R `matrix()` function.\n
@@ -125,6 +127,7 @@ class matrix(RObject,Generic[MT]):
     
     # Get/set attribute
     def attr(self,attribute:str,value=None):
+        #~ Attributes' updating validation
         if value is None:
             return super().attr(attribute,value)
         elif attribute=="dimnames" and any((len(value[0])>self.nrow,len(value[1])>self.ncol)):
@@ -134,6 +137,7 @@ class matrix(RObject,Generic[MT]):
     
     # Structure
     def structure(self,**attributes)->matrix:
+        #~ Attributes' updating validation
         if all([len(attributes["dimnames"][0])!=self.nrow,attributes["dimnames"][0] is not None]) or all([len(attributes["dimnames"][1])!=self.ncol,attributes["dimnames"][1] is not None]):
             raise IndexError(f"{"Row" if len(attributes["dimnames"][0])>self.nrow else "Column"} names iterable can't be larger than {"row" if len(attributes["dimnames"][0])>self.nrow else "column"}'s length")
         return super().structure(**attributes)
@@ -217,12 +221,13 @@ class matrix(RObject,Generic[MT]):
     #¡ "attributes" property redefinition
     @RObject.attributes.getter
     def attributes(self):
+        #~ "attributes" property usage
         if "dimnames" in self._attributes and self._attributes["dimnames"]==(None,None):
             del self._attributes["dimnames"]
         return super().attributes
     
     # Type
-    #¡ Getter was inherited
+    #¡ Getter
     # Setter
     @RObject.type.setter
     def type(self,new_type:"type|str"):
