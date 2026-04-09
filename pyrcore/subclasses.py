@@ -719,12 +719,14 @@ class TimeSeries(RObject,Generic[TS]):
             start (`Vector`|`int`): Starting time of the observations
             end (`Vector`|`int`|`None`): Time of the last observation
             frequency (`int`): Number of observations per time unit
+            deltat (`int`|`float`): Inverse of `frequency`
+            **attributes (`dict[str,Any]`, Optional): Keyword arguments for R-like attributes
         """
         super().__init__(data,**attributes)
         self._type=data._type
         
         # Time management
-        self._attributes["start"],self._attributes["end"],self._attributes["frequency"],self._attributes["deltat"]=start,end,frequency,deltat
+        self._attributes["start"],self._attributes["end"],self._attributes["frequency"]=start,end,(frequency or 1/deltat)
         current=start.copy()
         time=[]
         for i in range(len(self._data)):
@@ -803,7 +805,7 @@ class TimeSeries(RObject,Generic[TS]):
         #? Create new index object to comfortably manage time
         from pandas import Series
         #^ Revise argument `index` in `pandas.Series`
-        result=Series(self._data._data,index=[f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" if self._attributes["frequency"]!=1 else date for date in self._time])
+        result=Series(self._data._data,index=[f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" if self.frequency!=1 else date for date in self._time])
         del Series
         return result
     
@@ -816,3 +818,68 @@ class TimeSeries(RObject,Generic[TS]):
         super(TimeSeries,type(self)).type.__set__(self,new_type)
         self._data.type=self._type
     #^ No deleter
+    
+    # Start
+    @property
+    # Getter
+    def start(self)->Vector[int]|int:
+        return self.attributes["start"]
+    # Setter
+    @start.setter
+    def start(self,new_start:Vector[int]|int):
+        self._attributes["start"]=new_start
+    # Deleter
+    @start.deleter
+    def start(self):
+        self.start=1 if self.frequency==1 else c(1,1)
+    
+    # End
+    @property
+    # Getter
+    def end(self)->Vector[int]|int:
+        return self.attributes["end"]
+    # Setter
+    @end.setter
+    def end(self,new_end:Vector[int]|int):
+        self._attributes["end"]=new_end
+    # Deleter
+    @end.deleter
+    def end(self):
+        if self.frequency==1:
+            self.end=c(len(self._data),1)
+        else:
+            end=self.start.copy()
+            end[1]+=len(self._data)-1
+            year=end[0]+end[1]//self.frequency-1
+            if end[1]%self.frequency!=0:
+                year+=1
+            period=end[1]%self.frequency
+            if period==0:
+                period=self.frequency
+            end[0],end[1]=year,period
+            self.end=end.copy()
+    
+    # Frequency
+    @property
+    # Getter
+    def frequency(self)->int:
+        if self.attributes["frequency"] is None:
+            self._attributes["frequency"]=1
+        return self.attributes["frequency"]
+    # Setter
+    @frequency.setter
+    def frequency(self,new_frequency:int):
+        self._attributes["frequency"]=new_frequency
+        self._attributes["deltat"]=1/new_frequency
+    # Deleter
+    @frequency.deleter
+    def frequency(self):
+        self.frequency=1
+    
+    # Deltat
+    @property
+    # Getter
+    def deltat(self)->int|float:
+        return 1/self.frequency
+    
+    #¡ Attributes
