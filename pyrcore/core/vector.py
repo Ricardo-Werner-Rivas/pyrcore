@@ -143,7 +143,7 @@ class Vector(RObject,Generic[VT]):
     #¡ Getter was inherited
     # Setter
     @RObject.type.setter
-    def type(self,new_type:"type|str"):
+    def type(self,new_type:type|str):
         super(Vector,type(self)).type.__set__(self,new_type)
         self._data=np.array([self._type(value) for value in self._data],dtype=object)
     #^ No deleter
@@ -157,7 +157,7 @@ class Vector(RObject,Generic[VT]):
         return self._attributes["names"] if "names" in self._attributes else None
     # Setter
     @names.setter
-    def names(self,names:"list[str]|tuple[str]|Vector[str]|None"):
+    def names(self,names:list[str]|tuple[str]|Vector[str]|None):
         self._attributes["names"]=names
         if self._attributes["names"] is None:
             del self._attributes["names"]
