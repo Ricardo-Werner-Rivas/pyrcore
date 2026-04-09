@@ -741,8 +741,10 @@ class TimeSeries(RObject,Generic[TS]):
             match attribute:
                 case "frequency":
                     other="deltat"
-                case _:
+                case "deltat":
                     other="frequency"
+                case _:
+                    pass
             self._attributes[attribute]=value
             self._attributes[other]=1/value
         else:
