@@ -727,7 +727,7 @@ class TimeSeries(RObject,Generic[TS]):
         
         # Time management
         current=start.copy()
-        time=[]
+        time:list[Vector[int]]=[]
         for i in range(len(self._data)):
             time.append(current.copy())
             if end is not None and all(current==end):
@@ -794,6 +794,96 @@ class TimeSeries(RObject,Generic[TS]):
             R attributes as the original containing the stational indexes of each time unit for each data piece.
         """
         return TimeSeries(c([date[1] for date in self._time]),deltat=self.deltat,**self.attributes)
+    
+    # Window
+    def window(
+        self,
+        start:Vector[int]|int|None=None,end:Vector[int]|int|None=None,
+        frequency:int|None=None,deltat:float|int|None=None,
+        extend:bool=False
+    )->TimeSeries:
+        """
+        Replicates the R `window()` function and creates another `TimeSeries` object with the requested data.\n
+        ---
+        Arguments:
+            start (`Vector[int]`|`int`|`None`, Optional): New starting point.
+            end (`Vector[int]`|`int`|`None`, Optional): New ending point.
+            frequency (`int`|`None`, Optional): New frequency.
+            deltat (`float`|`int`|`None`, Optional): New `deltat`.
+            extend (`bool`, Optional): Whether to extend the series or not if `start` and/or `end` are not in the original time interval.
+                Defaults to `False`.\n
+        ---
+        Returns:
+            TimeSeries: Slice of the requested data as a new `TimeSeries` object.
+        """
+        data=self._data.copy()
+        if not start:
+            start=c(self.start,1) if isinstance(self.start,int) else self.start.copy()
+        elif isinstance(start,int):
+            start=c(start,1)
+        if not end:
+            end=c(self.end,1) if isinstance(self.end,int) else self.end.copy()
+        elif isinstance(end,int):
+            end=c(end)
+        if frequency and deltat:
+            if deltat!=1/frequency:
+                raise ValueError("Parameters 'frequency' and 'deltat' should be the inverse of one another")
+        elif frequency:
+            deltat=1/frequency
+        elif deltat:
+            frequency=1/deltat
+        else:
+            frequency=self.frequency
+            deltat=self.deltat
+        time=self._time.copy()
+        if start not in time:
+            if extend:
+                limit=time[0].copy()
+                time.clear()
+                current=start.copy()
+                while True:
+                    time.append(current)
+                    current[1]+=1
+                    if current[1]>self.frequency:
+                        current[0]+=1
+                        current[1]=1
+                    if all(current==limit):
+                        break
+                missing_start=len(time)
+                time.extend(self._time.copy())
+            else:
+                start=c(self.start,1) if isinstance(self.start,int) else self.start.copy()
+                missing_start=None
+                print("Warning: Value of parameter 'start' not changed")
+        if end not in time:
+            if extend:
+                add_on:list[Vector[int]]=[]
+                current=time[-1].copy()
+                while True:
+                    add_on.append(current)
+                    if all(current==end):
+                        break
+                    current[1]+=1
+                    if current[1]>self.frequency:
+                        current[0]+=1
+                        current[1]=1
+                missing_end=len(add_on)
+                time.extend(add_on)
+            else:
+                end=c(self.end,1) if isinstance(self.end,int) else self.end.copy()
+                missing_end=None
+                print("Warning: Value of parameter 'end' not changed")
+        if missing_start:
+            data=c([float("nan") for i in range(missing_start)],data)
+        if missing_end:
+            data=c(data,[float("nan") for i in range(missing_end)])
+        if frequency!=self.frequency and self.frequency%frequency==0:
+            data=data[time.index(start):time.index(end):self.frequency/frequency]
+        elif frequency!=self.frequency:
+            frequency=self.frequency
+            deltat=self.deltat
+            print("Warning: Value of parameter 'frequency' not changed")
+        return TimeSeries(data,start,end,frequency,deltat)
     
     # Generate copy
     def copy(self)->TimeSeries:
