@@ -1,6 +1,6 @@
 # `pyrcore`
-[Python]:https://img.shields.io/badge/python-3.14.3-&
-[Supported Python]:https://img.shields.io/badge/python->=3.14.3-&?label=CPython
+[Python]:https://img.shields.io/badge/python-3.14.4-&
+[Supported Python]:https://img.shields.io/badge/python->=3.14.4-&?label=CPython
 [TestPyPI Version]:https://img.shields.io/badge/dynamic/json?url=https://test.pypi.org/pypi/pyrcore/json&query=$.info.version&label=TestPyPI
 [License]:https://img.shields.io/github/license/Ricardo-Werner-Rivas/pyrcore
 
