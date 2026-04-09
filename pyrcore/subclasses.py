@@ -726,18 +726,19 @@ class TimeSeries(RObject,Generic[TS]):
         self._type=data._type
         
         # Time management
-        self._attributes["start"],self._attributes["end"],self._attributes["frequency"]=start,end,(frequency or 1/deltat)
         current=start.copy()
         time=[]
         for i in range(len(self._data)):
-            time.append(current)
-            if current==end:
+            time.append(current.copy())
+            if end is not None and all(current==end):
                 break
             current[1]+=1
             if current[1]>frequency:
                 current[0]+=1
                 current[1]=1
-        self._time=time
+        if end is None:
+            end=time[-1]
+        self._time,self._attributes["start"],self._attributes["end"],self._attributes["frequency"]=time,start,end,(frequency or 1/deltat)
     
     # Get/set attribute
     def attr(self,attribute:str,value=None):
@@ -772,6 +773,16 @@ class TimeSeries(RObject,Generic[TS]):
         super().structure(**attributes)
         self.attr("frequency",self._attributes["frequency"])
         return self
+    
+    # Time
+    def time(self)->TimeSeries:
+        """
+        Returns the time at which each observation data was taken, just like R does with its function `time()`.\n
+        ---
+        Returns:
+            TimeSeries: `TimeSeries` object containing the time at which each data piece was taken instead of the original data.
+        """
+        return TimeSeries(c([f"{float(date[0]+self.deltat*(date[1]-1)):.3f}" for date in self._time]),deltat=self.deltat,**self.attributes)
     
     # Generate copy
     def copy(self)->TimeSeries:
