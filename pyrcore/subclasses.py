@@ -778,6 +778,16 @@ class TimeSeries(RObject,Generic[TS]):
         self._data:Vector[TS]
         return TimeSeries(self._data.copy(),**self._attributes)
     
+    # Transform to list
+    def tolist(self)->list:
+        """
+        Returns the data in a `list` object.\n
+        ---
+        Returns:
+            list: Listed data of the `TimeSeries` object.
+        """
+        return self._data.tolist()
+    
     # Transform to pandas.Series
     def to_pandas(self)->Series:
         """
