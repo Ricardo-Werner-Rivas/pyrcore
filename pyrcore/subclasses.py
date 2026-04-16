@@ -886,7 +886,7 @@ class TimeSeries(RObject,Generic[TS]):
         return TimeSeries(data,start,end,frequency,deltat)
     
     # Generate copy
-    def copy(self)->TimeSeries:
+    def copy(self)->TimeSeries[TS]:
         """
         Returns a copy of the `TimeSeries` object.\n
         ---
@@ -897,7 +897,7 @@ class TimeSeries(RObject,Generic[TS]):
         return TimeSeries(self._data.copy(),**self._attributes)
     
     # Transform to list
-    def tolist(self)->list:
+    def tolist(self)->list[TS]:
         """
         Returns the data in a `list` object.\n
         ---
@@ -907,7 +907,7 @@ class TimeSeries(RObject,Generic[TS]):
         return self._data.tolist()
     
     # Transform to pandas.Series
-    def to_pandas(self)->Series:
+    def to_pandas(self)->Series[TS]:
         """
         Returns a `pandas.Series` object equivalent to the `TimeSeries` object.\n
         ---
@@ -993,5 +993,7 @@ class TimeSeries(RObject,Generic[TS]):
     # Getter
     def deltat(self)->int|float:
         return 1/self.frequency
+    #^ No setter
+    #^ No deleter
     
     #¡ Attributes
