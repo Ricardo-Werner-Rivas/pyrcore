@@ -9,7 +9,7 @@
 #^ Important
 # Normal comment
 #// Deprecated code
-#¡ Needed code for abstractmethod redefinition
+#¡ Code for abstractmethod redefinition
 #*===============================================================================================================================
 
 #^ The different types of comments require the "Colorful Comments Refreshed" extension for VSCode to be properly distinguished
@@ -88,7 +88,14 @@ class RObject(metaclass=ABCMeta):
     # Getter
     def attributes(self):
         #¡ Introduce controls for subclass specific R attributes if needed
-        #// return self._attributes
         return {key:value for key,value in self._attributes.items() if value is not None}
     #^ No setter
     #^ No deleter
+    
+    #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
+    # Attribute not found
+    def __getattr__(self,attribute:str):
+        try:
+            return self.attributes[attribute]
+        except KeyError:
+            return

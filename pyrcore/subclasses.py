@@ -230,6 +230,9 @@ class matrix(RObject,Generic[MT]):
         self._data=np.array([self._type(value) for value in self._data.ravel()],dtype=object).reshape(self.nrow,self.ncol)
     #^ No deleter
     
+    #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
+    # Attribute not found #¡ __getattr__
+    
     #* COMPARATIVE DUNDER METHODS
     # Equality
     def __eq__(self,value):
