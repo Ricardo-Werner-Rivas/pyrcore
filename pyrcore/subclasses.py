@@ -665,30 +665,50 @@ class matrix(RObject,Generic[MT]):
     
     # HTML representation
     def _repr_html_(self):
-        representation=f"""<table>"""
-        if self.colnames is not None:
-            representation+=f"""
-            <thead>
-                <tr>{f"\n<th style=\"text-align: center;\"></th>" if self.rownames is not None else ""}
-                    {"\n".join([f"<th style=\"text-align: center;\">[,{col}]</th>" for col in self.colnames])}
-                </tr>
-            </thead>
-            <tbody>"""
+        representation="""\
+<div>
+<style scoped>
+    .matrix thead th {
+        text-align: center;
+    }
+    .matrix tbody tr {
+        text-align: center;
+    }
+</style>
+<table class="matrix">
+"""
+        if self.colnames:
+            representation+=f"""\
+    <thead>
+        <tr>{f"\n<th></th>" if self.rownames else ""}
+            {"\n\
+            ".join([f"<th>[,{col}]</th>" for col in self.colnames])
+            }
+        </tr>
+    </thead>
+"""
+        representation+="""\
+    <tbody>
+"""
         for row in self._data:
-            representation+="""
-            \t<tr>"""
-            if self.rownames is not None:
-                representation+=f"""
-                    <th style=\"text-align: center;\"><b>[{self.rownames[self._data.tolist().index(row.tolist())]},]</b></th>"""
-            representation+=f"""
-                    {"\n".join([f"<td style=\"text-align: center;\">{value}</td>" for value in row])}
-                </tr>"""
-        representation="\n".join(representation.split("\n")[:-1])
-        if "<tbody>" in representation.split():
-            representation+="""
-            </tbody>"""
-        representation+="""
-        </table>"""
+            representation+="""\
+        <tr>
+"""
+            if self.rownames:
+                representation+=f"""\
+            <th>[{self.rownames[self._data.tolist().index(row.tolist())]},]</th>
+"""
+            representation+=f"""\
+            {"\n\
+            ".join([f"<td>{value}</td>" for value in row])
+            }
+        </tr>
+"""
+        representation+="""\
+    </tbody>
+</table>
+</div>\
+"""
         return representation
     
     # Printing (__str__ method)

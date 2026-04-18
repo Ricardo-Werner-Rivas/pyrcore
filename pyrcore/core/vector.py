@@ -407,19 +407,23 @@ class Vector(RObject,Generic[VT]):
     def _repr_html_(self):
         if self.names:
             headers=[f"<th>{name}</th>" for name in self.names]
-            values=[f"<td style=\"text-align: center;\">{value}</td>" for value in self._data]
-            return f"""
-            <table>
-                <thead>
-                    <tr>
-                        {"\n".join(headers)}
-                    </tr>
-                </thead>
-                <tr>
-                    {"\n".join(values)}
-                </tr>
-            </table>
-            """
+            values=[f"<td>{value}</td>" for value in self._data]
+            return f"""\
+<table>
+    <thead>
+        <tr>
+            {"\n\
+            ".join(headers)}
+        </tr>
+    </thead>
+    <tbody>
+        <tr style=\"text-align: center;\">
+            {"\n\
+            ".join(values)}
+        </tr>
+    </tbody>
+</table>\
+"""
         else:
             return f"<p>{"&emsp;·&emsp;".join(str(value) for value in self._data)}</p>"
     # Printing (__str__ method)
