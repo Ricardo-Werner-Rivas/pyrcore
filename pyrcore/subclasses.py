@@ -123,7 +123,7 @@ class matrix(RObject,Generic[MT]):
                 list(dimnames[1]) if dimnames[1] else None
             )
         else:
-            self._attributes.setdefault("dimnames",(None,None))
+            self._attributes["dimnames"]=None
     
     # Get/set attribute
     def attr(self,attribute:str,value=None):
@@ -166,7 +166,7 @@ class matrix(RObject,Generic[MT]):
     @property
     # Getter
     def nrow(self)->int:
-        return self.attributes["dim"][0]
+        return self.dim[0]
     #^ No setter
     #^ No deleter
     
@@ -174,7 +174,7 @@ class matrix(RObject,Generic[MT]):
     @property
     # Getter
     def ncol(self)->int:
-        return self.attributes["dim"][1]
+        return self.dim[1]
     #^ No setter
     #^ No deleter
     
@@ -190,8 +190,6 @@ class matrix(RObject,Generic[MT]):
     @property
     # Getter
     def dimnames(self)->tuple[Iterable[str],Iterable[str]]:
-        if "dimnames" not in self.attributes:
-            return (None,None)
         return self.attributes["dimnames"]
     #^ No setter
     #^ No deleter
@@ -200,30 +198,27 @@ class matrix(RObject,Generic[MT]):
     @property
     # Getter
     def rownames(self)->Vector[str]:
-        return c(self.dimnames[0]) if self.dimnames[0] is not None else None
+        return c(self.dimnames[0]) if self.dimnames else None
     # Setter
     @rownames.setter
     def rownames(self,names:Iterable[str]|None):
-        self._attributes["dimnames"][0]=names
+        self._attributes["dimnames"][0]=names if self.dimnames else (names,None)
     #^ No deleter
     
     # Names of columns
     @property
     # Getter
     def colnames(self)->Vector[str]:
-        return c(self.dimnames[1]) if self.dimnames[1] is not None else None
+        return c(self.dimnames[1]) if self.dimnames else None
     # Setter
     @colnames.setter
     def colnames(self,names:Iterable[str]|None):
-        self._attributes["dimnames"][1]=names
+        self._attributes["dimnames"][1]=names if self.dimnames else (None,names)
     #^ No deleter
     
     #¡ "attributes" property redefinition
     @RObject.attributes.getter
     def attributes(self):
-        #~ "attributes" property usage
-        if "dimnames" in self._attributes and self._attributes["dimnames"]==(None,None):
-            del self._attributes["dimnames"]
         return super().attributes
     
     # Type

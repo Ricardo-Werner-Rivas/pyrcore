@@ -88,6 +88,7 @@ class RObject(metaclass=ABCMeta):
     # Getter
     def attributes(self):
         #¡ Introduce controls for subclass specific R attributes if needed
-        return self._attributes
+        #// return self._attributes
+        return {key:value for key,value in self._attributes.items() if value is not None}
     #^ No setter
     #^ No deleter
