@@ -1120,3 +1120,16 @@ class TimeSeries(RObject,Generic[TS]):
     # Power
     def __rpow__(self,value):
         return TimeSeries(value**self._data,**self.attributes)
+    
+    #* UNARY DUNDER METHODS
+    # Negative
+    def __neg__(self):
+        return TimeSeries(-self._data,**self.attributes)
+    
+    # Positive
+    def __pos__(self):
+        return TimeSeries(+self._data,**self.attributes)
+    
+    # Absolute value
+    def __abs__(self):
+        return TimeSeries(abs(self._data),**self.attributes)
