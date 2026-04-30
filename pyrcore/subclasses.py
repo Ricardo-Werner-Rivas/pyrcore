@@ -1142,3 +1142,8 @@ class TimeSeries(RObject,Generic[TS]):
     # Setter
     def __setitem__(self,index,value):
         self._data[index]=value
+    
+    #* LENGTH
+    # Length
+    def __len__(self):
+        return len(self._data)
