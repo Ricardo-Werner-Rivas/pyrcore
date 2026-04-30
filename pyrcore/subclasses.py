@@ -1054,3 +1054,36 @@ class TimeSeries(RObject,Generic[TS]):
     # Greater or equal
     def __ge__(self,value):
         return self._data>=value
+    
+    #* ARITHMETIC DUNDER METHODS
+    # Addition
+    def __add__(self,value):
+        return TimeSeries(self._data+value,**self.attributes)
+    
+    # Difference
+    def __sub__(self,value):
+        return TimeSeries(self._data-value,**self.attributes)
+    
+    # Product
+    def __mul__(self,value):
+        return TimeSeries(self._data*value,**self.attributes)
+    
+    # Division
+    def __truediv__(self,value):
+        return TimeSeries(self._data/value,**self.attributes)
+    
+    # Integer division (floor division)
+    def __floordiv__(self,value):
+        return TimeSeries(self._data//value,**self.attributes)
+    
+    # Module
+    def __mod__(self,value):
+        return TimeSeries(self._data%value,**self.attributes)
+    
+    # Divmod
+    def __divmod__(self,value):
+        return self//value,self%value
+    
+    # Power
+    def __pow__(self,value):
+        return TimeSeries(self._data**value,**self.attributes)
