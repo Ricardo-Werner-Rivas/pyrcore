@@ -1147,3 +1147,62 @@ class TimeSeries(RObject,Generic[TS]):
     # Length
     def __len__(self):
         return len(self._data)
+    
+    #* SCREEN
+    # Representation
+    def __repr__(self):
+        return f"TimeSeries({repr(self._data)}{", ".join([f"{attribute}={str(value)}" for attribute,value in self.attributes.items()])})"
+    
+    # HTML representation
+    def _repr_html_(self):
+        if self.frequency>1:
+            match self.frequency:
+                case 4:
+                    headers=[f"<th>Q{quarter}</th>" for quarter in range(1,5)]
+                case 12:
+                    headers=[f"<th>{month}</th>" for month in "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()]
+                case _:
+                    headers=[f"<th>p{i+1}</th>" for i in range(self.frequency)]
+            representation=f"""\
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            {"\n\
+            ".join(headers)}
+        </tr>
+    </thead>
+    <tbody>
+"""
+            data=["<td></td>" for i in range(self.start[1]-1)] if self.start[1]-1>0 else []
+            data.extend(self._data.tolist())
+            if self.frequency==self.end[1]:
+                data.extend(["<td></td>" for i in range(self.frequency-self.end[1])])
+            data=[[f"<td>{str(data.pop[0])}</td>" for i in range(self.frequency)] for i in range(len(data)//self.frequency)]
+            for year in range(self.start[0],self.end[0]+1):
+                representation+=f"""\
+        <tr>
+            <th>{year}</th>
+            {("\n\
+            ".join([value for value in data[year-self.start[0]]]))}
+        </tr>
+"""
+            representation+="""\
+    </tbody>
+</table>
+"""
+        else:
+            representation=f"<p>{"&emsp;·&emsp;".join(str(value) for value in self._data)}</p>"
+        return representation
+    
+    # Printing (__str__ method)
+    def __str__(self):
+        string=f"""\
+Time Series:
+Start={str(self.start)}
+End={str(self.end)}
+Frequency={self.frequency}
+
+{"\t".join(self._data)}
+"""
+        return string
