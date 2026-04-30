@@ -1133,3 +1133,12 @@ class TimeSeries(RObject,Generic[TS]):
     # Absolute value
     def __abs__(self):
         return TimeSeries(abs(self._data),**self.attributes)
+    
+    #* INDEXATION DUNDER METHODS
+    # Getter
+    def __getitem__(self,index):
+        return self._data[index]
+    
+    # Setter
+    def __setitem__(self,index,value):
+        self._data[index]=value
