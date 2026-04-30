@@ -315,10 +315,10 @@ class Vector(RObject,Generic[VT]):
         return self*value
     # Fraction
     def __rtruediv__(self,value):
-        return self/value**-1
+        return (self/value)**-1
     # Integer division
     def __rfloordiv__(self,value):
-        return self//value**-1
+        return (self//value)**-1
     # Module
     def __rmod__(self,value):
         if isinstance(value,(int,float,np.number)) and self.type in [int,float]:
