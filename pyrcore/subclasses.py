@@ -771,6 +771,7 @@ class TimeSeries(RObject,Generic[TS]):
     
     # Get/set attribute
     def attr(self,attribute:str,value=None):
+        #~ Attributes' updating validation
         if value is None:
             return super().attr(attribute,value)
         elif any((attribute=="frequency" and value!=1/self._attributes["deltat"],attribute=="deltat" and value!=1/self._attributes["frequency"])):
@@ -788,6 +789,7 @@ class TimeSeries(RObject,Generic[TS]):
     
     # Structure
     def structure(self,**attributes)->TimeSeries:
+        #~ Attributes' updating validation
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `TimeSeries` object.\n
