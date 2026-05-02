@@ -1201,7 +1201,7 @@ class TimeSeries(RObject,Generic[TS]):
 """
             representation+="""\
     </tbody>
-</table>
+</table>\
 """
         else:
             representation=f"<p>{"&emsp;·&emsp;".join(str(value) for value in self._data)}</p>"
@@ -1215,6 +1215,6 @@ Start={str(self.start)}
 End={str(self.end)}
 Frequency={self.frequency}
 
-{"\t".join(self._data)}
+{"\t".join(self._data)}\
 """
         return string
