@@ -128,7 +128,6 @@ class matrix(RObject,Generic[MT]):
     
     # Get/set attribute
     def attr(self,attribute:str,value=None):
-        #~ Attributes' updating validation
         if value is None:
             return super().attr(attribute,value)
         elif attribute=="dimnames" and any((len(value[0])>self.nrow,len(value[1])>self.ncol)):
@@ -138,9 +137,6 @@ class matrix(RObject,Generic[MT]):
     
     # Structure
     def structure(self,**attributes)->matrix:
-        #~ Attributes' updating validation
-        if all([len(attributes["dimnames"][0])!=self.nrow,attributes["dimnames"][0] is not None]) or all([len(attributes["dimnames"][1])!=self.ncol,attributes["dimnames"][1] is not None]):
-            raise IndexError(f"{"Row" if len(attributes["dimnames"][0])>self.nrow else "Column"} names iterable can't be larger than {"row" if len(attributes["dimnames"][0])>self.nrow else "column"}'s length")
         return super().structure(**attributes)
     
     # Transform into vector
@@ -201,7 +197,7 @@ class matrix(RObject,Generic[MT]):
     @property
     # Getter
     def dimnames(self)->tuple[Iterable[str],Iterable[str]]:
-        return self.attributes["dimnames"]
+        return self.attributes["dimnames"] if "dimnames" in self.attributes else None
     #^ No setter
     #^ No deleter
     
@@ -213,7 +209,7 @@ class matrix(RObject,Generic[MT]):
     # Setter
     @rownames.setter
     def rownames(self,names:Iterable[str]|None):
-        self._attributes["dimnames"][0]=names if self.dimnames else (names,None)
+        self.attr("dimnames",(c(names),self.colnames) if self.dimnames else (c(names),None))
     #^ No deleter
     
     # Names of columns
@@ -224,13 +220,10 @@ class matrix(RObject,Generic[MT]):
     # Setter
     @colnames.setter
     def colnames(self,names:Iterable[str]|None):
-        self._attributes["dimnames"][1]=names if self.dimnames else (None,names)
+        self.attr("dimnames",(self.rownames,c(names)) if self.dimnames else (None,c(names)))
     #^ No deleter
     
-    #¡ "attributes" property redefinition
-    @RObject.attributes.getter
-    def attributes(self):
-        return super().attributes
+    #¡ Attributes
     
     # Type
     #¡ Getter
