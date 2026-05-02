@@ -35,7 +35,8 @@ TS=TypeVar("TimeSeriesDataTypes") # For time-series
 #* CLASS "matrix"
 class matrix(RObject,Generic[MT]):
     #^ Revise "attr()" and "structure()" methods and "attributes" property
-    #& Missing code comments
+    #& Code comments
+    #& Documentation
     """
     Replicates R matrixes and R `matrix()` function.\n
     Unlike class `Vector`, this class properly creates the object so no auxiliar functions are needed.\n
@@ -727,6 +728,7 @@ class matrix(RObject,Generic[MT]):
 #* CLASS "TimeSeries"
 class TimeSeries(RObject,Generic[TS]):
     #& Code comments
+    #& Documentation
     """
     Class replicating R univariate time-series.\n
     ---
