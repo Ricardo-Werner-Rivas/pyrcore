@@ -1070,27 +1070,27 @@ class TimeSeries(RObject,Generic[TS]):
     #* ARITHMETIC DUNDER METHODS
     # Addition
     def __add__(self,value):
-        return TimeSeries(self._data+value,**self.attributes)
+        return TimeSeries(self._data+value if not isinstance(value,TimeSeries) else self._data+value._data,**self.attributes)
     
     # Difference
     def __sub__(self,value):
-        return TimeSeries(self._data-value,**self.attributes)
+        return TimeSeries(self._data-value if not isinstance(value,TimeSeries) else self._data-value._data,**self.attributes)
     
     # Product
     def __mul__(self,value):
-        return TimeSeries(self._data*value,**self.attributes)
+        return TimeSeries(self._data*value if not isinstance(value,TimeSeries) else self._data*value._data,**self.attributes)
     
     # Division
     def __truediv__(self,value):
-        return TimeSeries(self._data/value,**self.attributes)
+        return TimeSeries(self._data/value if not isinstance(value,TimeSeries) else self._data/value._data,**self.attributes)
     
     # Integer division (floor division)
     def __floordiv__(self,value):
-        return TimeSeries(self._data//value,**self.attributes)
+        return TimeSeries(self._data//value if not isinstance(value,TimeSeries) else self._data//value._data,**self.attributes)
     
     # Module
     def __mod__(self,value):
-        return TimeSeries(self._data%value,**self.attributes)
+        return TimeSeries(self._data%value if not isinstance(value,TimeSeries) else self._data%value._data,**self.attributes)
     
     # Divmod
     def __divmod__(self,value):
@@ -1098,7 +1098,7 @@ class TimeSeries(RObject,Generic[TS]):
     
     # Power
     def __pow__(self,value):
-        return TimeSeries(self._data**value,**self.attributes)
+        return TimeSeries(self._data**value if not isinstance(value,TimeSeries) else self._data**value._data,**self.attributes)
     
     #* REFLEXED ARITHMETIC DUNDER METHODS
     # Addition
