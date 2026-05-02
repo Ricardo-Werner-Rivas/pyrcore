@@ -138,6 +138,17 @@ class matrix(RObject,Generic[MT]):
     
     # Structure
     def structure(self,**attributes)->matrix:
+        """
+        Updates attributes dictionary. Similar to R `structure` function.
+        Returns the `matrix` object.\n
+        ---
+        Arguments:
+            **attributes (Optional): Stream of attributes manually introduced.
+        Both cannot be introduced at the same time.\n
+        ---
+        Returns:
+            matrix: Returns the `matrix` instance with the updated attributes.
+        """
         return super().structure(**attributes)
     
     # Transform into vector
