@@ -167,6 +167,17 @@ class Vector(RObject,Generic[VT]):
     
     #¡ Attributes
     
+    #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
+    # Attribute not found
+    def __getattr__(self,attribute:str):
+        try:
+            return self.attributes[attribute]
+        except KeyError:
+            try:
+                return self[attribute]
+            except IndexError:
+                return
+    
     #* COMPARATIVE METHODS
     # Equality
     def __eq__(self,value):
@@ -345,7 +356,7 @@ class Vector(RObject,Generic[VT]):
     
     #* INDEXATION
     # Getter
-    def __getitem__(self,index):
+    def __getitem__(self,index:int|str):
         if self.names and isinstance(index,str):
             if index in self.names:
                 return self._data[self.names.index(index)]
@@ -354,7 +365,7 @@ class Vector(RObject,Generic[VT]):
         else:
             return self._data[index]
     # Setter
-    def __setitem__(self,index,value):
+    def __setitem__(self,index:int|str,value:VT):
         if self.names and isinstance(index,str):
             if index in self.names:
                 if value==None:
@@ -372,7 +383,7 @@ class Vector(RObject,Generic[VT]):
             try:
                 self._data=np.array([eval(self.type)(value) for value in data],dtype=object)
             except:
-                raise TypeError("New elements must respect de vectors typing")
+                raise TypeError("New elements must respect the vector's typing")
             if self.names:
                 self.names.remove(self.names[index])
         else:
