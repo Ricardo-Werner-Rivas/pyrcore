@@ -99,7 +99,6 @@ class Vector(RObject,Generic[VT]):
     
     # Get/set attribute
     def attr(self,attribute:str,value=None):
-        #~ Attributes' updating validation
         if value is None:
             return super().attr(attribute,value)
         elif attribute=="names" and len(value)!=len(self._data):
@@ -109,7 +108,6 @@ class Vector(RObject,Generic[VT]):
     
     # Update attributes
     def structure(self,**attributes)->Vector:
-        #~ Attributes' updating validation
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `Vector` object.\n
@@ -121,10 +119,7 @@ class Vector(RObject,Generic[VT]):
         Returns:
             Vector: Returns the `Vector` instance with the updated attributes.
         """
-        super().structure(**attributes)
-        if self._attributes["names"] and len(self._attributes["names"])!=len(self._data):
-            raise IndexError("List of names has different length than the data.")
-        return self
+        return super().structure(**attributes)
     
     # Transform to list
     def tolist(self)->list:
@@ -160,24 +155,17 @@ class Vector(RObject,Generic[VT]):
     @property
     # Getter
     def names(self)->list[str]|None:
-        if "names" in self._attributes and self._attributes["names"] is None:
-            del self._attributes["names"]
-        return self._attributes["names"] if "names" in self._attributes else None
+        return self.attributes["names"] if "names" in self.attributes else None
     # Setter
     @names.setter
     def names(self,names:list[str]|tuple[str]|Vector[str]|None):
-        self._attributes["names"]=names
-        if self._attributes["names"] is None:
-            del self._attributes["names"]
-    #^ No deleter
+        self.attr("names",names)
+    # Deleter
+    @names.deleter
+    def names(self):
+        self.names=None
     
-    #¡ "attributes" property redefinition
-    @RObject.attributes.getter
-    def attributes(self):
-        #~ "attributes" property usage
-        if "names" in self._attributes and self._attributes["names"] is None:
-            del self._attributes["names"]
-        return super().attributes
+    #¡ Attributes
     
     #* COMPARATIVE METHODS
     # Equality

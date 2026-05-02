@@ -63,7 +63,8 @@ class RObject(metaclass=ABCMeta):
     @abstractmethod
     def structure(self,**attributes)->RObject:
         ...
-        self._attributes.update(attributes)
+        for attribute,value in attributes.items():
+            self.attr(attribute,value)
         return self
     
     #* PROPERTIES

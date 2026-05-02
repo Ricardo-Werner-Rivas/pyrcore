@@ -800,13 +800,6 @@ class TimeSeries(RObject,Generic[TS]):
             TimeSeries: Returns the `TimeSeries` instance with the updated attributes.
         """
         if "frequency" in attributes and "deltat" in attributes:
-            self.attr("frequency",attributes["frequency"])
-            del attributes["frequency"],attributes["deltat"]
-        elif "frequency" in attributes:
-            self.attr("frequency",attributes["frequency"])
-            del attributes["frequency"]
-        elif "deltat" in attributes:
-            self.attr("deltat",attributes["deltat"])
             del attributes["deltat"]
         return super().structure(**attributes)
     
