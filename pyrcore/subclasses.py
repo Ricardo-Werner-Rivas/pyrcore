@@ -771,7 +771,6 @@ class TimeSeries(RObject,Generic[TS]):
     
     # Get/set attribute
     def attr(self,attribute:str,value=None):
-        #~ Attributes' updating validation
         if value is None:
             return super().attr(attribute,value)
         elif any((attribute=="frequency" and value!=1/self._attributes["deltat"],attribute=="deltat" and value!=1/self._attributes["frequency"])):
@@ -789,7 +788,6 @@ class TimeSeries(RObject,Generic[TS]):
     
     # Structure
     def structure(self,**attributes)->TimeSeries:
-        #~ Attributes' updating validation
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `TimeSeries` object.\n
@@ -801,9 +799,16 @@ class TimeSeries(RObject,Generic[TS]):
         Returns:
             TimeSeries: Returns the `TimeSeries` instance with the updated attributes.
         """
-        super().structure(**attributes)
-        self.attr("frequency",self._attributes["frequency"])
-        return self
+        if "frequency" in attributes and "deltat" in attributes:
+            self.attr("frequency",attributes["frequency"])
+            del attributes["frequency"],attributes["deltat"]
+        elif "frequency" in attributes:
+            self.attr("frequency",attributes["frequency"])
+            del attributes["frequency"]
+        elif "deltat" in attributes:
+            self.attr("deltat",attributes["deltat"])
+            del attributes["deltat"]
+        return super().structure(**attributes)
     
     # Time
     def time(self)->TimeSeries:
@@ -970,7 +975,7 @@ class TimeSeries(RObject,Generic[TS]):
     # Setter
     @start.setter
     def start(self,new_start:Vector[int]|int):
-        self._attributes["start"]=new_start
+        self.attr("start",new_start)
     # Deleter
     @start.deleter
     def start(self):
@@ -984,7 +989,7 @@ class TimeSeries(RObject,Generic[TS]):
     # Setter
     @end.setter
     def end(self,new_end:Vector[int]|int):
-        self._attributes["end"]=new_end
+        self.attr("end",new_end)
     # Deleter
     @end.deleter
     def end(self):
@@ -1012,8 +1017,7 @@ class TimeSeries(RObject,Generic[TS]):
     # Setter
     @frequency.setter
     def frequency(self,new_frequency:int):
-        self._attributes["frequency"]=new_frequency
-        self._attributes["deltat"]=1/new_frequency
+        self.attr("frequency",new_frequency)
     # Deleter
     @frequency.deleter
     def frequency(self):
@@ -1024,8 +1028,14 @@ class TimeSeries(RObject,Generic[TS]):
     # Getter
     def deltat(self)->int|float:
         return 1/self.frequency
-    #^ No setter
-    #^ No deleter
+    # Setter
+    @deltat.setter
+    def deltat(self,new_deltat:int|float):
+        self.attr("deltat",new_deltat)
+    # Deleter
+    @deltat.deleter
+    def deltat(self):
+        self.deltat=1
     
     #¡ Attributes
     
