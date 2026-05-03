@@ -1208,7 +1208,7 @@ class TimeSeries(RObject,Generic[TS]):
     
     # Printing (__str__ method)
     def __str__(self):
-        string=f"""\
+        return f"""\
 Time Series:
 Start={str(self.start)}
 End={str(self.end)}
@@ -1216,4 +1216,3 @@ Frequency={self.frequency}
 
 {"\t".join(self._data)}\
 """
-        return string
