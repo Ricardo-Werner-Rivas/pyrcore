@@ -11,5 +11,5 @@ Provides several R objects and functions.\n
 * Function `ts()`: Implementation of R `ts()` function.
 """
 from .core import Vector
-from .subclasses import matrix
+from .subclasses import matrix,TimeSeries
 from .functions import c
