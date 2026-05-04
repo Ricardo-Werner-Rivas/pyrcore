@@ -22,8 +22,8 @@ pip install pyrcore
 |R atomic vectors|✅|✅|**Stable**|
 |Combination function `c()`|✅|✅|**Stable**|
 |R matrixes and `matrix()` function|✅|✅|**Stable**|
-|R `ts` class|❌|❌|<ins>Development</ins>|
-|R `mts` class|❌|❌||
+|R `ts` class|✅|✅|**Stable**|
+|R `mts` class|❌|❌|<ins>Development</ins>|
 |`ts()` function|❌|❌||
 ## Dependency policy
 This project aims to be as package independent as possible.
