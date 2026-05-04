@@ -29,7 +29,7 @@ VT=TypeVar("VectorDataTypes",int,float,str,bool)
 #* CLASS "Vector"
 # Create vector class with Generic
 class Vector(RObject,Generic[VT]):
-    #^ Revise "attr()" and "structure()" methods and "attributes" property
+    #~ Revise "attr()" and "structure()" methods and "attributes" property
     #& Code comments
     """
     Replicates R atomic vectors.\n
