@@ -63,7 +63,7 @@ class Vector(RObject,Generic[VT]):
     """
     #* METHODS
     # __init__
-    def __init__(self,data:list[VT],**attributes):
+    def __init__(self,data:tuple[VT],**attributes):
         """
         Arguments:
             data (`list`): Object containing the value/s for the vector.
