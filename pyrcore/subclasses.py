@@ -1162,7 +1162,7 @@ class TimeSeries(RObject,Generic[TS]):
     #* SCREEN
     # Representation
     def __repr__(self):
-        return f"TimeSeries({repr(self._data)}{", ".join([f"{attribute}={str(value)}" for attribute,value in self.attributes.items()])})"
+        return f"TimeSeries({repr(self._data)}{", ".join([f"{attribute}={str(value) if not isinstance(value,Vector) else repr(value)}" for attribute,value in self.attributes.items()])})"
     
     # HTML representation
     def _repr_html_(self):
@@ -1186,10 +1186,10 @@ class TimeSeries(RObject,Generic[TS]):
     <tbody>
 """
             data=["<td></td>" for i in range(self.start[1]-1)] if self.start[1]-1>0 else []
-            data.extend(self._data.tolist())
-            if self.frequency==self.end[1]:
+            data.extend([f"<td>{str(value)}</td>" for value in self._data])
+            if self.frequency!=self.end[1]:
                 data.extend(["<td></td>" for i in range(self.frequency-self.end[1])])
-            data=[[f"<td>{str(data.pop[0])}</td>" for i in range(self.frequency)] for i in range(len(data)//self.frequency)]
+            data=[[data.pop(0) for i in range(self.frequency)] for i in range(len(data)//self.frequency)]
             for year in range(self.start[0],self.end[0]+1):
                 representation+=f"""\
         <tr>
@@ -1210,9 +1210,9 @@ class TimeSeries(RObject,Generic[TS]):
     def __str__(self):
         return f"""\
 Time Series:
-Start={str(self.start)}
-End={str(self.end)}
+Start={repr(self.start)}
+End={repr(self.end)}
 Frequency={self.frequency}
 
-{"\t".join(self._data)}\
+{repr(self._data)}\
 """
