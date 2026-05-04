@@ -3,12 +3,13 @@
 #*-------------------------------------------------------------------------------------------------------------------------------
 #! Missing
 #& Missing unimportant
+#~ Revision notes
 #? Questions
 #* Section
 #^ Important
 # Normal comment
 #// Deprecated code
-#¡ Needed code for abstractmethod redefinition
+#¡ Code for abstractmethod redefinition
 #*===============================================================================================================================
 
 #^ The different types of comments require the "Colorful Comments Refreshed" extension for VSCode to be properly distinguished
@@ -21,7 +22,7 @@ from abc import abstractmethod,ABCMeta
 class RObject(metaclass=ABCMeta):
     #& Missing code comments
     """
-    Base class for every R-based or *R-like* object or class in this package.
+    Base class for every R-based or *R-like* object or class in `pyrcore` package.
     """
     #* METHODS
     # __init__
@@ -62,7 +63,8 @@ class RObject(metaclass=ABCMeta):
     @abstractmethod
     def structure(self,**attributes)->RObject:
         ...
-        self._attributes.update(attributes)
+        for attribute,value in attributes.items():
+            self.attr(attribute,value)
         return self
     
     #* PROPERTIES
@@ -74,7 +76,7 @@ class RObject(metaclass=ABCMeta):
     # Setter
     @type.setter
     @abstractmethod
-    def type(self,new_type:"type|str"):
+    def type(self,new_type:type|str):
         if isinstance(new_type,type):
             self._type=new_type
         else:
@@ -84,10 +86,17 @@ class RObject(metaclass=ABCMeta):
     
     # Attributes
     @property
-    @abstractmethod
     # Getter
     def attributes(self):
-        #¡ Introduce controls for subclass specific R attributes here
-        return {key:value for key,value in self._attributes.items()}
+        #¡ Introduce controls for subclass specific R attributes if needed
+        return {key:value for key,value in self._attributes.items() if value is not None}
     #^ No setter
     #^ No deleter
+    
+    #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
+    # Attribute not found
+    def __getattr__(self,attribute:str):
+        try:
+            return self.attributes[attribute]
+        except KeyError:
+            return

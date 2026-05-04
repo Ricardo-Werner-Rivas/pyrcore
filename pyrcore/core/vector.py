@@ -3,6 +3,7 @@
 #*-------------------------------------------------------------------------------------------------------------------------------
 #! Missing
 #& Missing unimportant
+#~ Revision notes
 #? Questions
 #* Section
 #^ Important
@@ -28,7 +29,8 @@ VT=TypeVar("VectorDataTypes",int,float,str,bool)
 #* CLASS "Vector"
 # Create vector class with Generic
 class Vector(RObject,Generic[VT]):
-    #& Missing code comments
+    #^ Revise "attr()" and "structure()" methods and "attributes" property
+    #& Code comments
     """
     Replicates R atomic vectors.\n
     This class can be imported for documentation purposes. For vector creation you'll want to use the combination function (`c()`).\n
@@ -94,6 +96,7 @@ class Vector(RObject,Generic[VT]):
         else:
             self._type=eval(self._type[self._type.find("'")+1:self._type.rfind("'")])
         self._data=np.array([value.item() for value in self._data],dtype=object)
+    
     # Get/set attribute
     def attr(self,attribute:str,value=None):
         if value is None:
@@ -102,8 +105,9 @@ class Vector(RObject,Generic[VT]):
             raise ValueError("Number of names should be equal to number of values")
         else:
             self._attributes[attribute]=value
+    
     # Update attributes
-    def structure(self,**attributes):
+    def structure(self,**attributes)->Vector:
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `Vector` object.\n
@@ -115,23 +119,34 @@ class Vector(RObject,Generic[VT]):
         Returns:
             Vector: Returns the `Vector` instance with the updated attributes.
         """
-        super().structure(**attributes)
-        if self._attributes["names"] and len(self._attributes["names"])!=len(self._data):
-            raise IndexError("List of names has different length than the data.")
-        return self
+        return super().structure(**attributes)
+    
     # Transform to list
-    def tolist(self):
+    def tolist(self)->list:
+        """
+        Returns the data in a `list` object.\n
+        ---
+        Returns:
+            list: Listed data of the `Vector` object.
+        """
         return list(self._data)
+    
     # Generate copy
-    def copy(self):
+    def copy(self)->Vector:
+        """
+        Returns a copy of the `Vector` object stored in a new memory address.\n
+        ---
+        Returns:
+            Vector: Copy of the `Vector` object.
+        """
         return Vector(self.tolist().copy(),**self.attributes)
     
     #* PROPERTIES
     # Type
-    #¡ Getter was inherited
+    #¡ Getter
     # Setter
     @RObject.type.setter
-    def type(self,new_type:"type|str"):
+    def type(self,new_type:type|str):
         super(Vector,type(self)).type.__set__(self,new_type)
         self._data=np.array([self._type(value) for value in self._data],dtype=object)
     #^ No deleter
@@ -140,23 +155,28 @@ class Vector(RObject,Generic[VT]):
     @property
     # Getter
     def names(self)->list[str]|None:
-        if "names" in self._attributes and self._attributes["names"] is None:
-            del self._attributes["names"]
-        return self._attributes["names"] if "names" in self._attributes else None
+        return self.attributes["names"] if "names" in self.attributes else None
     # Setter
     @names.setter
-    def names(self,names:"list[str]|tuple[str]|Vector[str]|None"):
-        self._attributes["names"]=names
-        if self._attributes["names"] is None:
-            del self._attributes["names"]
-    #^ No deleter
+    def names(self,names:list[str]|tuple[str]|Vector[str]|None):
+        self.attr("names",names)
+    # Deleter
+    @names.deleter
+    def names(self):
+        self.names=None
     
-    #¡ "attributes" property redefinition
-    @RObject.attributes.getter
-    def attributes(self):
-        if "names" in self._attributes and self._attributes["names"] is None:
-            del self._attributes["names"]
-        return super().attributes
+    #¡ Attributes
+    
+    #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
+    # Attribute not found
+    def __getattr__(self,attribute:str):
+        try:
+            return self.attributes[attribute]
+        except KeyError:
+            try:
+                return self[attribute]
+            except IndexError:
+                return
     
     #* COMPARATIVE METHODS
     # Equality
@@ -294,10 +314,10 @@ class Vector(RObject,Generic[VT]):
         return self*value
     # Fraction
     def __rtruediv__(self,value):
-        return self/value**-1
+        return (self/value)**-1
     # Integer division
     def __rfloordiv__(self,value):
-        return self//value**-1
+        return (self//value)**-1
     # Module
     def __rmod__(self,value):
         if isinstance(value,(int,float,np.number)) and self.type in [int,float]:
@@ -336,7 +356,7 @@ class Vector(RObject,Generic[VT]):
     
     #* INDEXATION
     # Getter
-    def __getitem__(self,index):
+    def __getitem__(self,index:int|str):
         if self.names and isinstance(index,str):
             if index in self.names:
                 return self._data[self.names.index(index)]
@@ -345,7 +365,7 @@ class Vector(RObject,Generic[VT]):
         else:
             return self._data[index]
     # Setter
-    def __setitem__(self,index,value):
+    def __setitem__(self,index:int|str,value:VT):
         if self.names and isinstance(index,str):
             if index in self.names:
                 if value==None:
@@ -363,7 +383,7 @@ class Vector(RObject,Generic[VT]):
             try:
                 self._data=np.array([eval(self.type)(value) for value in data],dtype=object)
             except:
-                raise TypeError("New elements must respect de vectors typing")
+                raise TypeError("New elements must respect the vector's typing")
             if self.names:
                 self.names.remove(self.names[index])
         else:
@@ -386,19 +406,23 @@ class Vector(RObject,Generic[VT]):
     def _repr_html_(self):
         if self.names:
             headers=[f"<th>{name}</th>" for name in self.names]
-            values=[f"<td style=\"text-align: center;\">{value}</td>" for value in self._data]
-            return f"""
-            <table>
-                <thead>
-                    <tr>
-                        {"\n".join(headers)}
-                    </tr>
-                </thead>
-                <tr>
-                    {"\n".join(values)}
-                </tr>
-            </table>
-            """
+            values=[f"<td>{value}</td>" for value in self._data]
+            return f"""\
+<table>
+    <thead>
+        <tr>
+            {"\n\
+            ".join(headers)}
+        </tr>
+    </thead>
+    <tbody>
+        <tr style=\"text-align: center;\">
+            {"\n\
+            ".join(values)}
+        </tr>
+    </tbody>
+</table>\
+"""
         else:
             return f"<p>{"&emsp;·&emsp;".join(str(value) for value in self._data)}</p>"
     # Printing (__str__ method)
