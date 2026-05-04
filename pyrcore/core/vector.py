@@ -71,16 +71,9 @@ class Vector(RObject,Generic[VT]):
             **attributes (`dict`, Optional): Stream of keyword arguments containing the attributes for the vector.
                 Atomic vectors only support attribute "names" and metadata introduced by the user.
         """
-        self._data=np.array(
-            [
-                value.item()
-                if isinstance(value,np.generic)
-                else value
-                for value in data
-            ]
-        ) if isinstance(data,np.ndarray) else np.array(data)
+        self._data=np.array(data)
         if None in self._data:
-            self._data=np.array([value for value in self._data[self._data!=None]])
+            self._data=np.array(tuple(self._data[self._data!=None]))
         self._attributes=attributes or {}
         if "names" in self._attributes and self._attributes["names"] and len(self._attributes["names"])!=len(self._data):
             raise IndexError("List of names has different length than the data.")
