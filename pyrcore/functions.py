@@ -60,33 +60,6 @@ def c(*data:VT|list|tuple|np.ndarray,**named_data:VT)->Vector[VT]:
             data_list.clear()
         del data_list
         for value in data:
-            #// # Initialize data_type
-            #// data_type=None
-            #// # If data is in NumPy scalar types
-            #// if isinstance(value,np.generic):
-            #//     # Put its Python equivalent in a list
-            #//     value=[value.item()]
-            #// # Else, if value is a NumPy array
-            #// elif isinstance(value,np.ndarray):
-            #//     # Try listing
-            #//     try:
-            #//         # List its values in Python built-in types
-            #//         value=[item.item() if isinstance(item,np.generic) else item for item in value]
-            #//     # If array is 0-dimensional
-            #//     except TypeError:
-            #//         # Put its Python equivalent in a list
-            #//         value=[value.item()]
-            #//     # General exception
-            #//     except Exception as excep:
-            #//         raise type(excep)(
-            #//             "A fatal error has occured. Please report this in our issues page: {}\
-            #//             \n\nPlease include, along with the error type, the following message in your report:\n\"{}\""\
-            #//             .format("https://github.com/Ricardo-Werner-Rivas/pyrcore/issues",excep)
-            #//         ) from None
-            #// # Else, if value is a dictionary
-            #// elif isinstance(value,dict):
-            #//     # Take its values
-            #//     value=list(value.values())
             # If value is an R-like vector (class Vector)
             if isinstance(value,Vector):
                 # Store its attributes
@@ -94,24 +67,4 @@ def c(*data:VT|list|tuple|np.ndarray,**named_data:VT)->Vector[VT]:
                     attributes.setdefault(k,v)
                 if "names" not in attributes:
                     attributes["names"]=names
-            #//     # List its values
-            #//     value=[item for item in value._data]
-            #// elif not isinstance(value,(list,tuple)):
-            #//     try:
-            #//         value=list(value) if type(value)!=str else [value]
-            #//     except TypeError:
-            #//         value=[value]
-            #// data_list.extend(value)
-            #// try:
-            #//     Vector(data)
-            #// except TypeError:
-            #//     data_type=str(type(value[0])) if "'list'" in str(type(value)) else str(type(value))
-            #//     data_type=data_type[data_type.find("'")+1:data_type.rfind("'")]
-            #//     raise TypeError(f"Data type \"{data_type}\" not supported for atomic vectors") from None
-            #// except Exception as excep:
-            #//     raise type(excep)(
-            #//             "A fatal error has occured. Please report this in our issues page: {}\
-            #//             \n\nPlease include, along with the error type, the following message in your report:\n\"{}\""\
-            #//             .format("https://github.com/Ricardo-Werner-Rivas/pyrcore/issues",excep)
-            #//         ) from None
         return Vector(data,**attributes)
