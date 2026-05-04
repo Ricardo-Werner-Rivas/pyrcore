@@ -1044,27 +1044,27 @@ class TimeSeries(RObject,Generic[TS]):
     #* COMPARATIVE DUNDER METHODS
     # Equality
     def __eq__(self,value):
-        return self._data==value
+        return self._data==value if not isinstance(value,TimeSeries) else self._data==value._data
     
     # Inequality
     def __ne__(self,value):
-        return self._data!=value
+        return self._data!=value if not isinstance(value,TimeSeries) else self._data!=value._data
     
     # Less than
     def __lt__(self,value):
-        return self._data<value
+        return self._data<value if not isinstance(value,TimeSeries) else self._data<value._data
     
     # Less or equal
     def __le__(self,value):
-        return self._data<=value
+        return self._data<=value if not isinstance(value,TimeSeries) else self._data<=value._data
     
     # Greater than
     def __gt__(self,value):
-        return self._data>value
+        return self._data>value if not isinstance(value,TimeSeries) else self._data>value._data
     
     # Greater or equal
     def __ge__(self,value):
-        return self._data>=value
+        return self._data>=value if not isinstance(value,TimeSeries) else self._data>=value._data
     
     #* ARITHMETIC DUNDER METHODS
     # Addition
