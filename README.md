@@ -22,7 +22,7 @@ pip install pyrcore
 |R atomic vectors|✅|✅|**Stable**|
 |Combination function `c()`|✅|✅|**Stable**|
 |R matrixes and `matrix()` function|✅|✅|**Stable**|
-|R `ts` class|✅|✅|**Stable**|
+|R `ts` class|✅|✅|<ins>Debugging</ins>|
 |R `mts` class|❌|❌|<ins>Development</ins>|
 |`ts()` function|❌|❌||
 ## Dependency policy
