@@ -32,6 +32,7 @@ class RObject(metaclass=ABCMeta):
         self._attributes=attributes or {}
         self._type:type=type(data)
         ...
+    
     # Get/set R attribute
     @abstractmethod
     def attr(self,attribute:str,value=None):
@@ -59,6 +60,7 @@ class RObject(metaclass=ABCMeta):
                 """
             ) from None
         #¡ else/elif ...:
+    
     # Structure
     @abstractmethod
     def structure(self,**attributes)->RObject:
@@ -66,6 +68,7 @@ class RObject(metaclass=ABCMeta):
         for attribute,value in attributes.items():
             self.attr(attribute,value)
         return self
+    
     # Generate copy
     def copy(self):
         """
