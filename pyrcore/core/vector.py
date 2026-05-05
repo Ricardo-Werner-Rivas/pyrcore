@@ -124,6 +124,16 @@ class Vector(RObject,Generic[VT]):
         """
         return list(self._data)
     
+    # Transform to tuple
+    def tuple(self)->tuple:
+        """
+        Returns the data in a `tuple` object.\n
+        ---
+        Returns:
+            tuple: Listed data of the `Vector` object.
+        """
+        return tuple(self._data)
+    
     # Generate copy
     def copy(self)->Vector:
         """

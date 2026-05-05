@@ -161,6 +161,16 @@ class matrix(RObject,Generic[MT]):
         """
         return c(self._data.base).structure(**self.attributes)
     
+    # Transform to tuple
+    def tuple(self)->tuple:
+        """
+        Returns the data in a `tuple` object.\n
+        ---
+        Returns:
+            tuple: Listed data of the `matrix` object.
+        """
+        return self.vectorize().tuple()
+    
     # Determinant
     def det(self):
         """
@@ -940,6 +950,16 @@ class TimeSeries(RObject,Generic[TS]):
             list: Listed data of the `TimeSeries` object.
         """
         return self._data.tolist()
+    
+    # Transform to tuple
+    def tuple(self)->tuple:
+        """
+        Returns the data in a `tuple` object.\n
+        ---
+        Returns:
+            tuple: Listed data of the `TimeSeries` object.
+        """
+        return self._data.tuple()
     
     # Transform to pandas.Series
     def to_pandas(self)->Series[TS]:
