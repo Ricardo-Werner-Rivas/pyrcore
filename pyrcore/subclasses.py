@@ -34,7 +34,7 @@ TS=TypeVar("TimeSeriesDataTypes") # For time-series
 
 #* CLASS "matrix"
 class matrix(RObject,Generic[MT]):
-    #^ Revise "attr()" and "structure()" methods and "attributes" property
+    #~ Revise "attr()" and "structure()" methods and "attributes" property
     #& Code comments
     #& Documentation
     """

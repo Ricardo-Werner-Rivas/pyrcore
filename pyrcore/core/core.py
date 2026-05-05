@@ -120,7 +120,7 @@ class RObject(metaclass=ABCMeta):
             return
     
     #* COPYING DUNDER METHODS
-    # Copy
+    # Shallow copy
     @abstractmethod
     def __copy__(self):
         ...
