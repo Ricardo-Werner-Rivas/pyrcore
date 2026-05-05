@@ -269,6 +269,16 @@ class matrix(RObject,Generic[MT]):
     #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
     # Attribute not found #¡ __getattr__
     
+    #* COPYING DUNDER METHODS
+    # Shallow copy #¡ __copy__
+    def __copy__(self):
+        return matrix(self.vectorize().copy(),byrow=self._byrow,**self.attributes)
+    
+    # Deep copy #¡ __deepcopy__
+    def __deepcopy__(self):
+        from copy import deepcopy
+        return matrix(deepcopy(self.vectorize()),**deepcopy(self.attributes))
+    
     #* COMPARATIVE DUNDER METHODS
     # Equality
     def __eq__(self,value):
@@ -777,6 +787,7 @@ class TimeSeries(RObject,Generic[TS]):
             deltat (`int`|`float`): Inverse of `frequency`
             **attributes (`dict[str,Any]`, Optional): Keyword arguments for R-like attributes
         """
+        self._data:Vector[TS]
         super().__init__(data,**attributes)
         self._type=data._type
         
@@ -940,17 +951,6 @@ class TimeSeries(RObject,Generic[TS]):
             print("Warning: Value of parameter 'frequency' not changed")
         return TimeSeries(data,start,end,frequency,deltat)
     
-    # Generate copy
-    def copy(self)->TimeSeries[TS]:
-        """
-        Returns a copy of the `TimeSeries` object.\n
-        ---
-        Returns:
-            TimeSeries: Copy of the `TimeSeries` object.
-        """
-        self._data:Vector[TS]
-        return TimeSeries(self._data.copy(),**self._attributes)
-    
     # Transform to list
     def tolist(self)->list[TS]:
         """
@@ -1070,6 +1070,16 @@ class TimeSeries(RObject,Generic[TS]):
     
     #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
     # Attribute not found #¡ __getattr__
+    
+    #* COPYING DUNDER METHODS
+    # Shallow copy
+    def __copy__(self):
+        return TimeSeries(self._data.copy(),**self.attributes)
+    
+    # Deep copy
+    def __deepcopy__(self):
+        from copy import deepcopy
+        return TimeSeries(deepcopy(self._data),**deepcopy(self.attributes))
     
     #* COMPARATIVE DUNDER METHODS
     # Equality

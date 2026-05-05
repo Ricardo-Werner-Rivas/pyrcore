@@ -134,16 +134,6 @@ class Vector(RObject,Generic[VT]):
         """
         return tuple(self._data)
     
-    # Generate copy
-    def copy(self)->Vector:
-        """
-        Returns a copy of the `Vector` object stored in a new memory address.\n
-        ---
-        Returns:
-            Vector: Copy of the `Vector` object.
-        """
-        return Vector(self.tolist().copy(),**self.attributes)
-    
     #* PROPERTIES
     # Type
     #¡ Getter
@@ -180,6 +170,16 @@ class Vector(RObject,Generic[VT]):
                 return self[attribute]
             except IndexError:
                 return
+    
+    #* COPYING DUNDER METHODS
+    # Shallow copy #¡ __copy__
+    def __copy__(self):
+        return Vector(self.tuple(),**self.attributes.copy())
+    
+    # Deep copy #¡ __deepcopy__
+    def __deepcopy__(self):
+        from copy import deepcopy
+        return Vector(deepcopy(self.tuple()),**deepcopy(self.attributes))
     
     #* COMPARATIVE METHODS
     # Equality
