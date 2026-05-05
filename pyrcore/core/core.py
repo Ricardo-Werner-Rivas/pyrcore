@@ -66,6 +66,21 @@ class RObject(metaclass=ABCMeta):
         for attribute,value in attributes.items():
             self.attr(attribute,value)
         return self
+    # Generate copy
+    def copy(self):
+        """
+        Returns a shallow copy of the instance.
+        """
+        from copy import copy
+        return copy(self)
+    
+    # Deep copy
+    def deepcopy(self):
+        """
+        Returns a deep copy of the instance.
+        """
+        from copy import deepcopy
+        return deepcopy(self)
     
     #* PROPERTIES
     # Type
@@ -100,3 +115,15 @@ class RObject(metaclass=ABCMeta):
             return self.attributes[attribute]
         except KeyError:
             return
+    
+    #* COPYING DUNDER METHODS
+    # Copy
+    @abstractmethod
+    def __copy__(self):
+        ...
+    
+    # Deep copy
+    @abstractmethod
+    def __deepcopy__(self):
+        from copy import deepcopy
+        ...
