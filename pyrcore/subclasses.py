@@ -793,9 +793,9 @@ class TimeSeries(RObject,Generic[TS]):
         
         # Time management
         current=start.copy()
-        time:list[Vector[int]]=[]
+        time:tuple[Vector[int]]=tuple()
         for i in range(len(self._data)):
-            time.append(current.copy())
+            time=(*time,current.copy())
             if end is not None and all(current==end):
                 break
             current[1]+=1
