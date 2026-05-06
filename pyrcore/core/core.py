@@ -20,7 +20,7 @@ from abc import abstractmethod,ABCMeta
 
 #* BASE CLASS "RObject"
 class RObject(metaclass=ABCMeta):
-    #& Missing code comments
+    #& Code comments
     """
     Base class for every R-based or *R-like* object or class in `pyrcore` package.
     """
@@ -123,10 +123,16 @@ class RObject(metaclass=ABCMeta):
     # Shallow copy
     @abstractmethod
     def __copy__(self):
+        """
+        Controls how function `copy.copy()`, to create a shallow copy, acts over the instance.
+        """
         ...
     
     # Deep copy
     @abstractmethod
     def __deepcopy__(self):
+        """
+        Controls how function `copy.deepcopy()`, to create a deep copy, acts over the instance.
+        """
         from copy import deepcopy
         ...
