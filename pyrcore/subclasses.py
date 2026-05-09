@@ -118,13 +118,21 @@ class matrix(RObject,Generic[MT]):
         super().__init__(data,**attributes)
         self._type=data_type
         self._attributes["dim"]=(nrow,ncol)
-        if dimnames:
-            self._attributes["dimnames"]=(
-                list(dimnames[0]) if dimnames[0] else None,
-                list(dimnames[1]) if dimnames[1] else None
+        match (
+            isinstance(dimnames,Iterable),
+            not any(
+                (isinstance(names,Iterable) for names in dimnames) if isinstance(dimnames,Iterable) else (False,)
             )
-        else:
-            self._attributes["dimnames"]=None
+        ):
+            case (False,True):
+                dimnames=None
+            case (True,True):
+                dimnames=(dimnames,None)
+            case (True,False):
+                dimnames=(c(names) if names else None for names in (dimnames if len(dimnames)<=2 else dimnames[:2]))
+            case _:
+                raise RuntimeError("A fatal error occured")
+        self._attributes["dimnames"]=dimnames
         self._byrow=byrow
     
     # Get/set attribute
