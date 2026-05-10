@@ -195,6 +195,16 @@ class matrix(RObject,Generic[MT]):
         else:
             return sum([self._data[0,i]*((-1)**(1+i+1))*matrix(np.delete(self._data,i,1)[1:].base,self.nrow-1,self.ncol-1,self._byrow,**self.attributes).det() for i in range(self.ncol)])
     
+    # Transpose
+    def transpose(self)->matrix[MT]:
+        """
+        Switches rows and columns between each other.\n
+        ---
+        Returns:
+            matrix: Transposed matrix
+        """
+        return matrix(self._data.flatten(),self.nrow,self.ncol,byrow=not self._byrow,**self.attributes)
+    
     #* PROPERTIES
     # Number of rows
     @property
