@@ -203,7 +203,7 @@ class matrix(RObject,Generic[MT]):
         Returns:
             matrix: Transposed matrix
         """
-        return matrix(self._data.flatten(),self.nrow,self.ncol,byrow=not self._byrow,**self.attributes)
+        return matrix(self.vectorize(),self.nrow,self.ncol,not self._byrow,**self.attributes)
     
     #* PROPERTIES
     # Number of rows
