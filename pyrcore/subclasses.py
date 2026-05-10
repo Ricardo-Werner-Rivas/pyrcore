@@ -280,12 +280,12 @@ class matrix(RObject,Generic[MT]):
     #* COPYING DUNDER METHODS
     # Shallow copy #¡ __copy__
     def __copy__(self):
-        return matrix(self.vectorize().copy(),byrow=self._byrow,**self.attributes)
+        return matrix(self.vectorize().copy(),*self.dim,byrow=self._byrow,**self.attributes)
     
     # Deep copy #¡ __deepcopy__
     def __deepcopy__(self):
         from copy import deepcopy
-        return matrix(deepcopy(self.vectorize()),**deepcopy(self.attributes))
+        return matrix(deepcopy(self.vectorize()),*self.dim,byrow=self._byrow,**deepcopy(self.attributes))
     
     #* COMPARATIVE DUNDER METHODS
     # Equality
