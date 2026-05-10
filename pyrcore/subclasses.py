@@ -242,7 +242,7 @@ class matrix(RObject,Generic[MT]):
     @property
     # Getter
     def rownames(self)->Vector[str]:
-        return c(self.dimnames[0]) if self.dimnames else None
+        return self.dimnames[0] if self.dimnames else None
     # Setter
     @rownames.setter
     def rownames(self,names:Iterable[str]|None):
@@ -253,7 +253,7 @@ class matrix(RObject,Generic[MT]):
     @property
     # Getter
     def colnames(self)->Vector[str]:
-        return c(self.dimnames[1]) if self.dimnames else None
+        return self.dimnames[1] if self.dimnames else None
     # Setter
     @colnames.setter
     def colnames(self,names:Iterable[str]|None):
