@@ -99,20 +99,7 @@ class Vector(RObject,Generic[VT]):
         else:
             self._attributes[attribute]=value
     
-    # Update attributes
-    def structure(self,**attributes)->Vector:
-        """
-        Updates attributes dictionary. Similar to R `structure` function.
-        Returns the `Vector` object.\n
-        ---
-        Arguments:
-            **attributes (Optional): Stream of attributes manually introduced.
-        Both cannot be introduced at the same time.\n
-        ---
-        Returns:
-            Vector: Returns the `Vector` instance with the updated attributes.
-        """
-        return super().structure(**attributes)
+    # Update attributes #¡ structure
     
     # Transform to list
     def tolist(self)->list:
