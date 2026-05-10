@@ -157,7 +157,7 @@ class matrix(RObject,Generic[MT]):
         return c(self._data.base).structure(**self.attributes)
     
     # Transform to list
-    def tolist(self)->list:
+    def tolist(self)->list[MT]:
         """
         Returns the data in a `list` object.\n
         ---
@@ -167,7 +167,7 @@ class matrix(RObject,Generic[MT]):
         return self.vectorize().tolist()
     
     # Transform to tuple
-    def tuple(self)->tuple:
+    def tuple(self)->tuple[MT]:
         """
         Returns the data in a `tuple` object.\n
         ---
