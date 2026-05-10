@@ -177,12 +177,12 @@ class matrix(RObject,Generic[MT]):
         return self.vectorize().tuple()
     
     # Determinant
-    def det(self):
+    def det(self)->int|float:
         """
         Calculates the determinant of the matrix.\n
         ---
         Returns:
-            int: Determinant of the matrix
+            int|float: Determinant of the matrix
         """
         if self.nrow!=self.ncol:
             raise ValueError("Matrix is not square")
