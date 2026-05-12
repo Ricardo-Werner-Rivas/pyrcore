@@ -17,7 +17,6 @@
 #* IMPORTS
 # Abstract method decorator and class ABCMeta
 from abc import abstractmethod,ABCMeta
-from functools import wraps
 
 #* BASE CLASS "RObject"
 class RObject(metaclass=ABCMeta):
@@ -33,13 +32,6 @@ class RObject(metaclass=ABCMeta):
         self._attributes=attributes or {}
         self._type:type=type(data)
         ...
-    def __init_subclass__(cls):
-        for method in (getattr(cls,met) for met in "structure copy deepcopy".split()):
-            @wraps(method)
-            def wrapper(self,*args,**kwargs):
-                return method(self,*args,**kwargs)
-            wrapper.__doc__=method.__doc__.format(class_name=cls.__name__)
-            setattr(cls,method.__name__,wrapper)
     
     # Get/set R attribute
     @abstractmethod
@@ -70,18 +62,8 @@ class RObject(metaclass=ABCMeta):
         #¡ else/elif ...:
     
     # Structure
+    @abstractmethod
     def structure(self,**attributes)->RObject:
-        """
-        Updates attributes dictionary. Similar to R `structure` function.
-        Returns the `{class_name}` object.\n
-        ---
-        Arguments:
-            **attributes (Optional): Stream of attributes manually introduced.
-        Both cannot be introduced at the same time.\n
-        ---
-        Returns:
-            {class_name}: Returns the `{class_name}` instance with the updated attributes.
-        """
         for attribute,value in attributes.items():
             self.attr(attribute,value)
         return self
@@ -89,7 +71,7 @@ class RObject(metaclass=ABCMeta):
     # Generate copy
     def copy(self):
         """
-        Returns a shallow copy of the `{class_name}` object.
+        Returns a shallow copy of the instance.
         """
         from copy import copy
         return copy(self)
@@ -97,7 +79,7 @@ class RObject(metaclass=ABCMeta):
     # Deep copy
     def deepcopy(self):
         """
-        Returns a deep copy of the `{class_name}` object.
+        Returns a deep copy of the instance.
         """
         from copy import deepcopy
         return deepcopy(self)

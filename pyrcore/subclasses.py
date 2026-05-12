@@ -144,7 +144,19 @@ class matrix(RObject,Generic[MT]):
         else:
             self._attributes[attribute]=value
     
-    #¡ Structure
+    # Structure
+    def structure(self,**attributes)->matrix:
+        """
+        Updates attributes dictionary. Similar to R `structure` function.
+        Returns the `matrix` object.\n
+        ---
+        Arguments:
+            **attributes (Optional): Stream of attributes manually introduced.
+        ---
+        Returns:
+            matrix: Returns the `matrix` instance with the updated attributes.
+        """
+        return super().structure(**attributes)
     
     # Transform into vector
     def vectorize(self)->Vector[MT]:
@@ -828,7 +840,19 @@ class TimeSeries(RObject,Generic[TS]):
         else:
             self._attributes[attribute]=value
     
-    #¡ Structure
+    # Structure
+    def structure(self,**attributes)->TimeSeries:
+        """
+        Updates attributes dictionary. Similar to R `structure` function.
+        Returns the `TimeSeries` object.\n
+        ---
+        Arguments:
+            **attributes (Optional): Stream of attributes manually introduced.
+        ---
+        Returns:
+            TimeSeries: Returns the `TimeSeries` instance with the updated attributes.
+        """
+        return super().structure(**attributes)
     
     # Time
     def time(self)->TimeSeries:
