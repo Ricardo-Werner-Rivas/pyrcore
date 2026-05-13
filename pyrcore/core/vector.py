@@ -38,7 +38,7 @@ class Vector(RObject,Generic[VT]):
     Attributes:
         data (`numpy.array`, Hidden): A *NumPy* array storing all the data in its native Python type (not forced to `numpy` types).
             Attribute `data` is not multi-type, exactly as R atomic vectors.
-        attributes (`dict`, Hidden): Dictionary storing the R vector attribute `"names"` and metada introduced by the user.
+        attributes (`dict[str, Any]`, Hidden): Dictionary storing the R vector attribute `"names"` and metada introduced by the user.
         type (`str`, Hidden): String with the type of the elements of the vector.
     ---
     \n## Methods
@@ -63,12 +63,12 @@ class Vector(RObject,Generic[VT]):
     """
     #* METHODS
     # __init__
-    def __init__(self,data:tuple[VT],**attributes):
+    def __init__(self,data:tuple[VT],**attributes:dict[str,]):
         """
         Arguments:
-            data (`list`): Object containing the value/s for the vector.
+            data (`tuple`): Object containing the value/s for the vector.
                 For vector creation, combination function (`c()`) is recommended.
-            **attributes (`dict`, Optional): Stream of keyword arguments containing the attributes for the vector.
+            **attributes (`dict[str, Any]`, Optional): Stream of keyword arguments containing the attributes for the vector.
                 Atomic vectors only support attribute "names" and metadata introduced by the user.
         """
         self._data=np.array(data)
@@ -100,13 +100,13 @@ class Vector(RObject,Generic[VT]):
             self._attributes[attribute]=value
     
     # Structure
-    def structure(self,**attributes)->Vector:
+    def structure(self,**attributes:dict[str,])->Vector[VT]:
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `Vector` object.\n
         ---
         Arguments:
-            **attributes (Optional): Stream of attributes manually introduced.
+            **attributes (`dict[str, Any]`, Optional): Stream of R attributes manually introduced.
         ---
         Returns:
             Vector: Returns the `Vector` instance with the updated attributes.
@@ -114,7 +114,7 @@ class Vector(RObject,Generic[VT]):
         return super().structure(**attributes)
     
     # Transform to list
-    def tolist(self)->list:
+    def tolist(self)->list[VT]:
         """
         Returns the data in a `list` object.\n
         ---
@@ -124,7 +124,7 @@ class Vector(RObject,Generic[VT]):
         return list(self._data)
     
     # Transform to tuple
-    def tuple(self)->tuple:
+    def tuple(self)->tuple[VT]:
         """
         Returns the data in a `tuple` object.\n
         ---
@@ -150,12 +150,9 @@ class Vector(RObject,Generic[VT]):
         return self.attributes["names"] if "names" in self.attributes else None
     # Setter
     @names.setter
-    def names(self,names:list[str]|tuple[str]|Vector[str]|None):
+    def names(self,names:list[str]|None):
         self.attr("names",names)
-    # Deleter
-    @names.deleter
-    def names(self):
-        self.names=None
+    #^ No deleter
     
     #¡ Attributes
     

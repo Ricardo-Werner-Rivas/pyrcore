@@ -43,7 +43,7 @@ class matrix(RObject,Generic[MT]):
     ---
     Attributes:
         data (`numpy.array`, Hidden): Hidden attribute containing the data of the matrix in the form of a `numpy` array.
-        attributes (`dict`, Hidden): Hidden attribute containing the R like attributes of the matrix.
+        attributes (`dict[str, Any]`, Hidden): Hidden attribute containing the R like attributes of the matrix.
     ---
     ## Methods
     
@@ -88,7 +88,7 @@ class matrix(RObject,Generic[MT]):
                 m=matrix(<data>,<nrow>,2,dimnames=(None,["name1","name2"]))
                 ```
                 If only an iterable of strings is received, it will be passed to the rows.
-            **attributes (`dict`, Optional): Stream of keyword arguments defining the matrix R attributes.
+            **attributes (`dict[str, Any]`, Optional): Stream of keyword arguments defining the matrix R attributes.
                 Matrixes support `dim` and `dimnames` attributes, which contains the matrix dimensions.
         """
         if not isinstance(data,Vector):
@@ -145,13 +145,13 @@ class matrix(RObject,Generic[MT]):
             self._attributes[attribute]=value
     
     # Structure
-    def structure(self,**attributes)->matrix:
+    def structure(self,**attributes:dict[str,])->matrix[MT]:
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `matrix` object.\n
         ---
         Arguments:
-            **attributes (Optional): Stream of attributes manually introduced.
+            **attributes (`dict[str, Any]`, Optional): Stream of R attributes manually introduced.
         ---
         Returns:
             matrix: Returns the `matrix` instance with the updated attributes.
@@ -245,7 +245,7 @@ class matrix(RObject,Generic[MT]):
     # Names of rows and columns (dimnames)
     @property
     # Getter
-    def dimnames(self)->tuple[Iterable[str],Iterable[str]]:
+    def dimnames(self)->tuple[Iterable[str]|None,Iterable[str]|None]|None:
         return self.attributes["dimnames"] if "dimnames" in self.attributes else None
     #^ No setter
     #^ No deleter
@@ -253,23 +253,25 @@ class matrix(RObject,Generic[MT]):
     # Names of rows
     @property
     # Getter
-    def rownames(self)->Vector[str]:
+    def rownames(self)->Vector[str]|None:
         return self.dimnames[0] if self.dimnames else None
     # Setter
     @rownames.setter
     def rownames(self,names:Iterable[str]|None):
-        self.attr("dimnames",(c(names),self.colnames) if self.dimnames else (c(names),None))
+        names=c(names) if names else None
+        self.attr("dimnames",(names,self.colnames) if self.dimnames else (names,None))
     #^ No deleter
     
     # Names of columns
     @property
     # Getter
-    def colnames(self)->Vector[str]:
+    def colnames(self)->Vector[str]|None:
         return self.dimnames[1] if self.dimnames else None
     # Setter
     @colnames.setter
     def colnames(self,names:Iterable[str]|None):
-        self.attr("dimnames",(self.rownames,c(names)) if self.dimnames else (None,c(names)))
+        names=c(names) if names else None
+        self.attr("dimnames",(self.rownames,names) if self.dimnames else (None,names))
     #^ No deleter
     
     #¡ Attributes
@@ -794,7 +796,7 @@ class TimeSeries(RObject,Generic[TS]):
     """
     #* METHODS
     # __init__
-    def __init__(self,data:Vector[TS],start:Vector[int],end:Vector[int]|None,frequency:int,deltat:int|float,**attributes):
+    def __init__(self,data:Vector[TS],start:Vector[int],end:Vector[int]|None,frequency:int,deltat:int|float,**attributes:dict[str,]):
         """
         Arguments:
             data (`TS`): Data for the time-series
@@ -841,13 +843,13 @@ class TimeSeries(RObject,Generic[TS]):
             self._attributes[attribute]=value
     
     # Structure
-    def structure(self,**attributes)->TimeSeries:
+    def structure(self,**attributes:dict[str,])->TimeSeries[TS]:
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `TimeSeries` object.\n
         ---
         Arguments:
-            **attributes (Optional): Stream of attributes manually introduced.
+            **attributes (`dict[str, Any]`, Optional): Stream of attributes manually introduced.
         ---
         Returns:
             TimeSeries: Returns the `TimeSeries` instance with the updated attributes.
@@ -855,7 +857,7 @@ class TimeSeries(RObject,Generic[TS]):
         return super().structure(**attributes)
     
     # Time
-    def time(self)->TimeSeries:
+    def time(self)->TimeSeries[float]:
         """
         Returns the time at which each observation data was taken, just like R does with its function `time()`.\n
         ---
@@ -865,7 +867,7 @@ class TimeSeries(RObject,Generic[TS]):
         return TimeSeries(c([f"{float(date[0]+self.deltat*(date[1]-1)):.3f}" for date in self._time]),deltat=self.deltat,**self.attributes)
     
     # Stational indexes
-    def cycle(self)->TimeSeries:
+    def cycle(self)->TimeSeries[int]:
         """
         Returns the period of the time unit for each data piece. Replicates R `cycle()` function.\n
         ---
@@ -881,7 +883,7 @@ class TimeSeries(RObject,Generic[TS]):
         start:Vector[int]|int|None=None,end:Vector[int]|int|None=None,
         frequency:int|None=None,deltat:float|int|None=None,
         extend:bool=False
-    )->TimeSeries:
+    )->TimeSeries[TS]:
         """
         Replicates the R `window()` function and creates another `TimeSeries` object with the requested data.\n
         ---
@@ -976,7 +978,7 @@ class TimeSeries(RObject,Generic[TS]):
         return self._data.tolist()
     
     # Transform to tuple
-    def tuple(self)->tuple:
+    def tuple(self)->tuple[TS]:
         """
         Returns the data in a `tuple` object.\n
         ---
