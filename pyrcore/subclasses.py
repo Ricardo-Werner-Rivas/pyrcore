@@ -140,10 +140,34 @@ class matrix(RObject,Generic[MT]):
     def attr(self,attribute:str,value=None):
         if value is None:
             return super().attr(attribute,value)
-        elif attribute=="dimnames" and any((len(value[0])>self.nrow,len(value[1])>self.ncol)):
-            raise ValueError(f"{"Row" if len(value[0])>self.nrow else "Column"} names iterable can't be larger than {"row" if len(value[0])>self.nrow else "column"}'s length")
-        else:
-            self._attributes[attribute]=value
+        elif attribute=="dim" and value[0]*value[1]!=len(self._data):
+            raise ValueError("Dimensions must fit the data")
+        elif attribute=="dimnames":
+            match value:
+                case (None,None)|(float("nan"),float("nan")):
+                    value=None
+                case _:
+                    if len(value)==2:
+                        pass
+                    elif len(value)>2 or all((len(value)<2,isinstance(value[0],Iterable))):
+                        value=(c(value),None)
+                    else:
+                        raise ValueError("Dimnames cannot be a non-iterable")
+                    if value[0]:
+                        if len(value[0])==self.nrow:
+                            pass
+                        elif len(value[0])<self.nrow:
+                            value=(c(value[0],*(f"Row {row}" for row in range(len(value[0])+1,self.nrow+1))),value[1])
+                        else:
+                            raise ValueError("Rows' names iterable can't be larger than the number of rows")
+                    if value[1]:
+                        if len(value[1])==self.ncol:
+                            pass
+                        elif len(value[1])<self.ncol:
+                            value=(value[0],c(value[1],*(f"Column {col}" for col in range(len(value[1]+1),self.ncol+1))))
+                        else:
+                            raise ValueError("Columns' names iterable can't be larger than the number of columns")
+        self._attributes[attribute]=value
     
     # Structure
     def structure(self,**attributes:dict[str,])->matrix[MT]:
