@@ -31,6 +31,7 @@ if TYPE_CHECKING:
 # Define new variable types with TypeVar
 MT=TypeVar("MatrixDataTypes",int,float,str) # For matrixes
 TS=TypeVar("TimeSeriesDataTypes") # For time-series
+MTS=TypeVar("MultiVariateTimeSeries") # For multivariate time-series
 
 #* CLASS "matrix"
 class matrix(RObject,Generic[MT]):
@@ -1272,3 +1273,41 @@ Frequency={self.frequency}
 
 {repr(self._data)}\
 """
+
+#* CLASS "MultiVariateTimeSeries"
+class MultiVariateTimeSeries(RObject,Generic[MTS]):
+    #& Code comments
+    #& Documentation
+    """
+    Class replicating R multivariate time-series.\n
+    ---
+    Attributes:
+    """
+    #* METHODS
+    # __init__
+    def __init__(self,data:matrix[MTS],start:Vector[int],end:Vector[int]|None,frequency:int,deltat:int|float,**attributes):
+        """
+        Arguments:
+        """
+        self._data:matrix[MTS]
+        super().__init__(data,**attributes)
+        self._type=data._type
+        
+        # Time management
+        current=start.copy()
+        time:tuple[Vector[int]]=tuple()
+        for i in range(len(self._data.vectorize())):
+            time=(*time,current.copy())
+            if end is not None and all(current==end):
+                break
+            current[1]+=1
+            if current[1]>frequency:
+                current[0]+=1
+                current[1]=1
+        if end is None:
+            end=time[-1]
+        self._time=time
+        
+        # R attributes initialization
+        self._attributes["start"],self._attributes["end"],self._attributes["frequency"]=start,end,(frequency or 1/deltat)
+        self._attributes["dim"],self._attributes["dimnames"]=data.dim,(None,data.colnames) if data.colnames else None
