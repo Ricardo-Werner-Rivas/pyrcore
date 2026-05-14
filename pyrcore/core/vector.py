@@ -94,10 +94,14 @@ class Vector(RObject,Generic[VT]):
     def attr(self,attribute:str,value=None):
         if value is None:
             return super().attr(attribute,value)
-        elif attribute=="names" and len(value)!=len(self._data):
-            raise ValueError("Number of names should be equal to number of values")
-        else:
-            self._attributes[attribute]=value
+        elif attribute=="names":
+            if len(value)==len(self._data):
+                pass
+            elif len(value)<len(self._data):
+                value=[*value,*(f"Value {num}" for num in range(len(value)+1,len(self._data)+1))]
+            else:
+                value=value[:len(self._data)]
+        self._attributes[attribute]=value
     
     # Structure
     def structure(self,**attributes:dict[str,])->Vector[VT]:
