@@ -63,12 +63,12 @@ class Vector(RObject,Generic[VT]):
     """
     #* METHODS
     # __init__
-    def __init__(self,data:tuple[VT],**attributes:dict[str,]):
+    def __init__(self,data:tuple[VT],**attributes):
         """
         Arguments:
             data (`tuple`): Object containing the value/s for the vector.
                 For vector creation, combination function (`c()`) is recommended.
-            **attributes (`dict[str, Any]`, Optional): Stream of keyword arguments containing the attributes for the vector.
+            attributes (`dict[str, Any]`, Optional): Stream of keyword arguments containing the attributes for the vector.
                 Atomic vectors only support attribute "names" and metadata introduced by the user.
         """
         self._data=np.array(data)
@@ -104,13 +104,13 @@ class Vector(RObject,Generic[VT]):
         self._attributes[attribute]=value
     
     # Structure
-    def structure(self,**attributes:dict[str,])->Vector[VT]:
+    def structure(self,**attributes)->Vector[VT]:
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `Vector` object.\n
         ---
         Arguments:
-            **attributes (`dict[str, Any]`, Optional): Stream of R attributes manually introduced.
+            attributes (`dict[str, Any]`, Optional): Stream of R attributes manually introduced.
         ---
         Returns:
             Vector: Returns the `Vector` instance with the updated attributes.

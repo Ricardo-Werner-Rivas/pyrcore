@@ -89,7 +89,7 @@ class matrix(RObject,Generic[MT]):
                 m=matrix(<data>,<nrow>,2,dimnames=(None,["name1","name2"]))
                 ```
                 If only an iterable of strings is received, it will be passed to the rows.
-            **attributes (`dict[str, Any]`, Optional): Stream of keyword arguments defining the matrix R attributes.
+            attributes (`dict[str, Any]`, Optional): Stream of keyword arguments defining the matrix R attributes.
                 Matrixes support `dim` and `dimnames` attributes, which contains the matrix dimensions.
         """
         if not isinstance(data,Vector):
@@ -170,13 +170,13 @@ class matrix(RObject,Generic[MT]):
         self._attributes[attribute]=value
     
     # Structure
-    def structure(self,**attributes:dict[str,])->matrix[MT]:
+    def structure(self,**attributes)->matrix[MT]:
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `matrix` object.\n
         ---
         Arguments:
-            **attributes (`dict[str, Any]`, Optional): Stream of R attributes manually introduced.
+            attributes (`dict[str, Any]`, Optional): Stream of R attributes manually introduced.
         ---
         Returns:
             matrix: Returns the `matrix` instance with the updated attributes.
@@ -821,7 +821,7 @@ class TimeSeries(RObject,Generic[TS]):
     """
     #* METHODS
     # __init__
-    def __init__(self,data:Vector[TS],start:Vector[int],end:Vector[int]|None,frequency:int,deltat:int|float,**attributes:dict[str,]):
+    def __init__(self,data:Vector[TS],start:Vector[int],end:Vector[int]|None,frequency:int,deltat:int|float,**attributes):
         """
         Arguments:
             data (`TS`): Data for the time-series
@@ -829,7 +829,7 @@ class TimeSeries(RObject,Generic[TS]):
             end (`Vector`|`int`|`None`): Time of the last observation
             frequency (`int`): Number of observations per time unit
             deltat (`int`|`float`): Inverse of `frequency`
-            **attributes (`dict[str,Any]`, Optional): Keyword arguments for R-like attributes
+            attributes (`dict[str,Any]`, Optional): Keyword arguments for R-like attributes
         """
         self._data:Vector[TS]
         super().__init__(data,**attributes)
@@ -864,13 +864,13 @@ class TimeSeries(RObject,Generic[TS]):
         self._attributes[attribute]=value
     
     # Structure
-    def structure(self,**attributes:dict[str,])->TimeSeries[TS]:
+    def structure(self,**attributes)->TimeSeries[TS]:
         """
         Updates attributes dictionary. Similar to R `structure` function.
         Returns the `TimeSeries` object.\n
         ---
         Arguments:
-            **attributes (`dict[str, Any]`, Optional): Stream of attributes manually introduced.
+            attributes (`dict[str, Any]`, Optional): Stream of attributes manually introduced.
         ---
         Returns:
             TimeSeries: Returns the `TimeSeries` instance with the updated attributes.
