@@ -1371,3 +1371,17 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
                 case _:
                     value=int(value) if int(value)>0 else 1
         self._attributes[attribute]=value
+    
+    # Structure
+    def structure(self,**attributes)->MultiVariateTimeSeries[MTS]:
+        """
+        Updates attributes dictionary. Similar to R `structure` function.
+        Returns the `MultiVariateTimeSeries` object.\n
+        ---
+        Arguments:
+            attributes (`dict[str, Any]`, Optional): Stream of R attributes manually introduced.
+        ---
+        Returns:
+            MultiVariateTimeSeries: Returns the `MultiVariateTimeSeries` instance with the updated attributes.
+        """
+        return super().structure(**attributes)
