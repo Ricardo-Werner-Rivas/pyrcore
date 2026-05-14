@@ -854,18 +854,14 @@ class TimeSeries(RObject,Generic[TS]):
     def attr(self,attribute:str,value=None):
         if value is None:
             return super().attr(attribute,value)
-        elif any((attribute=="frequency" and value!=1/self._attributes["deltat"],attribute=="deltat" and value!=1/self._attributes["frequency"])):
+        elif attribute in "frequency deltat".split():
             match attribute:
-                case "frequency":
-                    other="deltat"
                 case "deltat":
-                    other="frequency"
+                    attribute="frequency"
+                    value=int(1/value) if int(1/value)>0 else 1
                 case _:
-                    pass
-            self._attributes[attribute]=value
-            self._attributes[other]=1/value
-        else:
-            self._attributes[attribute]=value
+                    value=int(value) if int(value)>0 else 1
+        self._attributes[attribute]=value
     
     # Structure
     def structure(self,**attributes:dict[str,])->TimeSeries[TS]:
