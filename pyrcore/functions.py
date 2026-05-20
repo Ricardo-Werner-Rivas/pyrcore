@@ -53,8 +53,11 @@ def c(*data:VT|list|tuple|np.ndarray,**named_data:VT)->Vector[VT]:
         # Empty list to store the data
         data_list=[]
         # Prepare the data to vectorize it
-        while any((isinstance(value,Iterable) for value in data)):
+        while (lambda:any(isinstance(value,Iterable) and not isinstance(value,str) for value in data))():
             for value in data:
+                if isinstance(value,str):
+                    data_list.append(value)
+                    continue
                 data_list.extend(tuple(value.values()) if isinstance(value,dict) else value) if isinstance(value,Iterable) else data_list.append(value)
             data=tuple(data_list)
             data_list.clear()
