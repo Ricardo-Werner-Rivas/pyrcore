@@ -1406,3 +1406,93 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
             R attributes as the original containing the stational indexes of each time unit for each data piece.
         """
         return TimeSeries(c([date[1] for date in self._time]),deltat=self.deltat,**self.attributes)
+    
+    # Window
+    def window(
+        self,
+        start:Vector[int]|int|None=None,end:Vector[int]|int|None=None,
+        frequency:int|None=None,deltat:float|int|None=None,
+        extend:bool=False
+    )->MultiVariateTimeSeries[TS]:
+        """
+        Replicates the R `window()` function and creates another `TimeSeries` object with the requested data.\n
+        ---
+        Arguments:
+            start (`Vector[int]`|`int`|`None`, Optional): New starting point.
+            end (`Vector[int]`|`int`|`None`, Optional): New ending point.
+            frequency (`int`|`None`, Optional): New frequency.
+            deltat (`float`|`int`|`None`, Optional): New `deltat`.
+            extend (`bool`, Optional): Whether to extend the series or not if `start` and/or `end` are not in the original time interval.
+                Defaults to `False`.\n
+        ---
+        Returns:
+            MultiVariateTimeSeries: Slice of the requested data as a new `MultiVariateTimeSeries` object.
+        """
+        data=self._data.copy()
+        if not start:
+            start=c(self.start,1) if isinstance(self.start,int) else self.start.copy()
+        elif isinstance(start,int):
+            start=c(start,1)
+        if not end:
+            end=c(self.end,1) if isinstance(self.end,int) else self.end.copy()
+        elif isinstance(end,int):
+            end=c(end,1)
+        if frequency and deltat:
+            if deltat!=1/frequency:
+                raise ValueError("Parameters 'frequency' and 'deltat' should be the inverse of one another")
+        elif frequency:
+            deltat=1/frequency
+        elif deltat:
+            frequency=1/deltat
+        else:
+            frequency=self.frequency
+            deltat=self.deltat
+        time:tuple[Vector[int]]=self._time
+        if start not in time:
+            if extend:
+                limit=time[0].copy()
+                time=tuple()
+                current=start.copy()
+                while True:
+                    time=(*time,current)
+                    current[1]+=1
+                    if current[1]>self.frequency:
+                        current[0]+=1
+                        current[1]=1
+                    if all(current==limit):
+                        break
+                missing_start=len(time)
+                time=(*time,*self._time)
+            else:
+                start=c(self.start,1) if isinstance(self.start,int) else self.start.copy()
+                missing_start=None
+                print("Warning: Value of parameter 'start' not changed")
+        if end not in time:
+            if extend:
+                add_on:tuple[Vector[int]]=tuple()
+                current=time[-1].copy()
+                while True:
+                    add_on=(*add_on,current)
+                    if all(current==end):
+                        break
+                    current[1]+=1
+                    if current[1]>self.frequency:
+                        current[0]+=1
+                        current[1]=1
+                missing_end=len(add_on)
+                time=(*time,*add_on)
+            else:
+                end=c(self.end,1) if isinstance(self.end,int) else self.end.copy()
+                missing_end=None
+                print("Warning: Value of parameter 'end' not changed")
+        if missing_start:
+            data=matrix(c((float("nan") for i in range(missing_start)),data.vectorize()),ncol=data.ncol,byrow=data._byrow,**data.attributes)
+        if missing_end:
+            data=matrix(c(data.vectorize(),(float("nan") for i in range(missing_end))),ncol=data.ncol,byrow=data._byrow,**data.attributes)
+        if frequency!=self.frequency and self.frequency%frequency==0:
+            data=data[time.index(start):time.index(end):self.frequency/frequency]
+        elif frequency!=self.frequency:
+            frequency=self.frequency
+            deltat=self.deltat
+            print("Warning: Value of parameter 'frequency' not changed")
+        return MultiVariateTimeSeries(data,start,end,frequency,deltat)
