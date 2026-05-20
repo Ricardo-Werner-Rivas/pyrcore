@@ -27,7 +27,7 @@ from .functions import c
 #* TYPING
 # Import pandas.Series only for annotations
 if TYPE_CHECKING:
-    from pandas import Series
+    from pandas import Series,DataFrame
 # Define new variable types with TypeVar
 MT=TypeVar("MatrixDataTypes",int,float,str) # For matrixes
 TS=TypeVar("TimeSeriesDataTypes") # For time-series
@@ -1496,3 +1496,16 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
             deltat=self.deltat
             print("Warning: Value of parameter 'frequency' not changed")
         return MultiVariateTimeSeries(data,start,end,frequency,deltat)
+    
+    # Transform to pandas.DataFrame
+    def to_pandas(self)->DataFrame[MTS]:
+        """
+        Returns a `pandas.DataFrame` object equivalent to the `MultiVariateTimeSeries` object.\n
+        ---
+        Returns:
+            pandas.DataFrame: `pandas` equivalent to the `MultiVariateTimeSeries`object.
+        """
+        from pandas import DataFrame
+        result=DataFrame(self._data._data,(f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time) if self.frequency!=1 else self._time,self.colnames,self.type)
+        del DataFrame
+        return result
