@@ -1497,6 +1497,20 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
             print("Warning: Value of parameter 'frequency' not changed")
         return MultiVariateTimeSeries(data,start,end,frequency,deltat)
     
+    # Transform to dictionary
+    def todict(self,list:bool=False)->dict[str,list[MTS]]|list[dict[str,MTS]]:
+        """
+        Returns a dictionary with the `MultiVariateTimeSeries` object's data.\n
+        ---
+        Arguments:
+            list (`bool`): Whether to return a list of dictionaries (`True`), containing one dictionary per row, or a dictionary of lists (`False`).
+                Defaults to `False`.
+        ---
+        Returns:
+            dict[str,list]|list[dict]: Dictionary containing the `MultiVariateTimeSeries` object's data.
+        """
+        return dict(zip(self.colnames,self._data.transpose()._data.tolist())) if not list else [dict(zip(self.colnames,row)) for row in self._data._data.tolist()]
+    
     # Transform to pandas.DataFrame
     def to_pandas(self)->DataFrame[MTS]:
         """
