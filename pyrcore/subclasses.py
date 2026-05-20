@@ -927,7 +927,7 @@ class TimeSeries(RObject,Generic[TS]):
         if not end:
             end=c(self.end,1) if isinstance(self.end,int) else self.end.copy()
         elif isinstance(end,int):
-            end=c(end)
+            end=c(end,1)
         if frequency and deltat:
             if deltat!=1/frequency:
                 raise ValueError("Parameters 'frequency' and 'deltat' should be the inverse of one another")
@@ -938,14 +938,14 @@ class TimeSeries(RObject,Generic[TS]):
         else:
             frequency=self.frequency
             deltat=self.deltat
-        time=self._time.copy()
+        time:tuple[Vector[int]]=self._time
         if start not in time:
             if extend:
                 limit=time[0].copy()
-                time.clear()
+                time=tuple()
                 current=start.copy()
                 while True:
-                    time.append(current)
+                    time=(*time,current)
                     current[1]+=1
                     if current[1]>self.frequency:
                         current[0]+=1
@@ -953,17 +953,17 @@ class TimeSeries(RObject,Generic[TS]):
                     if all(current==limit):
                         break
                 missing_start=len(time)
-                time.extend(self._time.copy())
+                time=(*time,*self._time)
             else:
                 start=c(self.start,1) if isinstance(self.start,int) else self.start.copy()
                 missing_start=None
                 print("Warning: Value of parameter 'start' not changed")
         if end not in time:
             if extend:
-                add_on:list[Vector[int]]=[]
+                add_on:tuple[Vector[int]]=tuple()
                 current=time[-1].copy()
                 while True:
-                    add_on.append(current)
+                    add_on=(*add_on,current)
                     if all(current==end):
                         break
                     current[1]+=1
@@ -971,15 +971,15 @@ class TimeSeries(RObject,Generic[TS]):
                         current[0]+=1
                         current[1]=1
                 missing_end=len(add_on)
-                time.extend(add_on)
+                time=(*time,*add_on)
             else:
                 end=c(self.end,1) if isinstance(self.end,int) else self.end.copy()
                 missing_end=None
                 print("Warning: Value of parameter 'end' not changed")
         if missing_start:
-            data=c([float("nan") for i in range(missing_start)],data)
+            data=c((float("nan") for i in range(missing_start)),data)
         if missing_end:
-            data=c(data,[float("nan") for i in range(missing_end)])
+            data=c(data,(float("nan") for i in range(missing_end)))
         if frequency!=self.frequency and self.frequency%frequency==0:
             data=data[time.index(start):time.index(end):self.frequency/frequency]
         elif frequency!=self.frequency:
