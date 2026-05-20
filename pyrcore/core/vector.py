@@ -88,7 +88,7 @@ class Vector(RObject,Generic[VT]):
             self._type=str
         else:
             self._type=eval(self._type[self._type.find("'")+1:self._type.rfind("'")])
-        self._data=np.array([value.item() for value in self._data],dtype=object)
+        self._data=np.array(tuple(value.item() for value in self._data),dtype=object)
     
     # Get/set attribute
     def attr(self,attribute:str,value=None):
@@ -98,7 +98,7 @@ class Vector(RObject,Generic[VT]):
             if len(value)==len(self._data):
                 pass
             elif len(value)<len(self._data):
-                value=[*value,*(f"Value {num}" for num in range(len(value)+1,len(self._data)+1))]
+                value=[*value,*tuple(f"Value {num}" for num in range(len(value)+1,len(self._data)+1))]
             else:
                 value=value[:len(self._data)]
         self._attributes[attribute]=value
@@ -144,7 +144,7 @@ class Vector(RObject,Generic[VT]):
     @RObject.type.setter
     def type(self,new_type:type|str):
         super(Vector,type(self)).type.__set__(self,new_type)
-        self._data=np.array([self._type(value) for value in self._data],dtype=object)
+        self._data=np.array(tuple(self._type(value) for value in self._data),dtype=object)
     #^ No deleter
     
     # Names
@@ -384,7 +384,7 @@ class Vector(RObject,Generic[VT]):
             data=list(self._data)
             data.remove(data[data.index(self._data[index],index)])
             try:
-                self._data=np.array([eval(self.type)(value) for value in data],dtype=object)
+                self._data=np.array(tuple((self.type)(value) for value in data),dtype=object)
             except:
                 raise TypeError("New elements must respect the vector's typing")
             if self.names:
@@ -408,8 +408,8 @@ class Vector(RObject,Generic[VT]):
     # HTML representation
     def _repr_html_(self):
         if self.names:
-            headers=[f"<th>{name}</th>" for name in self.names]
-            values=[f"<td>{value}</td>" for value in self._data]
+            headers=tuple(f"<th>{name}</th>" for name in self.names)
+            values=tuple(f"<td>{value}</td>" for value in self._data)
             return f"""\
 <table>
     <thead>

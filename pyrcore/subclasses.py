@@ -105,12 +105,12 @@ class matrix(RObject,Generic[MT]):
             if len(data)%ncol>0:nrow+=1
         
         if len(data)<nrow*ncol:
-            if data.type in [int,float]:
-                data=c(data,[0 for i in range(nrow*ncol-len(data))])
+            if data.type in (int,float):
+                data=c(data,tuple(0 for i in range(nrow*ncol-len(data))))
             elif data.type==bool:
-                data=c(data,[False for i in range(nrow*ncol-len(data))])
+                data=c(data,tuple(False for i in range(nrow*ncol-len(data))))
             else:
-                data=c(data,[None for i in range(nrow*ncol-len(data))])
+                data=c(data,tuple(float("nan") for i in range(nrow*ncol-len(data))))
         elif len(data)>nrow*ncol:
             data=data[:nrow*ncol]
         
@@ -122,7 +122,7 @@ class matrix(RObject,Generic[MT]):
         match (
             isinstance(dimnames,Iterable),
             not any(
-                (isinstance(names,Iterable) for names in dimnames) if isinstance(dimnames,Iterable) else (False,)
+                tuple(isinstance(names,Iterable) for names in dimnames) if isinstance(dimnames,Iterable) else (False,)
             )
         ):
             case (False,True):
@@ -130,7 +130,7 @@ class matrix(RObject,Generic[MT]):
             case (True,True):
                 dimnames=(dimnames,None)
             case (True,False):
-                dimnames=(c(names) if names else None for names in (dimnames if len(dimnames)<=2 else dimnames[:2]))
+                dimnames=tuple(c(names) if names else None for names in (dimnames if len(dimnames)<=2 else dimnames[:2]))
             case _:
                 raise RuntimeError("A fatal error occured")
         self._attributes["dimnames"]=dimnames
@@ -157,14 +157,14 @@ class matrix(RObject,Generic[MT]):
                         if len(value[0])==self.nrow:
                             pass
                         elif len(value[0])<self.nrow:
-                            value=(c(value[0],*(f"Row {row}" for row in range(len(value[0])+1,self.nrow+1))),value[1])
+                            value=(c(value[0],*tuple(f"Row {row}" for row in range(len(value[0])+1,self.nrow+1))),value[1])
                         else:
                             raise ValueError("Rows' names iterable can't be larger than the number of rows")
                     if value[1]:
                         if len(value[1])==self.ncol:
                             pass
                         elif len(value[1])<self.ncol:
-                            value=(value[0],c(value[1],*(f"Column {col}" for col in range(len(value[1]+1),self.ncol+1))))
+                            value=(value[0],c(value[1],*tuple(f"Column {col}" for col in range(len(value[1]+1),self.ncol+1))))
                         else:
                             raise ValueError("Columns' names iterable can't be larger than the number of columns")
         self._attributes[attribute]=value
@@ -230,7 +230,7 @@ class matrix(RObject,Generic[MT]):
         elif self.nrow==3:
             return self._data[0,0]*self._data[1,1]*self._data[2,2]+self._data[1,0]*self._data[2,1]*self._data[0,2]+self._data[0,1]*self._data[1,2]*self._data[2,0]-(self._data[0,2]*self._data[1,1]*self._data[2,0]+self._data[1,2]*self._data[2,1]*self._data[0,0]+self._data[0,1]*self._data[1,0]*self._data[2,2])
         else:
-            return sum([self._data[0,i]*((-1)**(1+i+1))*matrix(np.delete(self._data,i,1)[1:].base,self.nrow-1,self.ncol-1,self._byrow,**self.attributes).det() for i in range(self.ncol)])
+            return sum(tuple(self._data[0,i]*((-1)**(1+i+1))*matrix(np.delete(self._data,i,1)[1:].base,self.nrow-1,self.ncol-1,self._byrow,**self.attributes).det() for i in range(self.ncol)))
     
     # Transpose
     def transpose(self)->matrix[MT]:
@@ -307,7 +307,7 @@ class matrix(RObject,Generic[MT]):
     @RObject.type.setter
     def type(self,new_type:"type|str"):
         super(matrix,type(self)).type.__set__(self,new_type)
-        self._data=np.array([self._type(value) for value in self._data.ravel()],dtype=object).reshape(self.nrow,self.ncol)
+        self._data=np.array(tuple(self._type(value) for value in self._data.ravel()),dtype=object).reshape(self.nrow,self.ncol)
     #^ No deleter
     
     #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
@@ -770,7 +770,7 @@ class matrix(RObject,Generic[MT]):
     <thead>
         <tr>{f"\n<th></th>" if self.rownames else ""}
             {"\n\
-            ".join([f"<th>[,{col}]</th>" for col in self.colnames])
+            ".join(tuple(f"<th>[,{col}]</th>" for col in self.colnames))
             }
         </tr>
     </thead>
@@ -788,7 +788,7 @@ class matrix(RObject,Generic[MT]):
 """
             representation+=f"""\
             {"\n\
-            ".join([f"<td>{value}</td>" for value in row])
+            ".join(tuple(f"<td>{value}</td>" for value in row))
             }
         </tr>
 """
@@ -803,8 +803,8 @@ class matrix(RObject,Generic[MT]):
     def __str__(self):
         printing=f""
         printing+=(f"Rows' names: [{", ".join(self.rownames)}]\n" if self.rownames is not None else "")+(f"Columns' names: [{", ".join(self.colnames)}]\n" if self.colnames is not None else "")
-        printing+=f"Dimensions: ({", ".join([str(dim) for dim in self.dim])})\n\n"
-        printing+="\n".join(["\t".join([str(value) for value in row]) for row in self._data])
+        printing+=f"Dimensions: ({", ".join(tuple(str(dim) for dim in self.dim))})\n\n"
+        printing+="\n".join(["\t".join(tuple(str(value) for value in row)) for row in self._data])
         #// if self.colnames is not None:
         #//     printing+=("\t " if self.rownames is not None else "")+f"[,{"]\t[,".join(self.colnames)}]\n"
         #// printing+="\n".join([("["+self.rownames[self._data.tolist().index(row.tolist())]+",]\t" if self.rownames is not None else "")+"\t".join(str(value) for value in row) for row in self._data])
@@ -885,7 +885,7 @@ class TimeSeries(RObject,Generic[TS]):
         Returns:
             TimeSeries: `TimeSeries` object containing the time at which each data piece was taken instead of the original data.
         """
-        return TimeSeries(c([f"{float(date[0]+self.deltat*(date[1]-1)):.3f}" for date in self._time]),deltat=self.deltat,**self.attributes)
+        return TimeSeries(c(tuple(f"{float(date[0]+self.deltat*(date[1]-1)):.3f}" for date in self._time)),deltat=self.deltat,**self.attributes)
     
     # Stational indexes
     def cycle(self)->TimeSeries[int]:
@@ -896,7 +896,7 @@ class TimeSeries(RObject,Generic[TS]):
             TimeSeries: A `TimeSeries` object with same dimensions and
             R attributes as the original containing the stational indexes of each time unit for each data piece.
         """
-        return TimeSeries(c([date[1] for date in self._time]),deltat=self.deltat,**self.attributes)
+        return TimeSeries(c(tuple(date[1] for date in self._time)),deltat=self.deltat,**self.attributes)
     
     # Window
     def window(
@@ -977,9 +977,9 @@ class TimeSeries(RObject,Generic[TS]):
                 missing_end=None
                 print("Warning: Value of parameter 'end' not changed")
         if missing_start:
-            data=c((float("nan") for i in range(missing_start)),data)
+            data=c(tuple(float("nan") for i in range(missing_start)),data)
         if missing_end:
-            data=c(data,(float("nan") for i in range(missing_end)))
+            data=c(data,tuple(float("nan") for i in range(missing_end)))
         if frequency!=self.frequency and self.frequency%frequency==0:
             data=data[time.index(start):time.index(end):self.frequency/frequency]
         elif frequency!=self.frequency:
@@ -1019,7 +1019,7 @@ class TimeSeries(RObject,Generic[TS]):
         #? Create new index object to comfortably manage time
         from pandas import Series
         #~ Revise argument `index` in `pandas.Series`
-        result=Series(self._data._data,(f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time) if self.frequency!=1 else self._time,self.type)
+        result=Series(self._data._data,tuple(f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time) if self.frequency!=1 else self._time,self.type)
         del Series
         return result
     
@@ -1239,18 +1239,18 @@ class TimeSeries(RObject,Generic[TS]):
     #* SCREEN
     # Representation
     def __repr__(self):
-        return f"TimeSeries({repr(self._data)}{", ".join([f"{attribute}={str(value) if not isinstance(value,Vector) else repr(value)}" for attribute,value in self.attributes.items()])})"
+        return f"TimeSeries({repr(self._data)}{", ".join(tuple(f"{attribute}={str(value) if not isinstance(value,Vector) else repr(value)}" for attribute,value in self.attributes.items()))})"
     
     # HTML representation
     def _repr_html_(self):
         if self.frequency>1:
             match self.frequency:
                 case 4:
-                    headers=[f"<th>Q{quarter}</th>" for quarter in range(1,5)]
+                    headers=tuple(f"<th>Q{quarter}</th>" for quarter in range(1,5))
                 case 12:
-                    headers=[f"<th>{month}</th>" for month in "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()]
+                    headers=tuple(f"<th>{month}</th>" for month in "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split())
                 case _:
-                    headers=[f"<th>p{i+1}</th>" for i in range(self.frequency)]
+                    headers=tuple(f"<th>p{i+1}</th>" for i in range(self.frequency))
             representation=f"""\
 <table>
     <thead>
@@ -1272,7 +1272,7 @@ class TimeSeries(RObject,Generic[TS]):
         <tr>
             <th>{year}</th>
             {("\n\
-            ".join([value for value in data[year-self.start[0]]]))}
+            ".join(value for value in data[year-self.start[0]]))}
         </tr>
 """
             representation+="""\
@@ -1353,14 +1353,14 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
                         if len(value[0])==self.nrow:
                             pass
                         elif len(value[0])<self.nrow:
-                            value=(c(value[0],*(f"Row {row}" for row in range(len(value[0])+1,self.nrow+1))),value[1])
+                            value=(c(value[0],*tuple(f"Row {row}" for row in range(len(value[0])+1,self.nrow+1))),value[1])
                         else:
                             raise ValueError("Rows' names iterable can't be larger than the number of rows")
                     if value[1]:
                         if len(value[1])==self.ncol:
                             pass
                         elif len(value[1])<self.ncol:
-                            value=(value[0],c(value[1],*(f"Column {col}" for col in range(len(value[1]+1),self.ncol+1))))
+                            value=(value[0],c(value[1],*tuple(f"Column {col}" for col in range(len(value[1]+1),self.ncol+1))))
                         else:
                             raise ValueError("Columns' names iterable can't be larger than the number of columns")
         elif attribute in "frequency deltat".split():
@@ -1405,7 +1405,7 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
             TimeSeries: A `TimeSeries` object with same dimensions and
             R attributes as the original containing the stational indexes of each time unit for each data piece.
         """
-        return TimeSeries(c([date[1] for date in self._time]),deltat=self.deltat,**self.attributes)
+        return TimeSeries(c(tuple(date[1] for date in self._time)),deltat=self.deltat,**self.attributes)
     
     # Window
     def window(
@@ -1486,9 +1486,9 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
                 missing_end=None
                 print("Warning: Value of parameter 'end' not changed")
         if missing_start:
-            data=matrix(c((float("nan") for i in range(missing_start)),data.vectorize()),ncol=data.ncol,byrow=data._byrow,**data.attributes)
+            data=matrix(c(tuple(float("nan") for i in range(missing_start)),data.vectorize()),ncol=data.ncol,byrow=data._byrow,**data.attributes)
         if missing_end:
-            data=matrix(c(data.vectorize(),(float("nan") for i in range(missing_end))),ncol=data.ncol,byrow=data._byrow,**data.attributes)
+            data=matrix(c(data.vectorize(),tuple(float("nan") for i in range(missing_end))),ncol=data.ncol,byrow=data._byrow,**data.attributes)
         if frequency!=self.frequency and self.frequency%frequency==0:
             data=data[time.index(start):time.index(end):self.frequency/frequency]
         elif frequency!=self.frequency:
@@ -1520,6 +1520,6 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
             pandas.DataFrame: `pandas` equivalent to the `MultiVariateTimeSeries`object.
         """
         from pandas import DataFrame
-        result=DataFrame(self._data._data,(f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time) if self.frequency!=1 else self._time,self.colnames,self.type)
+        result=DataFrame(self._data._data,tuple(f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time) if self.frequency!=1 else self._time,self.colnames,self.type)
         del DataFrame
         return result
