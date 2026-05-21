@@ -18,7 +18,7 @@
 # NumPy
 import numpy as np
 # TypeVar, Generic, Iterable and TYPE_CHECKING
-from typing import TypeVar,Generic,Iterable,TYPE_CHECKING
+from typing import TypeVar,Generic,Iterable,Literal,overload,TYPE_CHECKING
 # Class RObject
 from .core import RObject,Vector
 # Combination function
@@ -1510,6 +1510,74 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
             dict[str,list]|list[dict]: Dictionary containing the `MultiVariateTimeSeries` object's data.
         """
         return dict(zip(self.colnames,self._data.transpose()._data.tolist())) if not list else [dict(zip(self.colnames,row)) for row in self._data._data.tolist()]
+    
+    # Obtain variable names
+    def keys(self)->Vector[str]:
+        """
+        Returns an R-like vector of strings containing the names of the variables (or columns).\n
+        ---
+        Returns:
+            Vector[str]: Vector of variables' names.
+        """
+        return self.colnames
+    
+    # Obtain values
+    @overload
+    def values(self,format:Literal["matrix"])->matrix[MTS]:
+        """
+        Returns the values of the `MultiVariateTimeSeries` object.\n
+        ---
+        Arguments:
+            format (`Literal["matrix","rows","cols"]`, Optional): Core values' matrix is returned.
+        ---
+        Returns:
+            matrix: Values of the time-series as a `matrix` object.
+        """
+        ...
+    @overload
+    def values(self,format:Literal["rows"])->list[Vector[MTS]]:
+        """
+        Returns the values of the `MultiVariateTimeSeries` object.\n
+        ---
+        Arguments:
+            format (`Literal["matrix","rows","cols"]`, Optional): Formats the output to a list of rows as `Vector` objects.
+        ---
+        Returns:
+            list[Vector]: Values of the time-series grouped by rows.
+        """
+        ...
+    @overload
+    def values(self,format:Literal["cols"])->list[Vector[MTS]]:
+        """
+        Returns the values of the `MultiVariateTimeSeries` object.\n
+        ---
+        Arguments:
+            format (`Literal["matrix","rows","cols"]`, Optional): Formats the output to a list of columns as `Vector` objects.
+        ---
+        Returns:
+            list[Vector]: Values of the time-series grouped by columns.
+                It can be zipped with a list of keys to create a dictionary.
+        """
+        ...
+    def values(self,format:Literal["matrix","rows","cols"]="matrix")->list[Vector[MTS]]|matrix[MTS]:
+        """
+        Returns the values of the `MultiVariateTimeSeries` object.\n
+        ---
+        Arguments:
+            format (`Literal["matrix","rows","cols"]`, Optional): Format of the output. Defaults to `"matrix"`.
+        ---
+        Returns:
+            list[Vector]|matrix: Values of the time-series.
+        """
+        match format:
+            case "matrix":
+                return self._data
+            case "rows":
+                return [c(value) for value in self._data._data.tolist()]
+            case "cols":
+                return [c(value) for value in tuple(self.todict().values())]
+            case _:
+                raise ValueError("Unexpected value given por argument \"format\"")
     
     # Transform to pandas.DataFrame
     def to_pandas(self)->DataFrame[MTS]:
