@@ -1019,9 +1019,7 @@ class TimeSeries(RObject,Generic[TS]):
         #? Create new index object to comfortably manage time
         from pandas import Series
         #~ Revise argument `index` in `pandas.Series`
-        result=Series(self._data._data,tuple(f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time) if self.frequency!=1 else self._time,self.type)
-        del Series
-        return result
+        return Series(self._data._data,tuple(f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time) if self.frequency!=1 else self._time,self.type)
     
     #* PROPERTIES
     # Type
@@ -1588,6 +1586,4 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
             pandas.DataFrame: `pandas` equivalent to the `MultiVariateTimeSeries`object.
         """
         from pandas import DataFrame
-        result=DataFrame(self._data._data,tuple(f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time) if self.frequency!=1 else self._time,self.colnames,self.type)
-        del DataFrame
-        return result
+        return DataFrame(self._data._data,tuple(f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time) if self.frequency!=1 else self._time,self.colnames,self.type)
