@@ -1587,3 +1587,45 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
         """
         from pandas import DataFrame
         return DataFrame(self._data._data,tuple(f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time) if self.frequency!=1 else self._time,self.colnames,self.type)
+    
+    #* PROPERTIES
+    # Type
+    #¡ Getter
+    # Setter
+    @RObject.type.setter
+    def type(self,new_type:type|str):
+        super(MultiVariateTimeSeries,type(self)).type.__set__(self,new_type)
+        self._data.type=new_type
+    #^ No deleter
+    
+    # Number of rows
+    @property
+    # Getter
+    def nrow(self)->int:
+        return self.dim[0]
+    #^ No setter
+    #^ No deleter
+    
+    # Number of columns
+    @property
+    # Getter
+    def ncol(self)->int:
+        return self.dim[1]
+    #^ No setter
+    #^ No deleter
+    
+    # Dimensions
+    @property
+    # Getter
+    def dim(self)->tuple[int,int]:
+        return self.attributes["dim"]
+    #^ No setter
+    #^ No deleter
+    
+    # Names of rows and columns (dimnames)
+    @property
+    # Getter
+    def dimnames(self)->tuple[Iterable[str]|None,Iterable[str]|None]|None:
+        return self.attributes["dimnames"] if "dimnames" in self.attributes else None
+    #^ No setter
+    #^ No deleter
