@@ -12,8 +12,6 @@
 #¡ Inherited
 #*===============================================================================================================================
 
-#^ The different types of comments require the "Colorful Comments Refreshed" extension for VSCode to be properly distinguished
-
 #* IMPORTS
 # NumPy
 import numpy as np
@@ -33,43 +31,59 @@ class Vector(RObject,Generic[VT]):
     #& Code comments
     """
     Replicates R atomic vectors.\n
-    This class can be imported for documentation purposes. For vector creation you'll want to use the combination function (`c()`).\n
-    ---
-    Attributes:
-        data (`numpy.array`, Hidden): A *NumPy* array storing all the data in its native Python type (not forced to `numpy` types).
-            Attribute `data` is not multi-type, exactly as R atomic vectors.
-        attributes (`dict[str, Any]`, Hidden): Dictionary storing the R vector attribute `"names"` and metada introduced by the user.
-        type (`str`, Hidden): String with the type of the elements of the vector.
-    ---
-    \n## Methods
-        :attr: *`MethodType`*
-        Gets or sets the value of an attribute
-        :structure: *`MethodType`*
-        Changes the dictionary of attributes and returns the object (`Vector`)
-    ---
-    \n## Properties
-    1. **type**: *`MethodType`*
-        * **Getter**: Gets the hidden attribute `type`.
-        * **Setter**: Changes the type of the values in the vector.
-        * **No deleter**.
-    2. **names**: *`MethodType`*
-        * **Getter**: Gets the names of the vector values.
-        * **Setter**: Changes the names of the vector values. Receives an iterable with the new names.
-        * **No deleter**.
-    3. **attributes**: *`MethodType`*
-        * **Getter**: Gets the hidden attribute `attributes`.
-        * **No setter**.
-        * **No deleter**.
+    This class can be imported for documentation purposes. For vector creation you'll want to use the combination function (`c()`).
+    
+    Attributes
+    ----------
+    data : `numpy.array`, Hidden
+        A *NumPy* array storing all the data in its native Python type (not forced to `numpy` types).
+        Attribute `data` is not multi-type, exactly as R atomic vectors.
+    attributes : `dict[str, Any]`, Hidden
+        Dictionary storing the R vector attribute `"names"` and metada introduced by the user.
+    type : `str`, Hidden
+        String with the type of the elements of the vector.
+    
+    Methods
+    -------
+    attr : `MethodType`
+        Gets or sets the value of an attribute.
+    structure : `MethodType`
+        Changes the dictionary of attributes and returns the object (`Vector`).
+    
+    Properties
+    ----------
+    **type**
+        Getter
+            Gets the hidden attribute `type`.
+        Setter
+            Changes the type of the values in the vector.
+        Deleter
+            There is **no deleter**.
+    **names**
+        Getter
+            Gets the names of the vector values.
+        Setter
+            Changes the names of the vector values. Receives an iterable with the new names.
+        Deleter
+            There is **no deleter**.
+    **attributes**
+        Getter
+            Gets the hidden attribute `attributes`.
+        Setter
+            There is **no setter**.
+        Deleter
+            There is **no deleter**.
     """
     #* METHODS
     # __init__
     def __init__(self,data:tuple[VT],**attributes):
         """
-        Arguments:
-            data (`tuple`): Object containing the value/s for the vector.
-                For vector creation, combination function (`c()`) is recommended.
-            attributes (`dict[str, Any]`, Optional): Stream of keyword arguments containing the attributes for the vector.
-                Atomic vectors only support attribute "names" and metadata introduced by the user.
+        Arguments
+        ---------
+        data (`tuple`): Object containing the value/s for the vector.
+            For vector creation, combination function (`c()`) is recommended.
+        attributes (`dict[str, Any]`, Optional): Stream of keyword arguments containing the attributes for the vector.
+            Atomic vectors only support attribute "names" and metadata introduced by the user.
         """
         self._data=np.array(data)
         if None in self._data:
@@ -107,33 +121,41 @@ class Vector(RObject,Generic[VT]):
     def structure(self,**attributes)->Vector[VT]:
         """
         Updates attributes dictionary. Similar to R `structure` function.
-        Returns the `Vector` object.\n
-        ---
-        Arguments:
-            attributes (`dict[str, Any]`, Optional): Stream of R attributes manually introduced.
-        ---
-        Returns:
-            Vector: Returns the `Vector` instance with the updated attributes.
+        Returns the `Vector` object.
+        
+        Arguments
+        ---------
+        attributes : `dict[str, Any]`, Optional
+            Stream of R attributes manually introduced.
+        
+        Returns
+        -------
+        Vector
+            Returns the `Vector` instance with the updated attributes.
         """
         return super().structure(**attributes)
     
     # Transform to list
     def tolist(self)->list[VT]:
         """
-        Returns the data in a `list` object.\n
-        ---
-        Returns:
-            list: Listed data of the `Vector` object.
+        Returns the data in a `list` object.
+        
+        Returns
+        -------
+        list
+            Listed data of the `Vector` object.
         """
         return list(self._data)
     
     # Transform to tuple
     def tuple(self)->tuple[VT]:
         """
-        Returns the data in a `tuple` object.\n
-        ---
-        Returns:
-            tuple: Listed data of the `Vector` object.
+        Returns the data in a `tuple` object.
+        
+        Returns
+        --------
+        tuple
+            Listed data of the `Vector` object.
         """
         return tuple(self._data)
     

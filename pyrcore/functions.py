@@ -11,8 +11,6 @@
 #// Deprecated code
 #*==============================================================================================================================
 
-#^ The different types of comments require the "Colorful Comments Refreshed" extension for VSCode to be properly distinguished
-
 #* IMPORTS
 # Class Vector
 from .core import Vector,VT
@@ -25,16 +23,21 @@ from typing import Iterable
 def c(*data:VT|list|tuple|np.ndarray,**named_data:VT)->Vector[VT]:
     #& Missing comments for code
     """
-    Creates an *R-like* atomic vector. The returned object is a `Vector` instance.\n
-    ---
-    Arguments:
-        *data (`Any`): Stream of unnamed values for the vector, resulting in a tuple of values.
-            Values can be of any type.
-        **named_data (`dict[str,Any]`): Stream of named values for the vector. They are passed as keyword arguments.
-            Values can be of any type. Arguments' names will be the names for the vector.
-    ---
-    Returns:
-        Vector: *R-like* atomic vector.
+    Creates an *R-like* atomic vector. The returned object is a `Vector` instance.
+    
+    Arguments
+    ---------
+    data : `tuple[Any]`
+        Stream of unnamed values for the vector, resulting in a tuple of values.
+        Values can be of any type.
+    named_data : `dict[str,Any]`
+        Stream of named values for the vector. They are passed as keyword arguments. Values can be of any type.
+        Arguments' names will be the names for the vector.
+    
+    Returns
+    -------
+    Vector
+        *R-like* atomic vector.
     """
     # Raise error if both named and unnamed data are given
     if data and named_data:

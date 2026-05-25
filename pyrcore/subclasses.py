@@ -12,8 +12,6 @@
 #¡ Inherited
 #*===============================================================================================================================
 
-#^ The different types of comments require the "Colorful Comments Refreshed" extension for VSCode to be properly distinguished
-
 #* IMPORTS
 # NumPy
 import numpy as np
@@ -40,31 +38,36 @@ class matrix(RObject,Generic[MT]):
     #& Documentation
     """
     Replicates R matrixes and R `matrix()` function.\n
-    Unlike class `Vector`, this class properly creates the object so no auxiliar functions are needed.\n
-    ---
-    Attributes:
-        data (`numpy.array`, Hidden): Hidden attribute containing the data of the matrix in the form of a `numpy` array.
-        attributes (`dict[str, Any]`, Hidden): Hidden attribute containing the R like attributes of the matrix.
-    ---
-    ## Methods
+    Unlike class `Vector`, this class properly creates the object so no auxiliar functions are needed.
     
-    ---
-    ## Properties\n
-    :nrow: *`MethodType`*\n
-        Gets the number of rows\n
-    :ncol: *`MethodType`*\n
+    Attributes
+    ----------
+    data : `numpy.array`, Hidden
+        Hidden attribute containing the data of the matrix in the form of a `numpy` array.
+    attributes : `dict[str, Any]`, Hidden
+        Hidden attribute containing the R like attributes of the matrix.
+    
+    Methods
+    -------
+    
+    
+    Properties
+    ----------
+    **nrow**
+        Gets the number of rows
+    **ncol**
         Gets the number of columns
-    :dim: *`MethodType`*\n
-        Gets the dimensions of the matrix\n
-    :dimnames: *`MethodType`*\n
-        Gets the names of rows and columns\n
-    :rownames: *`MethodType`*\n
-        Gets/sets the names of the rows\n
-    :colnames: *`MethodType`*\n
-        Gets/sets the names of the columns\n
-    :attributes: *`MethodType`*\n
+    **dim**
+        Gets the dimensions of the matrix
+    **dimnames**
+        Gets the names of rows and columns
+    **rownames**
+        Gets/sets the names of the rows
+    **colnames**
+        Gets/sets the names of the columns
+    **attributes**
         Gets/sets the R like attributes of the matrix
-    :type: *`MethodType`*\n
+    **type**
         Gets/sets the type of the data
     """
     #* METHODS
@@ -77,20 +80,27 @@ class matrix(RObject,Generic[MT]):
         **attributes
     ):
         """
-        Arguments:
-            data (`Vector`|`Iterable`|`None`, Optional): *Matrix-like* Python object to convert to an *R-like* matrix.
-            nrow (`int`|`None`, Optional): Number of rows to split the data. If not given, it is calculated.
-            ncol (`int`|`None`, Optional): Number of colums to split the data. If not given, it is calculated.
-            byrow (`bool`, Optional): Wether if the matrix will be built by rows (`True`) or by columns (`False`). `False` by default.
-            dimnames (`tuple[Iterable[str]|None,Iterable[str]|None]`|`None`, Optional): Ideally a tuple with the names for the rows (first position)
-                and the names for the columns (second position).
-                Any two position iterable works fine. Tuple is recommended if you just want to name the columns, so you can pass the following:
-                ```
-                m=matrix(<data>,<nrow>,2,dimnames=(None,["name1","name2"]))
-                ```
-                If only an iterable of strings is received, it will be passed to the rows.
-            attributes (`dict[str, Any]`, Optional): Stream of keyword arguments defining the matrix R attributes.
-                Matrixes support `dim` and `dimnames` attributes, which contains the matrix dimensions.
+        Arguments
+        ---------
+        data : `Vector`|`Iterable`|`None`, Optional
+            *Matrix-like* Python object to convert to an *R-like* matrix.
+        nrow : `int`|`None`, Optional
+            Number of rows to split the data. If not given, it is calculated.
+        ncol : `int`|`None`, Optional
+            Number of colums to split the data. If not given, it is calculated.
+        byrow : `bool`, Optional
+            Wether if the matrix will be built by rows (`True`) or by columns (`False`). `False` by default.
+        dimnames : `tuple[Iterable[str]|None, Iterable[str]|None]`|`None`, Optional
+            Ideally a tuple with the names for the rows (first position)
+            and the names for the columns (second position).
+            Any two position iterable works fine. Tuple is recommended if you just want to name the columns, so you can pass the following:
+            ```
+            m=matrix(<data>,<nrow>,2,dimnames=(None,["name1","name2"]))
+            ```
+            If only an iterable of strings is received, it will be passed to the rows.
+        attributes : `dict[str, Any]`, Optional
+            Stream of keyword arguments defining the matrix R attributes.
+            Matrixes support `dim` and `dimnames` attributes, which contains the matrix dimensions.
         """
         if not isinstance(data,Vector):
             data=c(data)
@@ -173,53 +183,65 @@ class matrix(RObject,Generic[MT]):
     def structure(self,**attributes)->matrix[MT]:
         """
         Updates attributes dictionary. Similar to R `structure` function.
-        Returns the `matrix` object.\n
-        ---
-        Arguments:
-            attributes (`dict[str, Any]`, Optional): Stream of R attributes manually introduced.
-        ---
-        Returns:
-            matrix: Returns the `matrix` instance with the updated attributes.
+        Returns the `matrix` object.
+        
+        Arguments
+        ---------
+        attributes : `dict[str, Any]`, Optional
+            Stream of R attributes manually introduced.
+        
+        Returns
+        -------
+        matrix
+            Returns the `matrix` instance with the updated attributes.
         """
         return super().structure(**attributes)
     
     # Transform into vector
     def vectorize(self)->Vector[MT]:
         """
-        Transforms the `matrix` object into a `Vector` object.\n
-        ---
-        Returns:
-            Vector: Original `Vector` object from which the matrix was made from.
+        Transforms the `matrix` object into a `Vector` object.
+        
+        Returns
+        -------
+        Vector
+            Original `Vector` object from which the matrix was made from.
         """
         return c(self._data.base).structure(**self.attributes)
     
     # Transform to list
     def tolist(self)->list[MT]:
         """
-        Returns the data in a `list` object.\n
-        ---
-        Returns:
-            list: Listed data of the `matrix` object.
+        Returns the data in a `list` object.
+        
+        Returns
+        -------
+        list
+            Listed data of the `matrix` object.
         """
         return self.vectorize().tolist()
     
     # Transform to tuple
     def tuple(self)->tuple[MT]:
         """
-        Returns the data in a `tuple` object.\n
-        ---
-        Returns:
-            tuple: Listed data of the `matrix` object.
+        Returns the data in a `tuple` object.
+        
+        Returns
+        -------
+        tuple
+            Listed data of the `matrix` object.
         """
         return self.vectorize().tuple()
     
     # Determinant
     def det(self)->int|float:
         """
-        Calculates the determinant of the matrix.\n
-        ---
-        Returns:
-            int|float: Determinant of the matrix
+        Calculates the determinant of the matrix.
+        
+        Returns
+        -------
+        int|float
+            Determinant of the matrix
         """
         if self.nrow!=self.ncol:
             raise ValueError("Matrix is not square")
@@ -235,10 +257,12 @@ class matrix(RObject,Generic[MT]):
     # Transpose
     def transpose(self)->matrix[MT]:
         """
-        Switches rows and columns between each other.\n
-        ---
-        Returns:
-            matrix: Transposed matrix
+        Switches rows and columns between each other.
+        
+        Returns
+        -------
+        matrix
+            Transposed matrix
         """
         return matrix(self.vectorize(),self.nrow,self.ncol,not self._byrow,**self.attributes)
     
@@ -815,21 +839,29 @@ class TimeSeries(RObject,Generic[TS]):
     #& Code comments
     #& Documentation
     """
-    Class replicating R univariate time-series.\n
-    ---
-    Attributes:
+    Class replicating R univariate time-series.
+    
+    Attributes
+    ----------
     """
     #* METHODS
     # __init__
     def __init__(self,data:Vector[TS],start:Vector[int],end:Vector[int]|None,frequency:int,deltat:int|float,**attributes):
         """
-        Arguments:
-            data (`TS`): Data for the time-series
-            start (`Vector`|`int`): Starting time of the observations
-            end (`Vector`|`int`|`None`): Time of the last observation
-            frequency (`int`): Number of observations per time unit
-            deltat (`int`|`float`): Inverse of `frequency`
-            attributes (`dict[str,Any]`, Optional): Keyword arguments for R-like attributes
+        Arguments
+        ---------
+        data : `Vector`
+            Data for the time-series
+        start : `Vector`|`int`
+            Starting time of the observations
+        end : `Vector`|`int`|`None`
+            Time of the last observation
+        frequency : `int`
+            Number of observations per time unit
+        deltat : `int`|`float`
+            Inverse of `frequency`
+        attributes : `dict[str, Any]`, Optional
+            Keyword arguments for R-like attributes
         """
         self._data:Vector[TS]
         super().__init__(data,**attributes)
@@ -867,33 +899,41 @@ class TimeSeries(RObject,Generic[TS]):
     def structure(self,**attributes)->TimeSeries[TS]:
         """
         Updates attributes dictionary. Similar to R `structure` function.
-        Returns the `TimeSeries` object.\n
-        ---
-        Arguments:
-            attributes (`dict[str, Any]`, Optional): Stream of attributes manually introduced.
-        ---
-        Returns:
-            TimeSeries: Returns the `TimeSeries` instance with the updated attributes.
+        Returns the `TimeSeries` object.
+        
+        Arguments
+        ---------
+        attributes : `dict[str, Any]`, Optional
+            Stream of attributes manually introduced.
+        
+        Returns
+        -------
+        TimeSeries
+            Returns the `TimeSeries` instance with the updated attributes.
         """
         return super().structure(**attributes)
     
     # Time
     def time(self)->TimeSeries[float]:
         """
-        Returns the time at which each observation data was taken, just like R does with its function `time()`.\n
-        ---
-        Returns:
-            TimeSeries: `TimeSeries` object containing the time at which each data piece was taken instead of the original data.
+        Returns the time at which each observation data was taken, just like R does with its function `time()`.
+        
+        Returns
+        -------
+        TimeSeries
+            `TimeSeries` object containing the time at which each data piece was taken instead of the original data.
         """
         return TimeSeries(c(tuple(f"{float(date[0]+self.deltat*(date[1]-1)):.3f}" for date in self._time)),deltat=self.deltat,**self.attributes)
     
     # Stational indexes
     def cycle(self)->TimeSeries[int]:
         """
-        Returns the period of the time unit for each data piece. Replicates R `cycle()` function.\n
-        ---
-        Returns:
-            TimeSeries: A `TimeSeries` object with same dimensions and
+        Returns the period of the time unit for each data piece. Replicates R `cycle()` function.
+        
+        Returns
+        -------
+        TimeSeries
+            A `TimeSeries` object with same dimensions and
             R attributes as the original containing the stational indexes of each time unit for each data piece.
         """
         return TimeSeries(c(tuple(date[1] for date in self._time)),deltat=self.deltat,**self.attributes)
@@ -906,18 +946,26 @@ class TimeSeries(RObject,Generic[TS]):
         extend:bool=False
     )->TimeSeries[TS]:
         """
-        Replicates the R `window()` function and creates another `TimeSeries` object with the requested data.\n
-        ---
-        Arguments:
-            start (`Vector[int]`|`int`|`None`, Optional): New starting point.
-            end (`Vector[int]`|`int`|`None`, Optional): New ending point.
-            frequency (`int`|`None`, Optional): New frequency.
-            deltat (`float`|`int`|`None`, Optional): New `deltat`.
-            extend (`bool`, Optional): Whether to extend the series or not if `start` and/or `end` are not in the original time interval.
-                Defaults to `False`.\n
-        ---
-        Returns:
-            TimeSeries: Slice of the requested data as a new `TimeSeries` object.
+        Replicates the R `window()` function and creates another `TimeSeries` object with the requested data.
+        
+        Arguments
+        ---------
+        start : `Vector[int]`|`int`|`None`, Optional
+            New starting point.
+        end : `Vector[int]`|`int`|`None`, Optional
+            New ending point.
+        frequency : `int`|`None`, Optional
+            New frequency.
+        deltat : `float`|`int`|`None`, Optional
+            New `deltat`.
+        extend : `bool`, Optional
+            Whether to extend the series or not if `start` and/or `end` are not in the original time interval.
+            Defaults to `False`.
+        
+        Returns
+        -------
+        TimeSeries
+            Slice of the requested data as a new `TimeSeries` object.
         """
         data=self._data.copy()
         if not start:
@@ -991,30 +1039,36 @@ class TimeSeries(RObject,Generic[TS]):
     # Transform to list
     def tolist(self)->list[TS]:
         """
-        Returns the data in a `list` object.\n
-        ---
-        Returns:
-            list: Listed data of the `TimeSeries` object.
+        Returns the data in a `list` object.
+        
+        Returns
+        -------
+        list
+            Listed data of the `TimeSeries` object.
         """
         return self._data.tolist()
     
     # Transform to tuple
     def tuple(self)->tuple[TS]:
         """
-        Returns the data in a `tuple` object.\n
-        ---
-        Returns:
-            tuple: Listed data of the `TimeSeries` object.
+        Returns the data in a `tuple` object.
+        
+        Returns
+        -------
+        tuple
+            Listed data of the `TimeSeries` object.
         """
         return self._data.tuple()
     
     # Transform to pandas.Series
     def to_pandas(self)->Series[TS]:
         """
-        Returns a `pandas.Series` object equivalent to the `TimeSeries` object.\n
-        ---
-        Returns:
-            pandas.Series: `pandas` equivalent to the `TimeSeries`object.
+        Returns a `pandas.Series` object equivalent to the `TimeSeries` object.
+        
+        Returns
+        -------
+        pandas.Series
+            `pandas` equivalent to the `TimeSeries`object.
         """
         #? Create new index object to comfortably manage time
         from pandas import Series
@@ -1297,15 +1351,17 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     #& Code comments
     #& Documentation
     """
-    Class replicating R multivariate time-series.\n
-    ---
-    Attributes:
+    Class replicating R multivariate time-series.
+    
+    Attributes
+    ----------
     """
     #* METHODS
     # __init__
     def __init__(self,data:matrix[MTS],start:Vector[int],end:Vector[int]|None,frequency:int,deltat:int|float,**attributes):
         """
-        Arguments:
+        Arguments
+        ---------
         """
         self._data:matrix[MTS]
         super().__init__(data,**attributes)
@@ -1374,33 +1430,41 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     def structure(self,**attributes)->MultiVariateTimeSeries[MTS]:
         """
         Updates attributes dictionary. Similar to R `structure` function.
-        Returns the `MultiVariateTimeSeries` object.\n
-        ---
-        Arguments:
-            attributes (`dict[str, Any]`, Optional): Stream of R attributes manually introduced.
-        ---
-        Returns:
-            MultiVariateTimeSeries: Returns the `MultiVariateTimeSeries` instance with the updated attributes.
+        Returns the `MultiVariateTimeSeries` object.
+        
+        Arguments
+        ---------
+        attributes : `dict[str, Any]`, Optional
+            Stream of R attributes manually introduced.
+        
+        Returns
+        -------
+        MultiVariateTimeSeries
+            Returns the `MultiVariateTimeSeries` instance with the updated attributes.
         """
         return super().structure(**attributes)
     
     # Time
     def time(self)->TimeSeries[float]:
         """
-        Returns the time at which each observation data was taken, just like R does with its function `time()`.\n
-        ---
-        Returns:
-            TimeSeries: `TimeSeries` object containing the time at which each data piece was taken instead of the original data.
+        Returns the time at which each observation data was taken, just like R does with its function `time()`.
+        
+        Returns
+        -------
+        TimeSeries
+            `TimeSeries` object containing the time at which each data piece was taken instead of the original data.
         """
         return TimeSeries(c([f"{float(date[0]+self.deltat*(date[1]-1)):.3f}" for date in self._time]),deltat=self.deltat,**self.attributes)
     
     # Cycle
     def cycle(self)->TimeSeries[int]:
         """
-        Returns the period of the time unit for each data piece. Replicates R `cycle()` function.\n
-        ---
-        Returns:
-            TimeSeries: A `TimeSeries` object with same dimensions and
+        Returns the period of the time unit for each data piece. Replicates R `cycle()` function.
+        
+        Returns
+        -------
+        TimeSeries
+            A `TimeSeries` object with same dimensions and
             R attributes as the original containing the stational indexes of each time unit for each data piece.
         """
         return TimeSeries(c(tuple(date[1] for date in self._time)),deltat=self.deltat,**self.attributes)
@@ -1413,18 +1477,26 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
         extend:bool=False
     )->MultiVariateTimeSeries[TS]:
         """
-        Replicates the R `window()` function and creates another `TimeSeries` object with the requested data.\n
-        ---
-        Arguments:
-            start (`Vector[int]`|`int`|`None`, Optional): New starting point.
-            end (`Vector[int]`|`int`|`None`, Optional): New ending point.
-            frequency (`int`|`None`, Optional): New frequency.
-            deltat (`float`|`int`|`None`, Optional): New `deltat`.
-            extend (`bool`, Optional): Whether to extend the series or not if `start` and/or `end` are not in the original time interval.
-                Defaults to `False`.\n
-        ---
-        Returns:
-            MultiVariateTimeSeries: Slice of the requested data as a new `MultiVariateTimeSeries` object.
+        Replicates the R `window()` function and creates another `MultiVariateTimeSeries` object with the requested data.
+        
+        Arguments
+        ---------
+        start : `Vector[int]`|`int`|`None`, Optional
+            New starting point.
+        end : `Vector[int]`|`int`|`None`, Optional
+            New ending point.
+        frequency : `int`|`None`, Optional
+            New frequency.
+        deltat : `float`|`int`|`None`, Optional
+            New `deltat`.
+        extend : `bool`, Optional
+            Whether to extend the series or not if `start` and/or `end` are not in the original time interval.
+            Defaults to `False`.
+        
+        Returns
+        -------
+        MultiVariateTimeSeries
+            Slice of the requested data as a new `MultiVariateTimeSeries` object.
         """
         data=self._data.copy()
         if not start:
@@ -1498,24 +1570,30 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     # Transform to dictionary
     def todict(self,list:bool=False)->dict[str,list[MTS]]|list[dict[str,MTS]]:
         """
-        Returns a dictionary with the `MultiVariateTimeSeries` object's data.\n
-        ---
-        Arguments:
-            list (`bool`): Whether to return a list of dictionaries (`True`), containing one dictionary per row, or a dictionary of lists (`False`).
-                Defaults to `False`.
-        ---
-        Returns:
-            dict[str,list]|list[dict]: Dictionary containing the `MultiVariateTimeSeries` object's data.
+        Returns a dictionary with the `MultiVariateTimeSeries` object's data.
+        
+        Arguments
+        ---------
+        list : `bool`
+            Whether to return a list of dictionaries (`True`), containing one dictionary per row, or a dictionary of lists (`False`).
+            Defaults to `False`.
+        
+        Returns
+        -------
+        dict[str,list]|list[dict]
+            Dictionary containing the `MultiVariateTimeSeries` object's data.
         """
         return dict(zip(self.colnames,self._data.transpose()._data.tolist())) if not list else [dict(zip(self.colnames,row)) for row in self._data._data.tolist()]
     
     # Obtain variable names
     def keys(self)->Vector[str]:
         """
-        Returns an R-like vector of strings containing the names of the variables (or columns).\n
-        ---
-        Returns:
-            Vector[str]: Vector of variables' names.
+        Returns an R-like vector of strings containing the names of the variables (or columns).
+        
+        Returns
+        -------
+        Vector[str]
+            Vector of variables' names.
         """
         return self.colnames
     
@@ -1523,49 +1601,66 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     @overload
     def values(self,format:Literal["matrix"])->matrix[MTS]:
         """
-        Returns the values of the `MultiVariateTimeSeries` object.\n
-        ---
-        Arguments:
-            format (`Literal["matrix","rows","cols"]`, Optional): Core values' matrix is returned.
-        ---
-        Returns:
-            matrix: Values of the time-series as a `matrix` object.
+        Returns the values of the `MultiVariateTimeSeries` object.
+        
+        Arguments
+        ---------
+        format : `Literal["matrix","rows","cols"]`, Optional
+            Core values' matrix is returned.
+        
+        Returns
+        -------
+        matrix
+            Values of the time-series as a `matrix` object.
         """
         ...
     @overload
     def values(self,format:Literal["rows"])->list[Vector[MTS]]:
         """
-        Returns the values of the `MultiVariateTimeSeries` object.\n
-        ---
-        Arguments:
-            format (`Literal["matrix","rows","cols"]`, Optional): Formats the output to a list of rows as `Vector` objects.
-        ---
-        Returns:
-            list[Vector]: Values of the time-series grouped by rows.
+        Returns the values of the `MultiVariateTimeSeries` object.
+        
+        Arguments
+        ---------
+        format : `Literal["matrix","rows","cols"]`, Optional
+            Formats the output to a list of rows as `Vector` objects.
+        
+        Returns
+        -------
+        list[Vector]
+            Values of the time-series grouped by rows.
         """
         ...
     @overload
     def values(self,format:Literal["cols"])->list[Vector[MTS]]:
         """
-        Returns the values of the `MultiVariateTimeSeries` object.\n
-        ---
-        Arguments:
-            format (`Literal["matrix","rows","cols"]`, Optional): Formats the output to a list of columns as `Vector` objects.
-        ---
-        Returns:
-            list[Vector]: Values of the time-series grouped by columns.
-                It can be zipped with a list of keys to create a dictionary.
+        Returns the values of the `MultiVariateTimeSeries` object.
+        
+        Arguments
+        ---------
+        format : `Literal["matrix","rows","cols"]`, Optional
+            Formats the output to a list of columns as `Vector` objects.
+        
+        Returns
+        -------
+        list[Vector]
+            Values of the time-series grouped by columns.
+            It can be zipped with a list of keys to create a dictionary.
         """
         ...
     def values(self,format:Literal["matrix","rows","cols"]="matrix")->list[Vector[MTS]]|matrix[MTS]:
         """
-        Returns the values of the `MultiVariateTimeSeries` object.\n
-        ---
-        Arguments:
-            format (`Literal["matrix","rows","cols"]`, Optional): Format of the output. Defaults to `"matrix"`.
-        ---
-        Returns:
-            list[Vector]|matrix: Values of the time-series.
+        Returns the values of the `MultiVariateTimeSeries` object.
+        
+        Arguments
+        ---------
+        format : `Literal["matrix","rows","cols"]`, Optional
+            Format of the output.
+            Defaults to `"matrix"`.
+        
+        Returns
+        -------
+        list[Vector]|matrix
+            Values of the time-series.
         """
         match format:
             case "matrix":
@@ -1580,10 +1675,12 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     # Transform to pandas.DataFrame
     def to_pandas(self)->DataFrame[MTS]:
         """
-        Returns a `pandas.DataFrame` object equivalent to the `MultiVariateTimeSeries` object.\n
-        ---
-        Returns:
-            pandas.DataFrame: `pandas` equivalent to the `MultiVariateTimeSeries`object.
+        Returns a `pandas.DataFrame` object equivalent to the `MultiVariateTimeSeries` object.
+        
+        Returns
+        -------
+        pandas.DataFrame
+            `pandas` equivalent to the `MultiVariateTimeSeries`object.
         """
         from pandas import DataFrame
         return DataFrame(self._data._data,tuple(f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time) if self.frequency!=1 else self._time,self.colnames,self.type)

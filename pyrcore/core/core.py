@@ -12,8 +12,6 @@
 #¡ Code for abstractmethod redefinition
 #*===============================================================================================================================
 
-#^ The different types of comments require the "Colorful Comments Refreshed" extension for VSCode to be properly distinguished
-
 #* IMPORTS
 # Abstract method decorator and class ABCMeta
 from abc import abstractmethod,ABCMeta
@@ -38,14 +36,19 @@ class RObject(metaclass=ABCMeta):
     def attr(self,attribute:str,value=None):
         """
         Gets the value of an attribute if `value` not provided.\n
-        If `value` is provided, attribute is set to that value.\n
-        ---
-        Arguments:
-            attribute (`str`): Attribute to get or set.
-            value (`Any`|`None`, Optional): New value of the attribute.
-        ---
-        Returns:
-            Any: Value of the fetched attribute (if `value` not given).
+        If `value` is provided, attribute is set to that value.
+        
+        Arguments
+        ---------
+        attribute : `str`
+            Attribute to get or set.
+        value : `Any`|`None`, Optional
+            New value of the attribute.
+        
+        Returns
+        -------
+        Any
+            Value of the fetched attribute (if `value` not given).
         """
         #¡ if value is None:
         try:
@@ -54,10 +57,11 @@ class RObject(metaclass=ABCMeta):
             return None
         except Exception as excep:
             raise type(excep)(
-                f"""A fatal error occured, please report this in our issues page: https://github.com/Ricardo-Werner-Rivas/pyrcore/issues
-                Include the following error message in your report:
-                {excep}
-                """
+                f"""\
+A fatal error occured, please report this in our issues page: https://github.com/Ricardo-Werner-Rivas/pyrcore/issues
+Include the following error message in your report:
+{excep}\
+"""
             ) from None
         #¡ else/elif ...:
     
