@@ -1092,8 +1092,28 @@ class TimeSeries(RObject,Generic[TS]):
         return self.attributes["start"]
     # Setter
     @start.setter
-    def start(self,new_start:Vector[int]|int):
-        self.attr("start",new_start)
+    def start(self,new_start:Vector[int]|int|None):
+        match type(new_start).__name__:
+            case "NoneType":
+                new_start=None
+            case "int":
+                new_start=c(new_start,1)
+            case "Vector":
+                if len(new_start)==0:
+                    new_start=None
+                elif len(new_start)<2:
+                    new_start=c(new_start,1)
+                elif len(new_start)>2:
+                    raise ValueError("Invalid length for new \"start\" R attribute value (maximum 2)")
+            case _:
+                if isinstance(new_start,Iterable) and not isinstance(new_start,str):
+                    self.start=c(new_start)
+                else:
+                    raise ValueError("Expected \"start\" value is a \"Vector\" or \"int\" object or \"None\", but something else was given")
+        if new_start:
+            self.attr("start",new_start)
+        else:
+            del self.start
     # Deleter
     @start.deleter
     def start(self):
@@ -1106,8 +1126,28 @@ class TimeSeries(RObject,Generic[TS]):
         return self.attributes["end"]
     # Setter
     @end.setter
-    def end(self,new_end:Vector[int]|int):
-        self.attr("end",new_end)
+    def end(self,new_end:Vector[int]|int|None):
+        match type(new_end).__name__:
+            case "NoneType":
+                new_end=None
+            case "int":
+                new_end=c(new_end,1)
+            case "Vector":
+                if len(new_end)==0:
+                    new_end=None
+                elif len(new_end)<2:
+                    new_end=c(new_end,1)
+                elif len(new_end)>2:
+                    raise ValueError("Invalid length for new \"end\" R attribute value (maximum 2)")
+            case _:
+                if isinstance(new_end,Iterable) and not isinstance(new_end,str):
+                    self.end=c(new_end)
+                else:
+                    raise ValueError("Expected \"end\" value is a \"Vector\" or \"int\" object or \"None\", but something else was given")
+        if new_end:
+            self.attr("end",new_end)
+        else:
+            del self.end
     # Deleter
     @end.deleter
     def end(self):
