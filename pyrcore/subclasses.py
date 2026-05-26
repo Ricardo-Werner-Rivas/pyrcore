@@ -308,7 +308,7 @@ class matrix(RObject,Generic[MT]):
     @rownames.setter
     def rownames(self,names:Iterable[str]|None):
         names=c(names) if names else None
-        self.attr("dimnames",(names,self.colnames) if self.dimnames else (names,None))
+        self.attr("dimnames",(names,self.colnames))
     #^ No deleter
     
     # Names of columns
@@ -320,7 +320,7 @@ class matrix(RObject,Generic[MT]):
     @colnames.setter
     def colnames(self,names:Iterable[str]|None):
         names=c(names) if names else None
-        self.attr("dimnames",(self.rownames,names) if self.dimnames else (None,names))
+        self.attr("dimnames",(self.rownames,names))
     #^ No deleter
     
     #¡ Attributes
