@@ -1726,3 +1726,27 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
         return self.attributes["dimnames"] if "dimnames" in self.attributes else None
     #^ No setter
     #^ No deleter
+    
+    # Names of rows
+    @property
+    # Getter
+    def rownames(self)->Vector[str]|None:
+        return self.dimnames[0] if self.dimnames else None
+    # Setter
+    @rownames.setter
+    def rownames(self,names:Iterable[str]|None):
+        names=c(names) if names else None
+        self.attr("dimnames",(names,self.colnames))
+    #^ No deleter
+    
+    # Names of columns
+    @property
+    # Getter
+    def colnames(self)->Vector[str]|None:
+        return self.dimnames[1] if self.dimnames else None
+    # Setter
+    @colnames.setter
+    def colnames(self,names:Iterable[str]|None):
+        names=c(names) if names else None
+        self.attr("dimnames",(self.rownames,names))
+    #^ No deleter
