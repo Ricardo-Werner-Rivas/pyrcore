@@ -886,6 +886,22 @@ class TimeSeries(RObject,Generic[TS]):
     def attr(self,attribute:str,value=None):
         if value is None:
             return super().attr(attribute,value)
+        elif attribute in "start end".split():
+            match type(value).__name__:
+                case "int":
+                    value=c(value,1)
+                case "Vector":
+                    if len(value)==0:
+                        value=None
+                    elif len(value)<2:
+                        value=c(value,1)
+                    elif len(value)>2:
+                        raise ValueError(f"Invalid length for new \"{attribute}\" R attribute value (maximum 2)")
+                case _:
+                    if isinstance(value,Iterable) and not isinstance(value,str):
+                        self.attr(attribute,c(value))
+                    else:
+                        raise ValueError(f"Expected \"{attribute}\" value is a \"Vector\" or \"int\" object or \"None\", but something else was given")
         elif attribute in "frequency deltat".split():
             match attribute:
                 case "deltat":
@@ -1093,23 +1109,6 @@ class TimeSeries(RObject,Generic[TS]):
     # Setter
     @start.setter
     def start(self,new_start:Vector[int]|int|None):
-        match type(new_start).__name__:
-            case "NoneType":
-                new_start=None
-            case "int":
-                new_start=c(new_start,1)
-            case "Vector":
-                if len(new_start)==0:
-                    new_start=None
-                elif len(new_start)<2:
-                    new_start=c(new_start,1)
-                elif len(new_start)>2:
-                    raise ValueError("Invalid length for new \"start\" R attribute value (maximum 2)")
-            case _:
-                if isinstance(new_start,Iterable) and not isinstance(new_start,str):
-                    self.start=c(new_start)
-                else:
-                    raise ValueError("Expected \"start\" value is a \"Vector\" or \"int\" object or \"None\", but something else was given")
         if new_start:
             self.attr("start",new_start)
         else:
@@ -1127,23 +1126,6 @@ class TimeSeries(RObject,Generic[TS]):
     # Setter
     @end.setter
     def end(self,new_end:Vector[int]|int|None):
-        match type(new_end).__name__:
-            case "NoneType":
-                new_end=None
-            case "int":
-                new_end=c(new_end,1)
-            case "Vector":
-                if len(new_end)==0:
-                    new_end=None
-                elif len(new_end)<2:
-                    new_end=c(new_end,1)
-                elif len(new_end)>2:
-                    raise ValueError("Invalid length for new \"end\" R attribute value (maximum 2)")
-            case _:
-                if isinstance(new_end,Iterable) and not isinstance(new_end,str):
-                    self.end=c(new_end)
-                else:
-                    raise ValueError("Expected \"end\" value is a \"Vector\" or \"int\" object or \"None\", but something else was given")
         if new_end:
             self.attr("end",new_end)
         else:
@@ -1455,6 +1437,22 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
                             value=(value[0],c(value[1],*tuple(f"Column {col}" for col in range(len(value[1]+1),self.ncol+1))))
                         else:
                             raise ValueError("Columns' names iterable can't be larger than the number of columns")
+        elif attribute in "start end".split():
+            match type(value).__name__:
+                case "int":
+                    value=c(value,1)
+                case "Vector":
+                    if len(value)==0:
+                        value=None
+                    elif len(value)<2:
+                        value=c(value,1)
+                    elif len(value)>2:
+                        raise ValueError(f"Invalid length for new \"{attribute}\" R attribute value (maximum 2)")
+                case _:
+                    if isinstance(value,Iterable) and not isinstance(value,str):
+                        self.attr(attribute,c(value))
+                    else:
+                        raise ValueError(f"Expected \"{attribute}\" value is a \"Vector\" or \"int\" object or \"None\", but something else was given")
         elif attribute in "frequency deltat".split():
             match attribute:
                 case "deltat":
@@ -1797,23 +1795,6 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     # Setter
     @start.setter
     def start(self,new_start:Vector[int]|int|None):
-        match type(new_start).__name__:
-            case "NoneType":
-                new_start=None
-            case "int":
-                new_start=c(new_start,1)
-            case "Vector":
-                if len(new_start)==0:
-                    new_start=None
-                elif len(new_start)<2:
-                    new_start=c(new_start,1)
-                elif len(new_start)>2:
-                    raise ValueError("Invalid length for new \"start\" R attribute value (maximum 2)")
-            case _:
-                if isinstance(new_start,Iterable) and not isinstance(new_start,str):
-                    self.start=c(new_start)
-                else:
-                    raise ValueError("Expected \"start\" value is a \"Vector\" or \"int\" object or \"None\", but something else was given")
         if new_start:
             self.attr("start",new_start)
         else:
@@ -1831,23 +1812,6 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     # Setter
     @end.setter
     def end(self,new_end:Vector[int]|int|None):
-        match type(new_end).__name__:
-            case "NoneType":
-                new_end=None
-            case "int":
-                new_end=c(new_end,1)
-            case "Vector":
-                if len(new_end)==0:
-                    new_end=None
-                elif len(new_end)<2:
-                    new_end=c(new_end,1)
-                elif len(new_end)>2:
-                    raise ValueError("Invalid length for new \"end\" R attribute value (maximum 2)")
-            case _:
-                if isinstance(new_end,Iterable) and not isinstance(new_end,str):
-                    self.end=c(new_end)
-                else:
-                    raise ValueError("Expected \"end\" value is a \"Vector\" or \"int\" object or \"None\", but something else was given")
         if new_end:
             self.attr("end",new_end)
         else:
