@@ -1870,3 +1870,31 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
                 period=self.frequency
             end[0],end[1]=year,period
             self.end=end.copy()
+    
+    # Frequency
+    @property
+    # Getter
+    def frequency(self)->int:
+        return self.attributes["frequency"]
+    # Setter
+    @frequency.setter
+    def frequency(self,new_frequency:int):
+        self.attr("frequency",new_frequency)
+    # Deleter
+    @frequency.deleter
+    def frequency(self):
+        self.frequency=1
+    
+    # Deltat
+    @property
+    # Getter
+    def deltat(self)->int|float:
+        return 1/self.frequency
+    # Setter
+    @deltat.setter
+    def deltat(self,new_deltat:int|float):
+        self.attr("deltat",new_deltat)
+    # Deleter
+    @deltat.deleter
+    def deltat(self):
+        self.deltat=1
