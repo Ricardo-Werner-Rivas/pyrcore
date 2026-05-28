@@ -1865,3 +1865,13 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     
     #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
     # Attribute not found #¡ __getattr__
+    
+    #* COPYING DUNDER METHODS
+    # Shallow copy
+    def __copy__(self):
+        return MultiVariateTimeSeries(self._data.copy(),deltat=self.deltat,**self.attributes)
+    
+    # Deepcopy
+    def __deepcopy__(self):
+        from copy import deepcopy
+        return MultiVariateTimeSeries(deepcopy(self._data),deltat=self.deltat,**deepcopy(self.attributes))
