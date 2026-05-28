@@ -1169,8 +1169,6 @@ class TimeSeries(RObject,Generic[TS]):
     @property
     # Getter
     def frequency(self)->int:
-        if self.attributes["frequency"] is None:
-            self._attributes["frequency"]=1
         return self.attributes["frequency"]
     # Setter
     @frequency.setter
