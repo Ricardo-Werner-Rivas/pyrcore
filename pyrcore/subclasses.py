@@ -1862,3 +1862,6 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
         self.deltat=1
     
     #¡ Attributes
+    
+    #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
+    # Attribute not found #¡ __getattr__
