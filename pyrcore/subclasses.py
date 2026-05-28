@@ -1860,3 +1860,5 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     @deltat.deleter
     def deltat(self):
         self.deltat=1
+    
+    #¡ Attributes
