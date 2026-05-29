@@ -846,7 +846,7 @@ class TimeSeries(RObject,Generic[TS]):
     """
     #* METHODS
     # __init__
-    def __init__(self,data:Vector[TS],start:Vector[int],end:Vector[int]|None,frequency:int,deltat:int|float,**attributes):
+    def __init__(self,data:Vector[TS],start:Vector[int],end:Vector[int]|None,frequency:int,**attributes):
         """
         Arguments
         ---------
@@ -880,7 +880,7 @@ class TimeSeries(RObject,Generic[TS]):
                 current[1]=1
         if end is None:
             end=time[-1]
-        self._time,self._attributes["start"],self._attributes["end"],self._attributes["frequency"]=time,start,end,(frequency or 1/deltat)
+        self._time,self._attributes["start"],self._attributes["end"],self._attributes["frequency"]=time,start,end,frequency
     
     # Get/set attribute
     def attr(self,attribute:str,value=None):
@@ -939,7 +939,7 @@ class TimeSeries(RObject,Generic[TS]):
         TimeSeries
             `TimeSeries` object containing the time at which each data piece was taken instead of the original data.
         """
-        return TimeSeries(c(tuple(f"{float(date[0]+self.deltat*(date[1]-1)):.3f}" for date in self._time)),deltat=self.deltat,**self.attributes)
+        return TimeSeries(c(tuple(f"{float(date[0]+self.deltat*(date[1]-1)):.3f}" for date in self._time)),**self.attributes)
     
     # Stational indexes
     def cycle(self)->TimeSeries[int]:
@@ -952,7 +952,7 @@ class TimeSeries(RObject,Generic[TS]):
             A `TimeSeries` object with same dimensions and
             R attributes as the original containing the stational indexes of each time unit for each data piece.
         """
-        return TimeSeries(c(tuple(date[1] for date in self._time)),deltat=self.deltat,**self.attributes)
+        return TimeSeries(c(tuple(date[1] for date in self._time)),**self.attributes)
     
     # Window
     def window(
@@ -1490,7 +1490,7 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
         TimeSeries
             `TimeSeries` object containing the time at which each data piece was taken instead of the original data.
         """
-        return TimeSeries(c([f"{float(date[0]+self.deltat*(date[1]-1)):.3f}" for date in self._time]),deltat=self.deltat,**self.attributes)
+        return TimeSeries(c([f"{float(date[0]+self.deltat*(date[1]-1)):.3f}" for date in self._time]),**self.attributes)
     
     # Cycle
     def cycle(self)->TimeSeries[int]:
@@ -1503,7 +1503,7 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
             A `TimeSeries` object with same dimensions and
             R attributes as the original containing the stational indexes of each time unit for each data piece.
         """
-        return TimeSeries(c(tuple(date[1] for date in self._time)),deltat=self.deltat,**self.attributes)
+        return TimeSeries(c(tuple(date[1] for date in self._time)),**self.attributes)
     
     # Window
     def window(
@@ -1869,12 +1869,12 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     #* COPYING DUNDER METHODS
     # Shallow copy
     def __copy__(self):
-        return MultiVariateTimeSeries(self._data.copy(),deltat=self.deltat,**self.attributes)
+        return MultiVariateTimeSeries(self._data.copy(),**self.attributes)
     
     # Deepcopy
     def __deepcopy__(self):
         from copy import deepcopy
-        return MultiVariateTimeSeries(deepcopy(self._data),deltat=self.deltat,**deepcopy(self.attributes))
+        return MultiVariateTimeSeries(deepcopy(self._data),**deepcopy(self.attributes))
     
     #* COMPARATIVE DUNDER METHODS
     # Equality
