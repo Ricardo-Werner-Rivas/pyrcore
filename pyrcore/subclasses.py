@@ -1933,3 +1933,36 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     # Power
     def __pow__(self,value):
         return MultiVariateTimeSeries(self._data**(value if not isinstance(value,MultiVariateTimeSeries) else value._data),**self.attributes)
+    
+    #* REFLEXED ARITHMETIC DUNDER METHODS
+    # Addition
+    def __radd__(self,value):
+        return self+value
+    
+    # Difference
+    def __rsub__(self,value):
+        return (self-value)*-1
+    
+    # Product
+    def __rmul__(self,value):
+        return self*value
+    
+    # Division
+    def __rtruediv__(self,value):
+        return (self/value)**-1
+    
+    # Integer division (floor division)
+    def __rfloordiv__(self,value):
+        return (self//value)**-1
+    
+    # Module
+    def __rmod__(self,value):
+        return MultiVariateTimeSeries(value%self._data,**self.attributes)
+    
+    # Divmod
+    def __rdivmod__(self,value):
+        return value//self,value%self
+    
+    # Power
+    def __rpow__(self,value):
+        return MultiVariateTimeSeries(value**self._data,**self.attributes)
