@@ -1875,3 +1875,28 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     def __deepcopy__(self):
         from copy import deepcopy
         return MultiVariateTimeSeries(deepcopy(self._data),deltat=self.deltat,**deepcopy(self.attributes))
+    
+    #* COMPARATIVE DUNDER METHODS
+    # Equality
+    def __eq__(self,value):
+        return self._data==value if not isinstance(value,MultiVariateTimeSeries) else self._data==value._data
+    
+    # Inequality
+    def __ne__(self,value):
+        return self._data!=value if not isinstance(value,MultiVariateTimeSeries) else self._data!=value._data
+    
+    # Less than
+    def __lt__(self,value):
+        return self._data<value if not isinstance(value,MultiVariateTimeSeries) else self._data<value._data
+    
+    # Less or equal
+    def __le__(self,value):
+        return self<value or self==value
+    
+    # Greater than
+    def __gt__(self,value):
+        return self._data>value if not isinstance(value,MultiVariateTimeSeries) else self._data>value._data
+    
+    # Greater or equal
+    def __ge__(self,value):
+        return self>value or self==value
