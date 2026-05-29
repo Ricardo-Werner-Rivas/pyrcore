@@ -1966,3 +1966,16 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     # Power
     def __rpow__(self,value):
         return MultiVariateTimeSeries(value**self._data,**self.attributes)
+    
+    #* UNARY DUNDER METHODS
+    # Negative
+    def __neg__(self):
+        return MultiVariateTimeSeries(-self._data,**self.attributes)
+    
+    # Positive
+    def __pos__(self):
+        return MultiVariateTimeSeries(+self._data,**self.attributes)
+    
+    # Absolute value
+    def __abs__(self):
+        return MultiVariateTimeSeries(abs(self._data),**self.attributes)
