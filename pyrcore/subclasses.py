@@ -1900,3 +1900,36 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     # Greater or equal
     def __ge__(self,value):
         return self>value or self==value
+    
+    #* ARITHMETIC DUNDER METHODS
+    # Addition
+    def __add__(self,value):
+        return MultiVariateTimeSeries(self._data+(value if not isinstance(value,MultiVariateTimeSeries) else value._data),**self.attributes)
+    
+    # Difference
+    def __sub__(self,value):
+        return MultiVariateTimeSeries(self._data-(value if not isinstance(value,MultiVariateTimeSeries) else value._data),**self.attributes)
+    
+    # Product
+    def __mul__(self,value):
+        return MultiVariateTimeSeries(self._data*(value if not isinstance(value,MultiVariateTimeSeries) else value._data),**self.attributes)
+    
+    # Division
+    def __truediv__(self,value):
+        return MultiVariateTimeSeries(self._data/(value if not isinstance(value,MultiVariateTimeSeries) else value._data),**self.attributes)
+    
+    # Integer division (floor division)
+    def __floordiv__(self,value):
+        return MultiVariateTimeSeries(self._data//(value if not isinstance(value,MultiVariateTimeSeries) else value._data),**self.attributes)
+    
+    # Module
+    def __mod__(self,value):
+        return MultiVariateTimeSeries(self._data%(value if not isinstance(value,MultiVariateTimeSeries) else value._data),**self.attributes)
+    
+    # Divmod
+    def __divmod__(self,value):
+        return self//value,self%value
+    
+    # Power
+    def __pow__(self,value):
+        return MultiVariateTimeSeries(self._data**(value if not isinstance(value,MultiVariateTimeSeries) else value._data),**self.attributes)
