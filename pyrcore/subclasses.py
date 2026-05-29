@@ -1979,3 +1979,48 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     # Absolute value
     def __abs__(self):
         return MultiVariateTimeSeries(abs(self._data),**self.attributes)
+    
+    #* INDEXATION DUNDER METHODS
+    # Getter
+    def __getitem__(self,index:int|str|tuple[int|str,int|str])->Vector[MTS]|MultiVariateTimeSeries[MTS]:
+        #~ Revise for slices
+        match len(index): #! Wrong. Checking "int" length will raise an error.
+            case 1:
+                match type(index).__name__:
+                    case "str":
+                        return c(self._data[:,self.colnames.tuple().index(index)])
+                    case "int":
+                        return c(self._data[index])
+                    case _:
+                        raise TypeError(f"\"{type(index).__name__}\" index is not allowed")
+            case 2:
+                match type(index[0]).__name__:
+                    case "str":
+                        if self.rownames:
+                            row=index[0]
+                            index=(self.rownames.tuple().index(index[0]),index[1])
+                        else:
+                            raise ValueError(f"This \"{self.__class__.__name__}\" object has no \"rownames\" R attribute, so \"int\" index is expected")
+                    case "int":
+                        pass
+                    case _:
+                        raise TypeError(f"\"{type(index).__name__}\" index is not allowed")
+                match type(index[1]).__name__:
+                    case "str":
+                        if self.colnames:
+                            col=index[1]
+                            index=(index[0],self.colnames.tuple().index(index[1]))
+                        else:
+                            raise ValueError(f"This \"{self.__class__.__name__}\" object has no \"colnames\" R attribute, so \"int\" index is expected")
+                    case "int":
+                        pass
+                    case _:
+                        raise TypeError(f"\"{type(index).__name__}\" index is not allowed")
+                return self._data[index]
+            case _:
+                raise IndexError("Sequence index out of range.")
+    
+    # Setter
+    def __setitem__(self,index:int|str|tuple[int|str,int|str],value):
+        self.__getitem__(index)
+        self._data[index]=value
