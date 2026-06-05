@@ -13,7 +13,9 @@
 
 #* IMPORTS
 # Class Vector
-from .core import Vector,VT
+from .core import Vector
+# VT type variable
+from .core.vector import VT
 # NumPy
 import numpy as np
 # Iterable
