@@ -1604,13 +1604,45 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
         return MultiVariateTimeSeries(data,start,end,frequency,deltat)
     
     # Transform to dictionary
-    def todict(self,list:bool=False)->dict[str,list[MTS]]|list[dict[str,MTS]]:
+    @overload
+    def todict(self,list:Literal[False])->dict[str,list[MTS]]:
         """
         Returns a dictionary with the `MultiVariateTimeSeries` object's data.
         
         Arguments
         ---------
-        list : `bool`
+        list : `bool`, Optional, default False
+            Establishes that not a list of dictionaries, but a dictionary of lists, is returned.
+        
+        Returns
+        -------
+        dict[str,list]
+            Dictionary containing the `MultiVariateTimeSeries` object's data.
+        """
+        ...
+    @overload
+    def todict(self,list:Literal[True])->list[dict[str,MTS]]:
+        """
+        Returns a list of dictionaries with the `MultiVariateTimeSeries` object's data.
+        
+        Arguments
+        ---------
+        list : `bool`, Optional, default False
+            Establishes that not a dictionary of lists, but a list of dictionaries, is returned.
+        
+        Returns
+        -------
+        list[str,dict]
+            List of dictionaries containing the `MultiVariateTimeSeries` object's data.
+        """
+        ...
+    def todict(self,list:bool=False)->dict[str,list[MTS]]|list[dict[str,MTS]]:
+        """
+        Returns a dictionary or list of dictionaries with the `MultiVariateTimeSeries` object's data.
+        
+        Arguments
+        ---------
+        list : `bool`, Optional, default False
             Whether to return a list of dictionaries (`True`), containing one dictionary per row, or a dictionary of lists (`False`).
             Defaults to `False`.
         
