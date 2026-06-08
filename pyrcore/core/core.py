@@ -130,6 +130,6 @@ Include the following error message in your report:
     
     # Deep copy
     @abstractmethod
-    def __deepcopy__(self):
+    def __deepcopy__(self,memo:dict[int,]):
         #¡ from copy import deepcopy
         ...

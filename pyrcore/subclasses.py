@@ -343,9 +343,9 @@ class matrix(RObject,Generic[MT]):
         return matrix(self.vectorize().copy(),*self.dim,byrow=self._byrow,**self.attributes)
     
     # Deep copy #¡ __deepcopy__
-    def __deepcopy__(self):
+    def __deepcopy__(self,memo:dict[int,]):
         from copy import deepcopy
-        return matrix(deepcopy(self.vectorize()),*self.dim,byrow=self._byrow,**deepcopy(self.attributes))
+        return matrix(deepcopy(self.vectorize(),memo),*self.dim,byrow=self._byrow,**deepcopy(self.attributes,memo))
     
     #* COMPARATIVE DUNDER METHODS
     # Equality
@@ -1186,9 +1186,9 @@ class TimeSeries(RObject,Generic[TS]):
         return TimeSeries(self._data.copy(),**self.attributes)
     
     # Deep copy
-    def __deepcopy__(self):
+    def __deepcopy__(self,memo:dict[int,]):
         from copy import deepcopy
-        return TimeSeries(deepcopy(self._data),**deepcopy(self.attributes))
+        return TimeSeries(deepcopy(self._data,memo),**deepcopy(self.attributes,memo))
     
     #* COMPARATIVE DUNDER METHODS
     # Equality
@@ -1904,9 +1904,9 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
         return MultiVariateTimeSeries(self._data.copy(),**self.attributes)
     
     # Deepcopy
-    def __deepcopy__(self):
+    def __deepcopy__(self,memo:dict[int,]):
         from copy import deepcopy
-        return MultiVariateTimeSeries(deepcopy(self._data),**deepcopy(self.attributes))
+        return MultiVariateTimeSeries(deepcopy(self._data,memo),**deepcopy(self.attributes,memo))
     
     #* COMPARATIVE DUNDER METHODS
     # Equality

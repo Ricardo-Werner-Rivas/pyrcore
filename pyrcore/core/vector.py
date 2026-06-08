@@ -199,9 +199,9 @@ class Vector(RObject,Generic[VT]):
         return Vector(self.tuple(),**self.attributes.copy())
     
     # Deep copy #¡ __deepcopy__
-    def __deepcopy__(self):
+    def __deepcopy__(self,memo:dict[int,]):
         from copy import deepcopy
-        return Vector(deepcopy(self.tuple()),**deepcopy(self.attributes))
+        return Vector(deepcopy(self.tuple(),memo),**deepcopy(self.attributes,memo))
     
     #* COMPARATIVE METHODS
     # Equality
