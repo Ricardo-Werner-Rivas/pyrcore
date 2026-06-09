@@ -22,7 +22,7 @@ import numpy as np
 from typing import Iterable
 
 #* COMBINATION FUNCTION (c(), for vector creation)
-def c(*data:VT|list|tuple|np.ndarray,**named_data:VT)->Vector[VT]:
+def c(*data:VT|list|tuple|np.ndarray,Rtype:type|str|None=None,**named_data:VT)->Vector[VT]:
     #& Missing comments for code
     """
     Creates an *R-like* atomic vector. The returned object is a `Vector` instance.
@@ -32,6 +32,8 @@ def c(*data:VT|list|tuple|np.ndarray,**named_data:VT)->Vector[VT]:
     data : `tuple[Any]`
         Stream of unnamed values for the vector, resulting in a tuple of values.
         Values can be of any type.
+    Rtype : `type`|`str`|`None`, Optional
+        Type to which the data will be transformed to. Introduce `object` for multitype vectors.
     named_data : `dict[str,Any]`
         Stream of named values for the vector. They are passed as keyword arguments. Values can be of any type.
         Arguments' names will be the names for the vector.
@@ -41,6 +43,9 @@ def c(*data:VT|list|tuple|np.ndarray,**named_data:VT)->Vector[VT]:
     Vector
         *R-like* atomic vector.
     """
+    # Control Rtype's type
+    if isinstance(Rtype,str):
+        Rtype=eval(Rtype)
     # Raise error if both named and unnamed data are given
     if data and named_data:
         raise ValueError("Vector cannot store both named and unnamed data")
@@ -75,4 +80,4 @@ def c(*data:VT|list|tuple|np.ndarray,**named_data:VT)->Vector[VT]:
                     attributes.setdefault(k,v)
                 if "names" not in attributes:
                     attributes["names"]=names
-        return Vector(data,**attributes)
+        return Vector(data,Rtype=Rtype,**attributes)

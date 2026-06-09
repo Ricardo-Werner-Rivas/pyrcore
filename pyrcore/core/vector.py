@@ -85,24 +85,19 @@ class Vector(RObject,Generic[VT]):
         attributes (`dict[str, Any]`, Optional): Stream of keyword arguments containing the attributes for the vector.
             Atomic vectors only support attribute "names" and metadata introduced by the user.
         """
-        self._data=np.array(data)
+        Rtype=attributes.pop("Rtype",None)
+        self._data=np.array(data,Rtype)
         if None in self._data:
-            self._data=np.array(tuple(self._data[self._data!=None]))
+            self._data=np.array(tuple(self._data[self._data!=None]),Rtype)
         self._attributes=attributes or {}
         if "names" in self._attributes and self._attributes["names"] and len(self._attributes["names"])!=len(self._data):
             raise IndexError("List of names has different length than the data.")
-        if self._data.dtype=="object":
-            raise TypeError("Multi-type atomic vector not supported. For this purpose, use lists or tuples")
         self._type=str(self._data.dtype)
-        if "int" in self.type:
-            self._type=int
-        elif "float" in self.type:
-            self._type=float
-        elif isinstance(self._data[0],np.str_):
-            self._type=str
+        if self._type=="object":
+            self._type=object
         else:
-            self._type=eval(self._type[self._type.find("'")+1:self._type.rfind("'")])
-        self._data=np.array(tuple(value.item() for value in self._data),dtype=object)
+            self._data=self._data.astype(object)
+            self._type=type(self._data[0])
     
     # Get/set attribute
     def attr(self,attribute:str,value=None):
@@ -166,7 +161,7 @@ class Vector(RObject,Generic[VT]):
     @RObject.type.setter
     def type(self,new_type:type|str):
         super(Vector,type(self)).type.__set__(self,new_type)
-        self._data=np.array(tuple(self._type(value) for value in self._data),dtype=object)
+        self._data=self._data.astype(self.type).astype(object)
     #^ No deleter
     
     # Names
