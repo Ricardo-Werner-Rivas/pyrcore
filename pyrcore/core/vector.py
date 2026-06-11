@@ -154,6 +154,41 @@ class Vector(RObject,Generic[VT]):
         """
         return tuple(self._data)
     
+    # Obtain position from value
+    def index(self,value:VT)->int:
+        """
+        Returns the first position of the passed value.
+        
+        Arguments
+        ---------
+        value : `Any`
+            Value to look for.
+        
+        Returns
+        -------
+        int
+            Position of the value in the vector.
+        """
+        return tuple(pos for pos in range(len(self)) if ((self[pos] is value) if self.type!=object else (self[pos]==value)))[0]
+    
+    # Obtain name from value
+    def name(self,value:VT)->str:
+        """
+        Returns the first name associated to the given value.
+        If values are not named, the index (or position) will be returned via `index()` method.
+        
+        Arguments
+        ---------
+        value : `Any`
+            Value to look for.
+        
+        Returns
+        -------
+        str
+            Name assigned to the given value.
+        """
+        return self.index(value) if not self.names else self.names[self.index(value)]
+    
     #* PROPERTIES
     # Type
     #¡ Getter
