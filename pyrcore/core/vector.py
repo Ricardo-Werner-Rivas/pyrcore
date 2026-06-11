@@ -191,12 +191,12 @@ class Vector(RObject,Generic[VT]):
     #* COPYING DUNDER METHODS
     # Shallow copy #¡ __copy__
     def __copy__(self):
-        return Vector(self.tuple(),**self.attributes.copy())
+        return Vector(self.tuple(),Rtype=self.type,**self.attributes.copy())
     
     # Deep copy #¡ __deepcopy__
     def __deepcopy__(self,memo:dict[int,]):
         from copy import deepcopy
-        return Vector(deepcopy(self.tuple(),memo),**deepcopy(self.attributes,memo))
+        return Vector(deepcopy(self.tuple(),memo),Rtype=self.type,**deepcopy(self.attributes,memo))
     
     #* COMPARATIVE METHODS
     # Equality
@@ -240,71 +240,67 @@ class Vector(RObject,Generic[VT]):
     # Addition
     def __add__(self,value):
         if isinstance(value,Vector):
-            if value.type in [int,float] and self.type in [int,float]:
-                return Vector(self._data+value._data,**self.attributes)
-            elif value.type==str and self.type==str:
-                return Vector(self._data+value._data,**self.attributes)
+            if (value.type in (int,float,object) and self.type in (int,float,object)) or (value.type in (str,object) and self.type in (str,object)):
+                return Vector(self._data+value._data,Rtype=self.type,**self.attributes)
             else:
                 raise TypeError("Addition only available for vectors and values of matching supported types")
-        elif isinstance(value,(int,float,np.number)) and self.type in [int,float]:
-            return Vector(self._data+value,**self.attributes)
-        elif isinstance(value,(str,np.str_)) and self.type==str:
-            return Vector(self._data+value,**self.attributes)
+        elif (isinstance(value,(int,float)) and self.type in (int,float,object)) or (isinstance(value,str) and self.type in (str,object)):
+            return Vector(self._data+value,Rtype=self.type,**self.attributes)
         else:
             raise TypeError("Addition only available for vectors and values of matching supported types")
     # Difference
     def __sub__(self,value):
         if isinstance(value,Vector):
-            if value.type in [int,float] and self.type in [int,float]:
-                return Vector(self._data-value._data,**self.attributes)
+            if value.type in (int,float,object) and self.type in (int,float,object):
+                return Vector(self._data-value._data,Rtype=self.type,**self.attributes)
             else:
                 raise TypeError("Difference not supported for non-numerical values")
-        elif isinstance(value,(int,float,np.number)) and self.type in [int,float]:
-            return Vector(self._data-value,**self.attributes)
+        elif isinstance(value,(int,float)) and self.type in (int,float,object):
+            return Vector(self._data-value,Rtype=self.type,**self.attributes)
         else:
             raise TypeError("Difference not supported for non-numerical values")
     # Product
     def __mul__(self,value):
         if isinstance(value,Vector):
-            if value.type in [int,float] and self.type in [int,float]:
-                return Vector(self._data*value._data,**self.attributes)
+            if value.type in (int,float,object) and self.type in (int,float,object):
+                return Vector(self._data*value._data,Rtype=self.type,**self.attributes)
             else:
                 raise TypeError("Multiplication not supported for non-numerical values")
-        elif isinstance(value,(int,float,np.number)) and self.type in [int,float]:
-            return Vector(self._data*value,**self.attributes)
+        elif isinstance(value,(int,float)) and self.type in (int,float,object):
+            return Vector(self._data*value,Rtype=self.type,**self.attributes)
         else:
             raise TypeError("Multiplication not supported for non-numerical values")
     # Fraction
     def __truediv__(self,value):
         if isinstance(value,Vector):
-            if value.type in [int,float] and self.type in [int,float]:
-                return Vector(self._data/value._data,**self.attributes)
+            if value.type in (int,float,object) and self.type in (int,float,object):
+                return Vector(self._data/value._data,Rtype=self.type,**self.attributes)
             else:
                 raise TypeError("Fraction not supported for non-numerical values")
-        elif isinstance(value,(int,float,np.number)) and self.type in [int,float]:
-            return Vector(self._data/value,**self.attributes)
+        elif isinstance(value,(int,float)) and self.type in (int,float,object):
+            return Vector(self._data/value,Rtype=self.type,**self.attributes)
         else:
             raise TypeError("Fraction not supported for non-numerical values")
     # Floor division (integer result)
     def __floordiv__(self,value):
         if isinstance(value,Vector):
-            if value.type in [int,float] and self.type in [int,float]:
-                return Vector(self._data//value._data,**self.attributes)
+            if value.type in (int,float,object) and self.type in (int,float,object):
+                return Vector(self._data//value._data,Rtype=self.type,**self.attributes)
             else:
                 raise TypeError("Integer division not supported for non-numerical values")
-        elif isinstance(value,(int,float,np.number)) and self.type in [int,float]:
-            return Vector(self._data//value,**self.attributes)
+        elif isinstance(value,(int,float)) and self.type in (int,float,object):
+            return Vector(self._data//value,Rtype=self.type,**self.attributes)
         else:
             raise TypeError("Integer division not supported for non-numerical values")
     # Module
     def __mod__(self,value):
         if isinstance(value,Vector):
-            if value.type in [int,float] and self.type in [int,float]:
-                return Vector(self._data%value._data,**self.attributes)
+            if value.type in (int,float,object) and self.type in (int,float,object):
+                return Vector(self._data%value._data,Rtype=self.type,**self.attributes)
             else:
                 raise TypeError("Module operation is not supported for non-numerical values")
-        elif isinstance(value,(int,float,np.number)) and self.type in [int,float]:
-            return Vector(self._data%value,**self.attributes)
+        elif isinstance(value,(int,float)) and self.type in (int,float,object):
+            return Vector(self._data%value,Rtype=self.type,**self.attributes)
         else:
             raise TypeError("Module operation is not supported for non-numerical values")
     # Divmod
@@ -313,12 +309,12 @@ class Vector(RObject,Generic[VT]):
     # Power
     def __pow__(self,value):
         if isinstance(value,Vector):
-            if value.type in [int,float] and self.type in [int,float]:
-                return Vector(self._data**value._data,**self.attributes)
+            if value.type in (int,float,object) and self.type in (int,float,object):
+                return Vector(self._data**value._data,Rtype=self.type,**self.attributes)
             else:
                 raise TypeError("Power operation is not supported for non-numerical values")
-        elif isinstance(value,(int,float,np.number)) and self.type in [int,float]:
-            return Vector(self._data**value,**self.attributes)
+        elif isinstance(value,(int,float)) and self.type in (int,float,object):
+            return Vector(self._data**value,Rtype=self.type,**self.attributes)
         else:
             raise TypeError("Power operation is not supported for non-numerical values")
     
@@ -340,8 +336,8 @@ class Vector(RObject,Generic[VT]):
         return (self//value)**-1
     # Module
     def __rmod__(self,value):
-        if isinstance(value,(int,float,np.number)) and self.type in [int,float]:
-            return Vector(value%self._data,**self.attributes)
+        if isinstance(value,(int,float)) and self.type in (int,float):
+            return Vector(value%self._data,Rtype=self.type,**self.attributes)
         else:
             raise TypeError("Module operation is not supported for non-numerical values")
     # Divmod
@@ -349,28 +345,28 @@ class Vector(RObject,Generic[VT]):
         return value//self,value%self
     # Power
     def __rpow__(self,value):
-        if isinstance(value,(int,float,np.number)) and self.type in [int,float]:
-            return Vector(value**self._data,**self.attributes)
+        if isinstance(value,(int,float)) and self.type in (int,float):
+            return Vector(value**self._data,Rtype=self.type,**self.attributes)
         else:
             raise TypeError("Power operation is not supported for non-numerical values")
     
     #* UNARY METHODS
     # Negative
     def __neg__(self):
-        if self.type in [int,float]:
-            return Vector(-self._data,**self.attributes)
+        if self.type in (int,float):
+            return Vector(-self._data,Rtype=self.type,**self.attributes)
         else:
             raise TypeError(f"Negative unary method only available for numeric vectors, not {self.type} type vectors")
     # Positive
     def __pos__(self):
-        if self.type in [int,float]:
-            return Vector(+self._data,**self.attributes)
+        if self.type in (int,float):
+            return Vector(+self._data,Rtype=self.type,**self.attributes)
         else:
             raise TypeError(f"Positive unary method only available for numeric vectors, not {self.type} type vectors")
     # Absolute value
     def __abs__(self):
-        if self.type in [int,float]:
-            return Vector(abs(self._data),**self.attributes)
+        if self.type in (int,float):
+            return Vector(abs(self._data),Rtype=self.type,**self.attributes)
         else:
             raise TypeError(f"Absolute value unary method only available for numeric vectors, not {self.type} type vectors")
     

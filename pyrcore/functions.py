@@ -44,7 +44,7 @@ def c(*data:VT|list|tuple|np.ndarray,Rtype:type|str|None=None,**named_data:VT)->
         *R-like* atomic vector.
     """
     # Control Rtype's type
-    if isinstance(Rtype,str):
+    if Rtype and isinstance(Rtype,str):
         Rtype=eval(Rtype)
     # Raise error if both named and unnamed data are given
     if data and named_data:
