@@ -8,9 +8,9 @@ from types import NoneType
 def _testSlice(index:slice,label:bool=True):
     return True\
     if\
-        isinstance(index.start,(str if label else int,Vector,NoneType))\
-        and isinstance(index.stop,(str if label else int,Vector,NoneType))\
-        and type(index.start)==type(index.stop)\
+        isinstance(index.start,(str,Vector,NoneType) if label else (int,NoneType))\
+        and isinstance(index.stop,(str,Vector,NoneType) if label else (int,NoneType))\
+        and (type(index.start)==type(index.stop) if all(index.start,index.stop) else True)\
     else False
 
 # Indexer for "loc" property
@@ -30,37 +30,127 @@ class _LocIndexer:
     @__getitem__.register
     def _(self,index:slice):
         if _testSlice(index):
-            return MultiVariateTimeSeries(
-                self.data._data[
-                    :,
-                    slice(
-                        self.data.colnames.index(index.start),
-                        self.data.colnames.index(index.stop),
-                        index.step
-                    )
-                ]
+            if isinstance(index.start,Vector):
+                return MultiVariateTimeSeries(
+                    self.data._data[
+                        slice(
+                            self.data._time.index(index.start) if index.start else None,
+                            self.data._time.index(index.stop) if index.stop else None,
+                            index.step
+                        ),
+                        :
+                    ]
+                )
+            else:
+                return MultiVariateTimeSeries(
+                    self.data._data[
+                        :,
+                        slice(
+                            self.data.colnames.index(index.start) if index.start else None,
+                            self.data.colnames.index(index.stop) if index.stop else None,
+                            index.step
+                        )
+                    ]
             )
         else:
             raise TypeError
     @__getitem__.register
     def _(self,index:tuple):
-        index=list(index)
-        for label in index:
-            if isinstance(label,str):
-                pass
-            elif isinstance(label,slice) and _testSlice(label):
-                index[index.index(label)]=slice(
-                    (self.data.rownames if index.index(label)==0 else self.data.colnames).index(label.start),
-                    (self.data.rownames if index.index(label)==0 else self.data.colnames).index(label.stop),
-                    label.step
+        #// index=list(index)
+        #// for i,label in zip(range(len(index)),index):
+        #//     if isinstance(label,str):
+        #//         index[i]=(self.data.rownames if i==0 else self.data.colnames).index(label)
+        #//     elif isinstance(label,Vector):
+        #//         if i==0:
+        #//             index[i]=self.data._time.index(label)
+        #//         else:
+        #//             raise TypeError
+        #//     elif isinstance(label,slice) and _testSlice(label):
+        #//         index[i]=slice(
+        #//             (
+        #//                 (
+        #//                     self.data._time
+        #//                     if isinstance(label.start,Vector)
+        #//                     else self.data.rownames
+        #//                 ) if i==0 else self.data.colnames
+        #//             ).index(label.start)
+        #//             if label.start
+        #//             else None,
+        #//             (
+        #//                 (
+        #//                     self.data._time
+        #//                     if isinstance(label.stop,Vector)
+        #//                     else self.data.rownames
+        #//                 ) if i==0 else self.data.colnames
+        #//             ).index(label.stop)
+        #//             if label.stop
+        #//             else None,
+        #//             label.step
+        #//         )
+        #//     else:
+        #//         raise TypeError
+        #// index=tuple(index)
+        #// return self.data._data[index]
+        return self.data.loc[index[0]][index[1]]
+    
+    @singledispatchmethod
+    def __setitem__(self,index:Vector[int]|str|slice|tuple[Vector[int]|str|slice,str|slice],value):
+        raise TypeError
+    @__setitem__.register
+    def _(self,index:Vector,value):
+        self.data._data[self.data._time.index(index)]=value
+    @__setitem__.register
+    def _(self,index:str,value):
+        self.data._data[:,self.data.colnames.index(index)]=value
+    @__setitem__.register
+    def _(self,index:slice,value):
+        if _testSlice(index):
+            self.data._data[
+                :,
+                slice(
+                    (
+                        self.data.colnames
+                        if isinstance(index.start,str) and index.start in self.data.colnames
+                        else self.data._time
+                    ).index(index.start) if index.start else None,
+                    (
+                        self.data.colnames
+                        if isinstance(index.stop,str) and index.stop in self.data.colnames
+                        else self.data._time
+                    ).index(index.stop) if index.stop else None,
+                    index.step
                 )
+            ]=value
+    @__setitem__.register
+    def _(self,index:tuple,value):
+        index=list(index)
+        for i,label in zip(range(len(index)),index):
+            if isinstance(label,str):
+                index[i]=(self.data.rownames if i==0 else self.data.colnames).index(label)
+            elif isinstance(label,Vector):
+                if i==0:
+                    index[i]=self.data._time.index[label]
+                else:
+                    raise TypeError
+            elif isinstance(label,slice) and _testSlice(label):
+                if isinstance(label.start,Vector):
+                    if i==0:
+                        index[i]=slice(
+                            self.data._time.index(label.start) if label.start else None,
+                            self.data._time.index(label.stop) if label.stop else None,
+                            label.step
+                        )
+                    else:
+                        raise TypeError
+                else:
+                    index[i]=slice(
+                        (self.data.rownames if i==0 else self.data.colnames).index(label.start) if label.start else None,
+                        (self.data.rownames if i==0 else self.data.colnames).index(label.stop) if label.stop else None,
+                        label.step
+                    )
             else:
                 raise TypeError
         index=tuple(index)
-        return self.data._data[index]
-    
-    def __setitem__(self,index,value):
-        self.__getitem__(index)
         self.data._data[index]=value
 
 # Indexer for "iloc" property
