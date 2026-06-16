@@ -2127,5 +2127,15 @@ Include the following error message in your report:
     
     # Setter
     def __setitem__(self,index:Vector[int]|int|str|slice|tuple[Vector[int]|int|str|slice,int|str|slice],value):
-        self.__getitem__(index)
-        self._data[index]=value
+        match type(index).__name__:
+            case "Vector"|"str":
+                self.loc[index]=value
+            case "int":
+                self.iloc[index]=value
+            case "slice"|"tuple":
+                try:
+                    self.loc[index]
+                except TypeError:
+                    self.iloc[index]=value
+                else:
+                    self.loc[index]=value
