@@ -172,6 +172,30 @@ class _IlocIndexer:
             raise TypeError
     @__getitem__.register
     def _(self,index:tuple):
+        #// for pos in index:
+        #//     if isinstance(pos,int):
+        #//         pass
+        #//     elif isinstance(pos,slice) and _testSlice(pos,False):
+        #//         pass
+        #//     else:
+        #//         raise TypeError
+        #// return self.data._data[index]
+        return self.data.iloc[index[0]][index[1]]
+    
+    @singledispatchmethod
+    def __setitem__(self,index:int|slice|tuple[int|slice,int|slice],value):
+        raise TypeError
+    @__setitem__.register
+    def _(self,index:int,value):
+        self.data._data[index]=value
+    @__setitem__.register
+    def _(self,index:slice,value):
+        if _testSlice(index,False):
+            self.data._data[index]=value
+        else:
+            raise TypeError
+    @__setitem__.register
+    def _(self,index:tuple,value):
         for pos in index:
             if isinstance(pos,int):
                 pass
@@ -179,10 +203,6 @@ class _IlocIndexer:
                 pass
             else:
                 raise TypeError
-        return self.data._data[index]
-    
-    def __setitem__(self,index,value):
-        self.__getitem__(index)
         self.data._data[index]=value
 
 #// class _LocIndexer:
