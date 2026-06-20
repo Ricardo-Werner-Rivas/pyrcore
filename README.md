@@ -1,6 +1,6 @@
 # `pyrcore`
-[Python]:https://img.shields.io/badge/python-3.14.4-&
-[Supported CPython]:https://img.shields.io/badge/python->=3.14.4-&?label=CPython
+[Python]:https://img.shields.io/badge/python-3.14.6-&
+[Supported CPython]:https://img.shields.io/badge/python->=3.14.6-&?label=CPython
 [Version]:https://img.shields.io/pypi/v/pyrcore
 [License]:https://img.shields.io/github/license/Ricardo-Werner-Rivas/pyrcore
 
@@ -8,7 +8,7 @@ Python package aiming to create a core of R programming language to optimize tim
 
 |About|Information|
 |---|---|
-|Development Python version|[![Python]](https://www.python.org/downloads/release/python-3144/)|
+|Development Python version|[![Python]](https://www.python.org/downloads/release/python-3146/)|
 |Supported Python distributions|[![Supported CPython]](https://www.python.org/downloads)|
 |Packaging|[![Version]](https://pypi.org/project/pyrcore/) [![License]](https://github.com/Ricardo-Werner-Rivas/pyrcore/blob/PyPI/LICENSE)|
 ## Installation
