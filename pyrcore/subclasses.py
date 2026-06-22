@@ -157,6 +157,9 @@ class matrix(RObject,Generic[MT]):
             case _:
                 raise RuntimeError("A fatal error occured")
         self._attributes["dimnames"]=dimnames
+        if self._attributes["dimnames"] and self._attributes["dimnames"][1]:
+            for name in self._attributes["dimnames"][1]:
+                setattr(self,name,self._data[:,self._attributes["dimnames"][1].index(name)])
         self._byrow=byrow
     
     # Get/set attribute
@@ -180,16 +183,21 @@ class matrix(RObject,Generic[MT]):
                         if len(value[0])==self.nrow:
                             pass
                         elif len(value[0])<self.nrow:
-                            value=(c(value[0],*tuple(f"Row {row}" for row in range(len(value[0])+1,self.nrow+1))),value[1])
+                            value=(c(value[0],*tuple(f"Row_{row}" for row in range(len(value[0])+1,self.nrow+1))),value[1])
                         else:
                             raise ValueError("Rows' names iterable can't be larger than the number of rows")
                     if value[1]:
                         if len(value[1])==self.ncol:
                             pass
                         elif len(value[1])<self.ncol:
-                            value=(value[0],c(value[1],*tuple(f"Column {col}" for col in range(len(value[1]+1),self.ncol+1))))
+                            value=(value[0],c(value[1],*tuple(f"Column_{col}" for col in range(len(value[1])+1,self.ncol+1))))
                         else:
                             raise ValueError("Columns' names iterable can't be larger than the number of columns")
+                        if self.colnames:
+                            for name in self.colnames:
+                                delattr(self,name)
+                        for name in value[1]:
+                            setattr(self,name,self._data[:,value[1].index(name)])
         self._attributes[attribute]=value
     
     # Structure
