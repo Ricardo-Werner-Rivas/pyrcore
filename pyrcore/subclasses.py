@@ -1111,9 +1111,12 @@ class TimeSeries(RObject,Generic[TS]):
             `pandas` equivalent to the `TimeSeries`object.
         """
         #? Create new index object to comfortably manage time
-        from pandas import Series
+        from pandas import Series,to_datetime
         #~ Revise argument `index` in `pandas.Series`
-        return Series(self._data._data,tuple(f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time) if self.frequency!=1 else self._time,self.type)
+        index=tuple(f"{str(year)}{"-" if self.frequency in (12,3,4) else "."}{("0" if len(str(month if self.frequency==12 else (month*4 if self.frequency==3 else (month*3 if self.frequency==4 else month))))==1 else "")+str(month if self.frequency==12 else (month*4 if self.frequency==3 else (month*3 if self.frequency==4 else month)))}{"-01" if self.frequency in (12,3,4) else ""}" for year,month in self._time)
+        index=tuple(to_datetime(date) for date in index) if self.frequency in (12,3,4) else index
+        return Series(self._data._data,index)
+        #// return Series(self._data._data,tuple(f"{str(date[0])}.{("0" if len(str(date[1]))==1 else "")+str(date[1])}" for date in self._time) if self.frequency!=1 else self._time,self.type)
     
     #* PROPERTIES
     # Type
