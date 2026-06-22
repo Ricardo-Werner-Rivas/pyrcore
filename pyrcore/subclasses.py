@@ -151,7 +151,7 @@ class matrix(RObject,Generic[MT]):
             case (False,True):
                 dimnames=None
             case (True,True):
-                dimnames=(dimnames,None)
+                dimnames=(c(dimnames),None)
             case (True,False):
                 dimnames=tuple(c(names) if names else None for names in (dimnames if len(dimnames)<=2 else dimnames[:2]))
             case _:
@@ -309,7 +309,11 @@ class matrix(RObject,Generic[MT]):
     # Getter
     def dimnames(self)->tuple[Iterable[str]|None,Iterable[str]|None]|None:
         return self.attributes["dimnames"] if "dimnames" in self.attributes else None
-    #^ No setter
+    # Setter
+    @dimnames.setter
+    def dimnames(self,names:tuple[Iterable[str]|None,Iterable[str]|None]|None):
+        names=(c(names[0]) if names[0] else None,c(names[1]) if names[1] else None) if names else None
+        self.attr("dimnames",names)
     #^ No deleter
     
     # Names of rows
