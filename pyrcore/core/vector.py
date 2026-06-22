@@ -218,7 +218,7 @@ class Vector(RObject,Generic[VT]):
     @property
     # Getter
     def names(self)->Vector[str]|None:
-        return self.attr("names")
+        return self.attributes["names"] if "names" in self.attributes else None
     # Setter
     @names.setter
     def names(self,names:Vector[str]|tuple[str]|list[str]|None):

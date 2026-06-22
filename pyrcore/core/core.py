@@ -120,7 +120,7 @@ Include the following error message in your report:
         try:
             return self.attributes[attribute]
         except KeyError:
-            return
+            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{attribute}'")
     
     #* COPYING DUNDER METHODS
     # Shallow copy
