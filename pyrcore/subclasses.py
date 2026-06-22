@@ -277,7 +277,8 @@ class matrix(RObject,Generic[MT]):
         matrix
             Transposed matrix
         """
-        return matrix(self.vectorize(),self.nrow,self.ncol,not self._byrow,Rtype=self.type,**self.attributes)
+        self._data=self._data.transpose()
+        return self
     
     #* PROPERTIES
     # Number of rows
