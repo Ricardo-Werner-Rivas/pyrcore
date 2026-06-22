@@ -875,8 +875,6 @@ class TimeSeries(RObject,Generic[TS]):
             Time of the last observation
         frequency : `int`
             Number of observations per time unit
-        deltat : `int`|`float`
-            Inverse of `frequency`
         attributes : `dict[str, Any]`, Optional
             Keyword arguments for R-like attributes
         """
