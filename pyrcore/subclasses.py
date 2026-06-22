@@ -1402,7 +1402,7 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
     """
     #* METHODS
     # __init__
-    def __init__(self,data:matrix[MTS],start:Vector[int],end:Vector[int]|None,frequency:int,deltat:int|float,**attributes):
+    def __init__(self,data:matrix[MTS],start:Vector[int],end:Vector[int]|None,frequency:int,**attributes):
         """
         Arguments
         ---------
@@ -1427,8 +1427,12 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
         self._time=time
         
         # R attributes initialization
-        self._attributes["start"],self._attributes["end"],self._attributes["frequency"]=start,end,(frequency or 1/deltat)
-        self._attributes["dim"],self._attributes["dimnames"]=data.dim,(None,data.colnames) if data.colnames else None
+        self._attributes["start"],self._attributes["end"],self._attributes["frequency"]=start,end,frequency
+        self._attributes["dim"],self._attributes["dimnames"]=data.dim,(None,data.colnames) if data.colnames else (attributes["dimnames"] if "dimnames" in attributes else None)
+        if self._attributes["dimnames"] and self._attributes["dimnames"][1]:
+            colnames=self._attributes["dimnames"][1]
+            for name in colnames:
+                setattr(self,name,self._data[:,colnames.index(name)])
     
     # Get/set attribute
     def attr(self,attribute:str,value=None):
@@ -1458,9 +1462,14 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
                         if len(value[1])==self.ncol:
                             pass
                         elif len(value[1])<self.ncol:
-                            value=(value[0],c(value[1],*tuple(f"Column {col}" for col in range(len(value[1]+1),self.ncol+1))))
+                            value=(value[0],c(value[1],*tuple(f"Column {col}" for col in range(len(value[1])+1,self.ncol+1))))
                         else:
                             raise ValueError("Columns' names iterable can't be larger than the number of columns")
+                        if self.colnames:
+                            for name in self.colnames:
+                                delattr(self,name)
+                        for name in value[1]:
+                            setattr(self,name,self._data[:,value[1].index(name)])
         elif attribute in "start end".split():
             match type(value).__name__:
                 case "int":
