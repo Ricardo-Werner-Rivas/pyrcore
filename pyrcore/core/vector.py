@@ -15,8 +15,8 @@
 #* IMPORTS
 # NumPy
 import numpy as np
-# TypeVar and Generic (typing)
-from typing import TypeVar,Generic
+# TypeVar, Generic and Any type (typing)
+from typing import TypeVar,Generic,Any
 # Class "Vector"
 from .core import RObject
 
@@ -89,7 +89,7 @@ class Vector(RObject,Generic[VT]):
         self._data=np.array(data,Rtype)
         if None in self._data:
             self._data=np.array(tuple(self._data[self._data!=None]),Rtype)
-        self._attributes=attributes or {}
+        self._attributes:dict[str,tuple|Any]=attributes or {}
         if "names" in self._attributes and self._attributes["names"] and len(self._attributes["names"])!=len(self._data):
             raise IndexError("List of names has different length than the data.")
         self._type=str(self._data.dtype)
@@ -98,18 +98,33 @@ class Vector(RObject,Generic[VT]):
         else:
             self._data=self._data.astype(object)
             self._type=type(self._data[0])
+        if "names" in self._attributes:
+            self._attributes["names"]=Vector(
+                tuple(self._attributes["names"])
+                if not isinstance(self._attributes["name"],tuple)
+                else self._attributes["names"]
+            ) if not isinstance(self._attributes["names"],Vector) else self._attributes["names"]
+            for name in self._attributes["names"]:
+                setattr(self,name,self._data[self._attributes["names"].index(name)])
     
     # Get/set attribute
-    def attr(self,attribute:str,value=None):
+    def attr(self,attribute:str,value:Vector[str]|tuple[str]|list[str]|Any|None=None):
         if value is None:
             return super().attr(attribute,value)
         elif attribute=="names":
+            #! Checking length could cause an error
             if len(value)==len(self._data):
                 pass
             elif len(value)<len(self._data):
-                value=[*value,*tuple(f"Value {num}" for num in range(len(value)+1,len(self._data)+1))]
+                value=tuple(*value,*tuple(f"Value_{num}" for num in range(len(value)+1,len(self._data)+1)))
             else:
                 value=value[:len(self._data)]
+            value=Vector(tuple(value) if not isinstance(value,tuple) else value) if not isinstance(value,Vector) else value
+            if self.names:
+                for name in self.names:
+                    delattr(self,name)
+            for name in value:
+                setattr(self,name,self._data[value.index(name)])
         self._attributes[attribute]=value
     
     # Structure
@@ -202,11 +217,11 @@ class Vector(RObject,Generic[VT]):
     # Names
     @property
     # Getter
-    def names(self)->list[str]|None:
-        return self.attributes["names"] if "names" in self.attributes else None
+    def names(self)->Vector[str]|None:
+        return self.attr("names")
     # Setter
     @names.setter
-    def names(self,names:list[str]|None):
+    def names(self,names:Vector[str]|tuple[str]|list[str]|None):
         self.attr("names",names)
     #^ No deleter
     
