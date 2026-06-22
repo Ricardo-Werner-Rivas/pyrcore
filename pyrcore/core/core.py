@@ -121,6 +121,14 @@ Include the following error message in your report:
             return self.attributes[attribute]
         except KeyError:
             raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{attribute}'")
+        except Exception as excep:
+            raise type(excep)(
+                f"""\
+A fatal error occured, please report this in our issues page: https://github.com/Ricardo-Werner-Rivas/pyrcore/issues
+Include the following error message in your report:
+{excep}\
+"""
+            )
     
     #* COPYING DUNDER METHODS
     # Shallow copy
