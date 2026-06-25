@@ -18,8 +18,12 @@ from .core import Vector
 from .core.vector import VT
 # NumPy
 import numpy as np
-# Iterable
-from typing import Iterable
+# Iterable and TYPE_CHECKING
+from typing import Iterable,TYPE_CHECKING
+
+# Annotations' classes imports
+if TYPE_CHECKING:
+    from .subclasses import TimeSeries
 
 #* COMBINATION FUNCTION (c(), for vector creation)
 def c(*data:VT|list|tuple|np.ndarray,Rtype:type|str|None=None,**named_data:VT)->Vector[VT]:
@@ -81,3 +85,12 @@ def c(*data:VT|list|tuple|np.ndarray,Rtype:type|str|None=None,**named_data:VT)->
                 if "names" not in attributes:
                     attributes["names"]=names
         return Vector(data,Rtype=Rtype,**attributes)
+
+#* AUTOCORRELATION FUNCTIONS
+# Simple AutoCorrelation Function (ACF)
+def acf(ts:TimeSeries,lag:int)->dict[int,]:
+    mean=sum(ts)/len(ts)
+    result=tuple()
+    for k in range(lag+1):
+        result=(*result,sum(tuple((ts[i]-mean)*(ts[i-k]) if i>=k else 0 for i in range(len(ts))))/sum(tuple((ts[i]-mean)**2 for i in range(len(ts)))))
+    return dict(zip(tuple(range(lag+1)),(1,*result)))
