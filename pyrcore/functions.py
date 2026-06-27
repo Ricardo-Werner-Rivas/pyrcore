@@ -94,3 +94,16 @@ def acf(ts:TimeSeries,lag:int)->dict[int,]:
     for k in range(lag+1):
         result=(*result,sum(tuple((ts[i]-mean)*(ts[i-k]) if i>=k else 0 for i in range(len(ts))))/sum(tuple((ts[i]-mean)**2 for i in range(len(ts)))))
     return dict(zip(tuple(range(lag+1)),(1,*result)))
+
+# Partial AutoCorrelation Function (PACF)
+def pacf(ts:TimeSeries,lag:int)->dict[tuple[int],]:
+    p=acf(ts,lag)
+    result:dict[tuple[int],]={}
+    for k in range(1,lag+1):
+        if k==1:
+            result[(1,1)]=p[1]
+        else:
+            result[(k,k)]=(p[k]-sum(tuple(result[(k-1,j)]*p[k-j] for j in range(1,k))))/(1-sum(tuple(result[(k-1,j)]*p[j] for j in range(1,k))))
+            for j in range(1,k):
+                result[(k,j)]=result[(k-1,j)]-result[(k,k)]*result[(k-1,k-j)]
+    return dict(zip(sorted(tuple(result.keys())),tuple(result[k] for k in sorted(tuple(result.keys())))))
