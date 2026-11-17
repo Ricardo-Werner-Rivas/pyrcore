@@ -98,10 +98,10 @@ class Vector(RObject,Generic[VT]):
         else:
             self._data=self._data.astype(object)
             self._type=type(self._data[0])
-        if "names" in self._attributes:
+        if "names" in self.attributes:
             self._attributes["names"]=Vector(
                 tuple(self._attributes["names"])
-                if not isinstance(self._attributes["name"],tuple)
+                if not isinstance(self._attributes["names"],tuple)
                 else self._attributes["names"]
             ) if not isinstance(self._attributes["names"],Vector) else self._attributes["names"]
             for name in self._attributes["names"]:
