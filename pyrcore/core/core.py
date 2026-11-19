@@ -15,6 +15,8 @@
 #* IMPORTS
 # Abstract method decorator and class ABCMeta
 from abc import abstractmethod,ABCMeta
+# `SubclassAttrAccessManager` descriptor
+from .._descriptors import SubclassAttrAccessManager
 
 #* BASE CLASS "RObject"
 class RObject(metaclass=ABCMeta):
@@ -30,6 +32,13 @@ class RObject(metaclass=ABCMeta):
         self._attributes=attributes or {}
         self._type:type=type(data)
         ...
+    
+    # __init_subclass__
+    def __init_subclass__(cls):
+        for attr in ("_data","_attributes","_type"):
+            access_manager=SubclassAttrAccessManager("RObject")
+            setattr(cls,attr,access_manager)
+            access_manager.__set_name__(cls,attr)
     
     # Get/set R attribute
     @abstractmethod

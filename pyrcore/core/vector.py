@@ -236,6 +236,8 @@ class Vector(RObject,Generic[VT]):
             try:
                 return self[attribute]
             except IndexError:
+                if attribute in dir(self):
+                    raise AttributeError(f"Attribute \"{attribute}\" is not accessible outside the \"{self.__class__.__name__}\" class")
                 return
     
     #* COPYING DUNDER METHODS

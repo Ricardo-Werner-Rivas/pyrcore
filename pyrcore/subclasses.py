@@ -17,12 +17,14 @@
 import numpy as np
 # Dispatching
 from functools import singledispatchmethod
-# TypeVar, Generic, Iterable, Literal, overload and TYPE_CHECKING
+# `TypeVar`, `Generic`, `Iterable`, `Literal`, `overload` and `TYPE_CHECKING`
 from typing import TypeVar,Generic,Iterable,Literal,overload,TYPE_CHECKING
-# Class RObject
+# Classes `RObject` and `Vector`
 from .core import RObject,Vector
 # Combination function
 from .functions import c
+# `SubclassAttrAccessManager` descriptor
+from ._descriptors import SubclassAttrAccessManager
 # Auxiliar classes
 from ._aux_classes import _LocIndexer,_IlocIndexer
 
@@ -74,6 +76,10 @@ class matrix(RObject,Generic[MT]):
     **type**
         Gets/sets the type of the data
     """
+    #* DESCRIPTORS
+    # Define the matrix specific private attributes as obfuscated descriptor instances
+    __byrow=SubclassAttrAccessManager(RObject)
+    
     #* METHODS
     # __init__
     def __init__(
@@ -160,7 +166,7 @@ class matrix(RObject,Generic[MT]):
         if self._attributes["dimnames"] and self._attributes["dimnames"][1]:
             for name in self._attributes["dimnames"][1]:
                 setattr(self,name,self._data[:,self._attributes["dimnames"][1].index(name)])
-        self._byrow=byrow
+        self.__byrow=byrow
     
     # Get/set attribute
     def attr(self,attribute:str,value=None):
@@ -273,7 +279,7 @@ class matrix(RObject,Generic[MT]):
         elif self.nrow==3:
             return self._data[0,0]*self._data[1,1]*self._data[2,2]+self._data[1,0]*self._data[2,1]*self._data[0,2]+self._data[0,1]*self._data[1,2]*self._data[2,0]-(self._data[0,2]*self._data[1,1]*self._data[2,0]+self._data[1,2]*self._data[2,1]*self._data[0,0]+self._data[0,1]*self._data[1,0]*self._data[2,2])
         else:
-            return sum(tuple(self._data[0,i]*((-1)**(1+i+1))*matrix(np.delete(self._data,i,1)[1:].base,self.nrow-1,self.ncol-1,self._byrow,Rtype=self.type,**self.attributes).det() for i in range(self.ncol)))
+            return sum(tuple(self._data[0,i]*((-1)**(1+i+1))*matrix(np.delete(self._data,i,1)[1:].base,self.nrow-1,self.ncol-1,self.__byrow,Rtype=self.type,**self.attributes).det() for i in range(self.ncol)))
     
     # Transpose
     def transpose(self)->matrix[MT]:
@@ -366,12 +372,12 @@ class matrix(RObject,Generic[MT]):
     #* COPYING DUNDER METHODS
     # Shallow copy #¡ __copy__
     def __copy__(self):
-        return matrix(self.vectorize().copy(),*self.dim,byrow=self._byrow,Rtype=self.type,**self.attributes)
+        return matrix(self.vectorize().copy(),*self.dim,byrow=self.__byrow,Rtype=self.type,**self.attributes)
     
     # Deep copy #¡ __deepcopy__
     def __deepcopy__(self,memo:dict[int,]):
         from copy import deepcopy
-        return matrix(deepcopy(self.vectorize(),memo),*self.dim,byrow=self._byrow,**deepcopy(self.attributes,memo))
+        return matrix(deepcopy(self.vectorize(),memo),*self.dim,byrow=self.__byrow,**deepcopy(self.attributes,memo))
     
     #* COMPARATIVE DUNDER METHODS
     # Equality
@@ -403,14 +409,14 @@ class matrix(RObject,Generic[MT]):
     def __add__(self,value):
         if isinstance(value,matrix):
             if self.dim==value.dim:
-                return matrix((self._data+value._data).base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix((self._data+value._data).base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 raise ArithmeticError("Dimensions are not compatible")
         elif isinstance(value,Vector):
             if len(value)>self.nrow*self.ncol:
                 raise ArithmeticError("More values in vector than in matrix")
             elif len(value)==self.nrow*self.ncol:
-                return matrix(self._data.base+value._data,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(self._data.base+value._data,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 result=self._data.copy()
                 pos=0
@@ -420,9 +426,9 @@ class matrix(RObject,Generic[MT]):
                             pos=0
                         result[i,j]+=value[pos]
                         pos+=1
-                return matrix(result.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(result.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         elif isinstance(value,(int,float)):
-            return matrix(self._data.base+value,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+            return matrix(self._data.base+value,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         else:
             data_type=str(type(value))
             data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
@@ -432,14 +438,14 @@ class matrix(RObject,Generic[MT]):
     def __sub__(self,value):
         if isinstance(value,matrix):
             if self.dim==value.dim:
-                return matrix((self._data-value._data).base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix((self._data-value._data).base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 raise ArithmeticError("Dimensions are not compatible")
         elif isinstance(value,Vector):
             if len(value)>self.nrow*self.ncol:
                 raise ArithmeticError("More values in vector than in matrix")
             elif len(value)==self.nrow*self.ncol:
-                return matrix(self._data.base-value._data,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(self._data.base-value._data,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 result=self._data.copy()
                 pos=0
@@ -449,9 +455,9 @@ class matrix(RObject,Generic[MT]):
                             pos=0
                         result[i,j]-=value[pos]
                         pos+=1
-                return matrix(result.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(result.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         elif isinstance(value,(int,float)):
-            return matrix(self._data.base-value,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+            return matrix(self._data.base-value,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         else:
             data_type=str(type(value))
             data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
@@ -461,14 +467,14 @@ class matrix(RObject,Generic[MT]):
     def __mul__(self,value):
         if isinstance(value,matrix):
             if self.dim==value.dim:
-                return matrix((self._data*value._data).base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix((self._data*value._data).base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 raise ArithmeticError("Dimensions are not compatible")
         elif isinstance(value,Vector):
             if len(value)>self.nrow*self.ncol:
                 raise ArithmeticError("More values in vector than in matrix")
             elif len(value)==self.nrow*self.ncol:
-                return matrix(c(self._data.base*value._data),self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(c(self._data.base*value._data),self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 result=self._data.copy()
                 pos=0
@@ -478,9 +484,9 @@ class matrix(RObject,Generic[MT]):
                             pos=0
                         result[i,j]*=value[pos]
                         pos+=1
-                return matrix(result.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(result.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         elif isinstance(value,(int,float)):
-            return matrix(self._data.base*value,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+            return matrix(self._data.base*value,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         else:
             data_type=str(type(value))
             data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
@@ -507,9 +513,9 @@ class matrix(RObject,Generic[MT]):
                             pos=0
                         result[i,j]/=value[pos]
                         pos+=1
-                return matrix(result.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(result.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         elif isinstance(value,(int,float)):
-            return matrix(self._data.base/value,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+            return matrix(self._data.base/value,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         else:
             data_type=str(type(value))
             data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
@@ -519,14 +525,14 @@ class matrix(RObject,Generic[MT]):
     def __floordiv__(self,value):
         if isinstance(value,matrix):
             if self.dim==value.dim:
-                return matrix((self._data//value._data).base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix((self._data//value._data).base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 raise ArithmeticError("Dimensions are not compatible")
         elif isinstance(value,Vector):
             if len(value)>self.nrow*self.ncol:
                 raise ArithmeticError("More values in vector than in matrix")
             elif len(value)==self.nrow*self.ncol:
-                return matrix(self._data.base//value._data,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(self._data.base//value._data,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 result=self._data.copy()
                 pos=0
@@ -536,9 +542,9 @@ class matrix(RObject,Generic[MT]):
                             pos=0
                         result[i,j]//=value[pos]
                         pos+=1
-                return matrix(result.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(result.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         elif isinstance(value,(int,float)):
-            return matrix(self._data.base//value,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+            return matrix(self._data.base//value,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         else:
             data_type=str(type(value))
             data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
@@ -548,14 +554,14 @@ class matrix(RObject,Generic[MT]):
     def __mod__(self,value):
         if isinstance(value,matrix):
             if self.dim==value.dim:
-                return matrix((self._data%value._data).base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix((self._data%value._data).base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 raise ArithmeticError("Dimensions are not compatible")
         elif isinstance(value,Vector):
             if len(value)>self.nrow*self.ncol:
                 raise ArithmeticError("More values in vector than in matrix")
             elif len(value)==self.nrow*self.ncol:
-                return matrix(self._data.base%value._data,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(self._data.base%value._data,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 result=self._data.copy()
                 pos=0
@@ -565,9 +571,9 @@ class matrix(RObject,Generic[MT]):
                             pos=0
                         result[i,j]%=value[pos]
                         pos+=1
-                return matrix(result.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(result.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         elif isinstance(value,(int,float)):
-            return matrix(self._data.base%value,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+            return matrix(self._data.base%value,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         else:
             data_type=str(type(value))
             data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
@@ -581,14 +587,14 @@ class matrix(RObject,Generic[MT]):
     def __pow__(self,value):
         if isinstance(value,matrix):
             if self.dim==value.dim:
-                return matrix((self._data**value._data).base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix((self._data**value._data).base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 raise ArithmeticError("Dimensions are not compatible")
         elif isinstance(value,Vector):
             if len(value)>self.nrow*self.ncol:
                 raise ArithmeticError("More values in vector than in matrix")
             elif len(value)==self.nrow*self.ncol:
-                return matrix(self._data.base**value._data,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(self._data.base**value._data,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 result=self._data.copy()
                 pos=0
@@ -598,9 +604,9 @@ class matrix(RObject,Generic[MT]):
                             pos=0
                         result[i,j]**=value[pos]
                         pos+=1
-                return matrix(result.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(result.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         elif isinstance(value,(int,float)):
-            return matrix(self._data.base**value,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+            return matrix(self._data.base**value,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         else:
             data_type=str(type(value))
             data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
@@ -610,12 +616,12 @@ class matrix(RObject,Generic[MT]):
     def __matmul__(self,value:"matrix|Vector|np.ndarray"):
         if isinstance(value,(matrix,Vector)):
             if self.ncol==value.nrow:
-                return matrix((self._data@value._data).base,self.nrow,value.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix((self._data@value._data).base,self.nrow,value.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 raise ArithmeticError("Dimension conditions for matrix product are not met")
         elif isinstance(value,np.ndarray):
             if self.ncol==value.shape[0]:
-                return matrix((self._data@value).base,self.nrow,value.shape[1],self._byrow,Rtype=self.type,**self.attributes)
+                return matrix((self._data@value).base,self.nrow,value.shape[1],self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 raise ArithmeticError("Dimension conditions for matrix product are not met")
         else:
@@ -647,12 +653,12 @@ class matrix(RObject,Generic[MT]):
     # Module
     def __rmod__(self,value):
         if isinstance(value,(int,float)):
-            return matrix(value%self._data.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+            return matrix(value%self._data.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         elif isinstance(value,Vector):
             if len(value)>self.nrow*self.ncol:
                 raise ArithmeticError("More values in vector than in matrix")
             elif len(value)==self.nrow*self.ncol:
-                return matrix(value._data%self._data.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(value._data%self._data.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 result=self._data.copy()
                 pos=0
@@ -662,7 +668,7 @@ class matrix(RObject,Generic[MT]):
                             pos=0
                         result[i,j]=value[pos]%result[i,j]
                         pos+=1
-                return matrix(result.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(result.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         else:
             data_type=str(type(value))
             data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
@@ -675,12 +681,12 @@ class matrix(RObject,Generic[MT]):
     # Power
     def __rpow__(self,value):
         if isinstance(value,(int,float)):
-            return matrix(value**self._data.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+            return matrix(value**self._data.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         elif isinstance(value,Vector):
             if len(value)>self.nrow*self.ncol:
                 raise ArithmeticError("More values in vector than in matrix")
             elif len(value)==self.nrow*self.ncol:
-                return matrix(value._data**self._data.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(value._data**self._data.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 result=self._data.copy()
                 pos=0
@@ -690,7 +696,7 @@ class matrix(RObject,Generic[MT]):
                             pos=0
                         result[i,j]=value[pos]**result[i,j]
                         pos+=1
-                return matrix(result.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+                return matrix(result.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         else:
             data_type=str(type(value))
             data_type=data_type[data_type.find("'"):data_type.rfind("'")+1]
@@ -700,7 +706,7 @@ class matrix(RObject,Generic[MT]):
     def __rmatmul__(self,value):
         if isinstance(value,np.ndarray):
             if self.ncol==value.shape[0]:
-                return matrix((value@self._data).base,self.nrow,value.shape[1],self._byrow,Rtype=self.type,**self.attributes)
+                return matrix((value@self._data).base,self.nrow,value.shape[1],self.__byrow,Rtype=self.type,**self.attributes)
             else:
                 raise ArithmeticError("Dimension conditions for matrix product are not met")
         else:
@@ -712,7 +718,7 @@ class matrix(RObject,Generic[MT]):
     # Negative
     def __neg__(self):
         try:
-            return matrix(-self._data.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+            return matrix(-self._data.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         except TypeError:
             raise TypeError("Negative unary method only available for numeric matrixes") from None
         except Exception as excep:
@@ -725,7 +731,7 @@ class matrix(RObject,Generic[MT]):
     # Positive
     def __pos__(self):
         try:
-            return matrix(+self._data.base,self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+            return matrix(+self._data.base,self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         except TypeError:
             raise TypeError("Positive unary method only available for numeric matrixes") from None
         except Exception as excep:
@@ -738,7 +744,7 @@ class matrix(RObject,Generic[MT]):
     # Absolute value
     def __abs__(self):
         try:
-            return matrix(abs(self._data.base),self.nrow,self.ncol,self._byrow,Rtype=self.type,**self.attributes)
+            return matrix(abs(self._data.base),self.nrow,self.ncol,self.__byrow,Rtype=self.type,**self.attributes)
         except TypeError:
             raise TypeError("Absolute value unary method only available for numeric matrixes") from None
         except Exception as excep:
@@ -799,7 +805,7 @@ class matrix(RObject,Generic[MT]):
     #* SCREEN
     # Representation
     def __repr__(self):
-        return f"matrix(c({", ".join(str(value) for value in self._data.base)}),{self.nrow},{self.ncol},{self._byrow},**{self.attributes})"
+        return f"matrix(c({", ".join(str(value) for value in self._data.base)}),{self.nrow},{self.ncol},{self.__byrow},**{self.attributes})"
     
     # HTML representation
     def _repr_html_(self):
@@ -1628,9 +1634,9 @@ class MultiVariateTimeSeries(RObject,Generic[MTS]):
                 missing_end=None
                 print("Warning: Value of parameter 'end' not changed")
         if missing_start:
-            data=matrix(c(tuple(float("nan") for i in range(missing_start)),data.vectorize()),ncol=data.ncol,byrow=data._byrow,**data.attributes)
+            data=matrix(c(tuple(float("nan") for i in range(missing_start)),data.vectorize()),ncol=data.ncol,byrow=data._matrix__byrow,**data.attributes)
         if missing_end:
-            data=matrix(c(data.vectorize(),tuple(float("nan") for i in range(missing_end))),ncol=data.ncol,byrow=data._byrow,**data.attributes)
+            data=matrix(c(data.vectorize(),tuple(float("nan") for i in range(missing_end))),ncol=data.ncol,byrow=data._matrix__byrow,**data.attributes)
         if frequency!=self.frequency and self.frequency%frequency==0:
             data=data[time.index(start):time.index(end):self.frequency/frequency]
         elif frequency!=self.frequency:
