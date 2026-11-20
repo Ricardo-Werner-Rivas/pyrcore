@@ -70,6 +70,8 @@ class SubclassAttrAccessManager:
         """
         # Store the base class (or its name)
         self.base=base_class
+        # Initialize `value` attribute
+        self.value={}
     
     # Custom name
     def __set_name__(self,owner:type,name:str):
@@ -117,7 +119,7 @@ class SubclassAttrAccessManager:
         # If the object calling the descriptor is an instance of a subclass of the base class's ecosystem
         if instance is not None and issubclass(currentframe().f_back.f_locals.get("self",None).__class__,self.base):
             # Return the stored value
-            return self.value
+            return self.value[id(instance)]
         # Else
         else:
             # Raise an `AttributeError`
@@ -144,7 +146,7 @@ class SubclassAttrAccessManager:
         # If the object calling the descriptor matches the received instance
         if issubclass(currentframe().f_back.f_locals.get("self",None).__class__,self.base):
             # Store the new value
-            self.value=value
+            self.value[id(instance)]=value
         # Else
         else:
             # Raise an `AttributeError`
