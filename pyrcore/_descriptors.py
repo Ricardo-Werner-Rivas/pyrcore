@@ -171,7 +171,7 @@ class SubclassAttrAccessManager:
         # If the object calling the descriptor matches the received instance
         if issubclass(currentframe().f_back.f_locals.get("self",None).__class__,self.base):
             # Delete the stored value
-            del self.value
+            del self.value[id(instance)]
         # Else
         else:
             # Raise an `AttributeError`
