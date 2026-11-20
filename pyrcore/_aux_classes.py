@@ -1,10 +1,38 @@
-# Imports
+#*===============================================================================================================================
+#* LEGEND
+#*-------------------------------------------------------------------------------------------------------------------------------
+#! Missing
+#& Missing unimportant
+#~ Revision notes
+#? Questions
+#* Section
+#^ Important
+# Normal comment
+#// Deprecated code
+#¡ Inherited
+#*===============================================================================================================================
+
+#* IMPORTS
+# Class `Vector`
 from .core import Vector
+# Combination function
 from .functions import c
-from .subclasses import MultiVariateTimeSeries
+# Try
+try:
+    # Import class `MultiVariateTimeSeries`
+    from .subclasses import MultiVariateTimeSeries
+# If an `ImportError` is raised
+except ImportError:
+    # Create empty class `MultiVariateTimeSeries` while the real one is unfinished
+    class MultiVariateTimeSeries:
+        pass
+# `singledispatchmethod` (`functools`)
 from functools import singledispatchmethod
+# `NoneType` (`types`)
 from types import NoneType
 
+#* FUNCTIONS
+# `_testSlice` for slice index validation
 def _testSlice(index:slice,label:bool=True):
     return True\
     if\
@@ -13,6 +41,7 @@ def _testSlice(index:slice,label:bool=True):
         and (type(index.start)==type(index.stop) if all(index.start,index.stop) else True)\
     else False
 
+#* LOC INDEXER
 # Indexer for "loc" property
 class _LocIndexer:
     def __init__(self,data:MultiVariateTimeSeries):
@@ -153,6 +182,7 @@ class _LocIndexer:
         index=tuple(index)
         self.data._data[index]=value
 
+#* ILOC INDEXER
 # Indexer for "iloc" property
 class _IlocIndexer:
     def __init__(self,data:MultiVariateTimeSeries):
