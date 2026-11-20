@@ -282,17 +282,26 @@ class matrix(RObject,Generic[MT]):
             return sum(tuple(self._data[0,i]*((-1)**(1+i+1))*matrix(np.delete(self._data,i,1)[1:].base,self.nrow-1,self.ncol-1,self.__byrow,Rtype=self.type,**self.attributes).det() for i in range(self.ncol)))
     
     # Transpose
-    def transpose(self)->matrix[MT]:
+    def transpose(self,*,inplace:bool=False)->matrix[MT]:
         """
         Switches rows and columns between each other.
+        
+        Arguments
+        ---------
+        inplace : `bool`, Optional
+            Whether to transpose the matrix or to return a transposed copy.
         
         Returns
         -------
         matrix
             Transposed matrix
         """
-        self._data=self._data.transpose()
-        return self
+        #! Attributes are not transposed
+        if inplace is True:
+            self._data=self._data.transpose()
+            return self
+        else:
+            return self.copy().transpose(inplace=True)
     
     #* PROPERTIES
     # Number of rows
