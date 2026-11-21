@@ -296,10 +296,9 @@ class matrix(RObject,Generic[MT]):
         matrix
             Transposed matrix
         """
-        #! Attributes are not transposed
         if inplace is True:
             self._data=self._data.transpose()
-            return self
+            return self.structure(dim=self.dim[-1::-1],dimnames=self.dimnames[-1::-1] if self.dimnames else None)
         else:
             return self.copy().transpose(inplace=True)
     
