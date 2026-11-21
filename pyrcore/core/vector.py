@@ -130,7 +130,7 @@ class Vector(RObject,Generic[VT]):
     # Structure
     def structure(self,**attributes)->Vector[VT]:
         """
-        Updates attributes dictionary. Similar to R `structure` function.
+        Updates attributes' dictionary. Similar to R `structure` function.
         Returns the `Vector` object.
         
         Arguments
@@ -141,7 +141,7 @@ class Vector(RObject,Generic[VT]):
         Returns
         -------
         Vector
-            Returns the `Vector` instance with the updated attributes.
+            `Vector` self instance with the updated attributes.
         """
         return super().structure(**attributes)
     
@@ -165,7 +165,7 @@ class Vector(RObject,Generic[VT]):
         Returns
         --------
         tuple
-            Listed data of the `Vector` object.
+            Data sequence of the `Vector` object.
         """
         return tuple(self._data)
     
@@ -182,7 +182,7 @@ class Vector(RObject,Generic[VT]):
         Returns
         -------
         int
-            Position of the value in the vector.
+            Position of the given value in the vector.
         """
         return tuple(pos for pos in range(len(self)) if ((self[pos] is value) if self.type!=object else (self[pos]==value)))[0]
     
@@ -230,14 +230,14 @@ class Vector(RObject,Generic[VT]):
     #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
     # Attribute not found
     def __getattr__(self,attribute:str):
+        if attribute in dir(self):
+            raise AttributeError(f"Attribute \"{attribute}\" is not accessible outside the \"{self.__class__.__name__}\" class")
         try:
             return self.attributes[attribute]
         except KeyError:
             try:
                 return self[attribute]
             except IndexError:
-                if attribute in dir(self):
-                    raise AttributeError(f"Attribute \"{attribute}\" is not accessible outside the \"{self.__class__.__name__}\" class")
                 return
     
     #* COPYING DUNDER METHODS
