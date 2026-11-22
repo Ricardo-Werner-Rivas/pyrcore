@@ -116,6 +116,8 @@ class matrix(RObject,Generic[MT]):
             Stream of keyword arguments defining the matrix R attributes.
             Matrixes support `dim` and `dimnames` attributes, which contains the matrix dimensions.
         """
+        if isinstance(data,matrix):
+            data=data.vectorize()
         if isinstance(Rtype,str):
             Rtype=eval(Rtype)
         if not isinstance(data,Vector):
