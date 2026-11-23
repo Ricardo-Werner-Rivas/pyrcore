@@ -378,16 +378,6 @@ class matrix(RObject,Generic[MT]):
     
     #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
     # Attribute not found #¡ __getattr__
-    def __getattr__(self,attribute:str):
-        try:
-            if attribute in dir(self):
-                raise AttributeError(f"Attribute \"{attribute}\" is not accessible outside the \"{self.__class__.__name__}\" class")
-            return self.attributes[attribute]
-        except KeyError:
-            try:
-                return self[attribute]
-            except IndexError:
-                return
     
     #* COPYING DUNDER METHODS
     # Shallow copy #¡ __copy__

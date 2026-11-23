@@ -126,10 +126,15 @@ Include the following error message in your report:
     #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
     # Attribute not found
     def __getattr__(self,attribute:str):
+        if attribute in dir(self):
+            raise AttributeError(f"Attribute \"{attribute}\" is not accessible outside the \"{self.__class__.__name__}\" class")
         try:
             return self.attributes[attribute]
         except KeyError:
-            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{attribute}'")
+            try:
+                return self[attribute]
+            except IndexError:
+                return
         except Exception as excep:
             raise type(excep)(
                 f"""\

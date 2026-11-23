@@ -228,17 +228,7 @@ class Vector(RObject,Generic[VT]):
     #¡ Attributes
     
     #* ATTRIBUTES' MANAGEMENT DUNDER METHODS
-    # Attribute not found
-    def __getattr__(self,attribute:str):
-        if attribute in dir(self):
-            raise AttributeError(f"Attribute \"{attribute}\" is not accessible outside the \"{self.__class__.__name__}\" class")
-        try:
-            return self.attributes[attribute]
-        except KeyError:
-            try:
-                return self[attribute]
-            except IndexError:
-                return
+    # Attribute not found #¡ __getattr__
     
     #* COPYING DUNDER METHODS
     # Shallow copy #¡ __copy__
