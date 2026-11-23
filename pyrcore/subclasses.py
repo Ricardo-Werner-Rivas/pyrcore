@@ -167,7 +167,7 @@ class matrix(RObject,Generic[MT]):
         self._attributes["dimnames"]=dimnames
         if self._attributes["dimnames"] and self._attributes["dimnames"][1]:
             for name in self._attributes["dimnames"][1]:
-                setattr(self,name,self._data[:,self._attributes["dimnames"][1].index(name)])
+                setattr(self,name,c(self._data[:,self._attributes["dimnames"][1].index(name)]))
         self.__byrow=byrow
     
     # Get/set attribute
@@ -180,6 +180,10 @@ class matrix(RObject,Generic[MT]):
             match value:
                 case (None,None)|(float("nan"),float("nan")):
                     value=None
+                    if self.colnames:
+                        for name in self.colnames:
+                            if name in dir(self):
+                                delattr(self,name)
                 case _:
                     if len(value)==2:
                         pass
@@ -205,7 +209,7 @@ class matrix(RObject,Generic[MT]):
                             for name in self.colnames:
                                 delattr(self,name)
                         for name in value[1]:
-                            setattr(self,name,self._data[:,value[1].index(name)])
+                            setattr(self,name,c(self._data[:,value[1].index(name)]))
         self._attributes[attribute]=value
     
     # Structure
