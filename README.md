@@ -1,22 +1,29 @@
 # `pyrcore`
-[Python]:https://img.shields.io/badge/python-3.14.7-&
-[Supported CPython]:https://img.shields.io/badge/python->=3.14.7-&?label=CPython
+[Python]:https://img.shields.io/badge/python-3.15.2-&
+[Supported CPython]:https://img.shields.io/badge/python->=3.10-&?label=CPython
 [Version]:https://img.shields.io/pypi/v/pyrcore
 [License]:https://img.shields.io/github/license/Ricardo-Werner-Rivas/pyrcore
 
-Python package aiming to create a core of R programming language to optimize time series management.
-
 |About|Information|
 |---|---|
-|Development Python version|[![Python]](https://www.python.org/downloads/release/python-3147/)|
+|Development Python version|[![Python]](https://www.python.org/downloads/release/python-3152/)|
 |Supported Python distributions|[![Supported CPython]](https://www.python.org/downloads)|
 |Packaging|[![Version]](https://pypi.org/project/pyrcore/) [![License]](https://github.com/Ricardo-Werner-Rivas/pyrcore/blob/PyPI/LICENSE)|
+## About the Project
+`pyrcore` is a Python package that provides a set of R native objects to simplify coding tasks related to time series analysis in Python.
+This simplification easier Python/R learning, a smoother transition between the two languages' usages and improved time-bound data management, as periodic time periods are now managed by the recreation of R `ts` objects using integer atomic vectors instead of `datetime` objects.
+## Table of Contents
+* [Installation](#installation)
+* [Current Features](#current-features)
+* [Dependency Policy](#dependency-policy)
+* [Contribution](#contribution)
+* [Building](#building)
 ## Installation
 You can install the `pyrcore` package from **PyPI** like so:
 ```powershell
 pip install pyrcore
 ```
-## Current features
+## Current Features
 |Feature|PyPI|TestPyPI|Status|
 |-------|----|--------|------|
 |R atomic vectors|✅|✅|**Stable**|
@@ -25,7 +32,7 @@ pip install pyrcore
 |R `ts` class|✅|✅|<ins>Debugging</ins>|
 |R `mts` class|❌|❌|<ins>Development</ins>|
 |`ts()` function|❌|❌||
-## Dependency policy
+## Dependency Policy
 This project aims to be as package independent as possible.
 
 At the moment, this project depends on `numpy` for core functionalities and `pandas` for optional ones.
